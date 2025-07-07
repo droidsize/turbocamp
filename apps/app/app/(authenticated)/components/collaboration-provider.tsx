@@ -2,7 +2,7 @@
 
 import { getUsers } from '@/app/actions/users/get';
 import { searchUsers } from '@/app/actions/users/search';
-import { Room } from '@repo/collaboration/room';
+import { Room } from '@packages/collaboration/room';
 import type { ReactNode } from 'react';
 
 export const CollaborationProvider = ({

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Badge } from '@repo/design-system/components/ui/badge';
+import { Badge } from '@packages/design-system/components/ui/badge';
 
 /**
  * Displays a badge or a component that looks like a badge.

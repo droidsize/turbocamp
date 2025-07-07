@@ -1,11 +1,11 @@
-import { blog } from '@repo/cms';
-import { Feed } from '@repo/cms/components/feed';
-import { Image } from '@repo/cms/components/image';
-import { cn } from '@repo/design-system/lib/utils';
-import { getDictionary } from '@repo/internationalization';
-import type { Blog, WithContext } from '@repo/seo/json-ld';
-import { JsonLd } from '@repo/seo/json-ld';
-import { createMetadata } from '@repo/seo/metadata';
+import { blog } from '@packages/cms';
+import { Feed } from '@packages/cms/components/feed';
+import { Image } from '@packages/cms/components/image';
+import { cn } from '@packages/design-system/lib/utils';
+import { getDictionary } from '@packages/internationalization';
+import type { Blog, WithContext } from '@packages/seo/json-ld';
+import { JsonLd } from '@packages/seo/json-ld';
+import { createMetadata } from '@packages/seo/metadata';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 

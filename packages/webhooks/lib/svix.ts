@@ -1,5 +1,5 @@
 import 'server-only';
-import { auth } from '@repo/auth/server';
+import { auth } from '@packages/auth/server';
 import { Svix } from 'svix';
 import { keys } from '../keys';
 

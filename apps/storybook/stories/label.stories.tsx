@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Label } from '@repo/design-system/components/ui/label';
+import { Label } from '@packages/design-system/components/ui/label';
 
 /**
  * Renders an accessible label associated with controls.

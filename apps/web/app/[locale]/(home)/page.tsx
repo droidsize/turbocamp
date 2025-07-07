@@ -1,6 +1,6 @@
-import { showBetaFeature } from '@repo/feature-flags';
-import { getDictionary } from '@repo/internationalization';
-import { createMetadata } from '@repo/seo/metadata';
+import { showBetaFeature } from '@packages/feature-flags';
+import { getDictionary } from '@packages/internationalization';
+import { createMetadata } from '@packages/seo/metadata';
 import type { Metadata } from 'next';
 import { Cases } from './components/cases';
 import { CTA } from './components/cta';

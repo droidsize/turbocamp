@@ -6,7 +6,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@repo/design-system/components/ui/tooltip';
+} from '@packages/design-system/components/ui/tooltip';
 
 /**
  * A popup that displays information related to an element when the element

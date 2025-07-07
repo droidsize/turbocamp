@@ -1,6 +1,6 @@
 'use client';
 
-import { useMyPresence, useOthers } from '@repo/collaboration/hooks';
+import { useMyPresence, useOthers } from '@packages/collaboration/hooks';
 import { useEffect } from 'react';
 
 const Cursor = ({

@@ -1,7 +1,7 @@
 'use client';
 
-import { useAnalytics } from '@repo/analytics/posthog/client';
-import { useUser } from '@repo/auth/client';
+import { useUser } from '@packages/auth/client';
+import { useAnalytics } from '@packagesages/analytics/posthog/client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 

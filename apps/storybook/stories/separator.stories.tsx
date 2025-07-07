@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Separator } from '@repo/design-system/components/ui/separator';
+import { Separator } from '@packages/design-system/components/ui/separator';
 
 /**
  * Visually or semantically separates content.

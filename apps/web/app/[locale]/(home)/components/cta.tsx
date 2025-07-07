@@ -1,6 +1,6 @@
 import { env } from '@/env';
-import { Button } from '@repo/design-system/components/ui/button';
-import type { Dictionary } from '@repo/internationalization';
+import { Button } from '@packages/design-system/components/ui/button';
+import type { Dictionary } from '@packages/internationalization';
 import { MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
 

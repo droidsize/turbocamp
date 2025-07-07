@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@repo/design-system": "workspace:*",
+    "@packages/design-system": "workspace:*",
     "@storybook/addon-actions": "^8.6.14",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
-    "@repo/typescript-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@storybook/addon-essentials": "^8.6.14",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/addon-onboarding": "^8.6.14",

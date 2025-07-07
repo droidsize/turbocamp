@@ -1,4 +1,4 @@
-import { Toolbar } from '@repo/cms/components/toolbar';
+import { Toolbar } from '@packages/cms/components/toolbar';
 import type { ReactNode } from 'react';
 
 type LegalLayoutProps = {

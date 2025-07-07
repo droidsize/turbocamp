@@ -5,7 +5,7 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from '@repo/design-system/components/ui/alert';
+} from '@packages/design-system/components/ui/alert';
 
 /**
  * Displays a callout for user attention.

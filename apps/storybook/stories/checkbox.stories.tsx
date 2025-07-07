@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Checkbox } from '@repo/design-system/components/ui/checkbox';
+import { Checkbox } from '@packages/design-system/components/ui/checkbox';
 
 /**
  * A control that allows the user to toggle between checked and not checked.

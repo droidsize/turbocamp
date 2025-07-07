@@ -1,9 +1,9 @@
-import { authMiddleware } from '@repo/auth/middleware';
+import { authMiddleware } from '@packages/auth/middleware';
 import {
   noseconeMiddleware,
   noseconeOptions,
   noseconeOptionsWithToolbar,
-} from '@repo/security/middleware';
+} from '@packages/security/middleware';
 import type { NextMiddleware } from 'next/server';
 import { env } from './env';
 

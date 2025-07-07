@@ -1,13 +1,13 @@
 import { env } from '@/env';
-import { authMiddleware } from '@repo/auth/middleware';
-import { internationalizationMiddleware } from '@repo/internationalization/middleware';
-import { parseError } from '@repo/observability/error';
-import { secure } from '@repo/security';
+import { authMiddleware } from '@packages/auth/middleware';
+import { internationalizationMiddleware } from '@packages/internationalization/middleware';
+import { parseError } from '@packages/observability/error';
+import { secure } from '@packages/security';
 import {
   noseconeMiddleware,
   noseconeOptions,
   noseconeOptionsWithToolbar,
-} from '@repo/security/middleware';
+} from '@packages/security/middleware';
 import {
   type NextMiddleware,
   type NextRequest,

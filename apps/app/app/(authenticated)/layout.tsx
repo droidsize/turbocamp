@@ -1,9 +1,9 @@
 import { env } from '@/env';
-import { auth, currentUser } from '@repo/auth/server';
-import { SidebarProvider } from '@repo/design-system/components/ui/sidebar';
-import { showBetaFeature } from '@repo/feature-flags';
-import { NotificationsProvider } from '@repo/notifications/components/provider';
-import { secure } from '@repo/security';
+import { auth, currentUser } from '@packages/auth/server';
+import { SidebarProvider } from '@packages/design-system/components/ui/sidebar';
+import { showBetaFeature } from '@packages/feature-flags';
+import { NotificationsProvider } from '@packages/notifications/components/provider';
+import { secure } from '@packages/security';
 import type { ReactNode } from 'react';
 import { PostHogIdentifier } from './components/posthog-identifier';
 import { GlobalSidebar } from './components/sidebar';

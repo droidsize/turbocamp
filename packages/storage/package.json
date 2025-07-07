@@ -1,5 +1,5 @@
 {
-  "name": "@repo/storage",
+  "name": "@packages/storage",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,6 @@
     "zod": "^3.25.28"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@packages/typescript-config": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { webhooks } from '@repo/webhooks';
+import { webhooks } from '@packages/webhooks';
 import { notFound } from 'next/navigation';
 
 export const metadata = {

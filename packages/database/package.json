@@ -1,5 +1,5 @@
 {
-  "name": "@repo/database",
+  "name": "@packages/database",
   "version": "0.0.0",
   "main": "./index.ts",
   "types": "./index.ts",
@@ -20,7 +20,7 @@
     "zod": "^3.25.28"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/node": "22.15.21",
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.0.9",

@@ -1,5 +1,5 @@
 {
-  "name": "@repo/internationalization",
+  "name": "@packages/internationalization",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@packages/typescript-config": "workspace:*",
     "@types/negotiator": "^0.6.3",
     "@types/node": "22.15.21",
     "@types/react": "19.1.5",
