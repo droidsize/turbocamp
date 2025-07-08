@@ -263,6 +263,9 @@ $RECYCLE.BIN/
 # BaseHub
 .basehub
 
+# content-collections
+.content-collections
+
 # AI Rules
 .cursorrules
 .github/copilot-instructions.md
