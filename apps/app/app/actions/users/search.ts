@@ -1,23 +1,9 @@
 'use server';
 
-import {
-  type OrganizationMembership,
-  auth,
-  clerkClient,
-} from '@packages/auth/server';
+import { auth } from '@packages/auth/server';
+import { database } from '@packages/database';
 import Fuse from 'fuse.js';
-
-const getName = (user: OrganizationMembership): string | undefined => {
-  let name = user.publicUserData?.firstName;
-
-  if (name && user.publicUserData?.lastName) {
-    name = `${name} ${user.publicUserData.lastName}`;
-  } else if (!name) {
-    name = user.publicUserData?.identifier;
-  }
-
-  return name;
-};
+import { headers } from 'next/headers';
 
 export const searchUsers = async (
   query: string
@@ -30,36 +16,64 @@ export const searchUsers = async (
     }
 > => {
   try {
-    const { orgId } = await auth();
+    // Get the current session
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-    if (!orgId) {
-      throw new Error('Not logged in');
+    if (!session?.user) {
+      throw new Error('Not authenticated');
     }
 
-    const clerk = await clerkClient();
+    // Get the current organization ID from session
+    const currentOrgId = session.session?.activeOrganizationId;
 
-    const members = await clerk.organizations.getOrganizationMembershipList({
-      organizationId: orgId,
-      limit: 100,
+    if (!currentOrgId) {
+      throw new Error('No active organization');
+    }
+
+    // If query is empty, return empty results
+    if (!query.trim()) {
+      return { data: [] };
+    }
+
+    // Query all users who are members of the current organization
+    const users = await database.user.findMany({
+      where: {
+        members: {
+          some: {
+            organizationId: currentOrgId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
 
-    const users = members.data.map((user) => ({
-      id: user.id,
-      name: getName(user) ?? user.publicUserData?.identifier,
-      imageUrl: user.publicUserData?.imageUrl,
-    }));
-
+    // Use Fuse.js for fuzzy search
     const fuse = new Fuse(users, {
-      keys: ['name'],
-      minMatchCharLength: 1,
-      threshold: 0.3,
+      keys: [
+        { name: 'name', weight: 0.7 },
+        { name: 'email', weight: 0.3 },
+      ],
+      threshold: 0.3, // Lower threshold means more strict matching
+      includeScore: true,
     });
 
-    const results = fuse.search(query);
-    const data = results.map((result) => result.item.id);
+    // Perform the search
+    const searchResults = fuse.search(query);
 
-    return { data };
+    // Extract user IDs from search results, sorted by relevance
+    const userIds = searchResults.map((result) => result.item.id);
+
+    return {
+      data: userIds,
+    };
   } catch (error) {
+    console.error('Error searching users:', error);
     return { error };
   }
 };

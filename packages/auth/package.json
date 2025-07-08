@@ -7,10 +7,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.23.3",
-    "@clerk/themes": "^2.2.54",
-    "@clerk/types": "^4.63.0",
+    "@better-auth/stripe": "^1.2.12",
+    "@packages/database": "workspace:*",
+    "@packages/payments": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.4",
+    "better-auth": "^1.1.1",
+    "next": "15.3.2",
     "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "server-only": "^0.0.1",

@@ -1,9 +1,11 @@
 import { env } from '@/env';
-import { auth, currentUser } from '@packages/auth/server';
+import { auth } from '@packages/auth/server';
 import { SidebarProvider } from '@packages/design-system/components/ui/sidebar';
 import { showBetaFeature } from '@packages/feature-flags';
 import { NotificationsProvider } from '@packages/notifications/components/provider';
 import { secure } from '@packages/security';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { PostHogIdentifier } from './components/posthog-identifier';
 import { GlobalSidebar } from './components/sidebar';
@@ -17,16 +19,19 @@ const AppLayout = async ({ children }: AppLayoutProperties) => {
     await secure(['CATEGORY:PREVIEW']);
   }
 
-  const user = await currentUser();
-  const { redirectToSignIn } = await auth();
+  // Use Better Auth to get session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   const betaFeature = await showBetaFeature();
 
-  if (!user) {
-    return redirectToSignIn();
+  if (!session?.user) {
+    return redirect('/sign-in');
   }
 
   return (
-    <NotificationsProvider userId={user.id}>
+    <NotificationsProvider userId={session.user.id}>
       <SidebarProvider>
         <GlobalSidebar>
           {betaFeature && (

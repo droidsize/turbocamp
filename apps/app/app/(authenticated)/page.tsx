@@ -3,6 +3,7 @@ import { auth } from '@packages/auth/server';
 import { database } from '@packages/database';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { AvatarStack } from './components/avatar-stack';
 import { Cursors } from './components/cursors';
@@ -24,16 +25,23 @@ export const metadata: Metadata = {
 
 const App = async () => {
   const pages = await database.page.findMany();
-  const { orgId } = await auth();
 
-  if (!orgId) {
+  // Use Better Auth to get session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
     notFound();
   }
+
+  // Get active organization ID from session
+  const orgId = session.session.activeOrganizationId;
 
   return (
     <>
       <Header pages={['Building Your Application']} page="Data Fetching">
-        {env.LIVEBLOCKS_SECRET && (
+        {env.LIVEBLOCKS_SECRET && orgId && (
           <CollaborationProvider orgId={orgId}>
             <AvatarStack />
             <Cursors />

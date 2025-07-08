@@ -1,5 +1,6 @@
-import { auth, currentUser } from '@packages/auth/server';
+import { auth } from '@packages/auth/server';
 import { authenticate } from '@packages/collaboration/auth';
+import { headers } from 'next/headers';
 
 const COLORS = [
   'var(--color-red-500)',
@@ -22,8 +23,13 @@ const COLORS = [
 ];
 
 export const POST = async () => {
-  const user = await currentUser();
-  const { orgId } = await auth();
+  // Use Better Auth to get session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = session?.user;
+  const orgId = session?.session.activeOrganizationId;
 
   if (!user || !orgId) {
     return new Response('Unauthorized', { status: 401 });
@@ -33,9 +39,8 @@ export const POST = async () => {
     userId: user.id,
     orgId,
     userInfo: {
-      name:
-        user.fullName ?? user.emailAddresses.at(0)?.emailAddress ?? undefined,
-      avatar: user.imageUrl ?? undefined,
+      name: user.name ?? user.email ?? undefined,
+      avatar: user.image ?? undefined,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     },
   });

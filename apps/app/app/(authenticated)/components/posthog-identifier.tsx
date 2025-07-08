@@ -1,12 +1,13 @@
 'use client';
 
-import { useUser } from '@packages/auth/client';
-import { useAnalytics } from '@packagesages/analytics/posthog/client';
+import { useAnalytics } from '@packages/analytics/posthog/client';
+import { useSession } from '@packages/auth/client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 export const PostHogIdentifier = () => {
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
   const identified = useRef(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -31,12 +32,12 @@ export const PostHogIdentifier = () => {
     }
 
     analytics.identify(user.id, {
-      email: user.emailAddresses.at(0)?.emailAddress,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      email: user.email,
+      firstName: user.name?.split(' ')[0],
+      lastName: user.name?.split(' ').slice(1).join(' '),
       createdAt: user.createdAt,
-      avatar: user.imageUrl,
-      phoneNumber: user.phoneNumbers.at(0)?.phoneNumber,
+      avatar: user.image,
+      // phoneNumber: user.phoneNumber, // Add if available in your schema
     });
 
     identified.current = true;
