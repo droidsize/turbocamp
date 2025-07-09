@@ -1,8 +1,6 @@
-import { env } from '@/env';
 import { auth } from '@packages/auth/server';
 import { SidebarProvider } from '@packages/design-system/components/ui/sidebar';
 import { showBetaFeature } from '@packages/feature-flags';
-import { secure } from '@packages/security';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -14,10 +12,6 @@ type AppLayoutProperties = {
 };
 
 const AppLayout = async ({ children }: AppLayoutProperties) => {
-  if (env.ARCJET_KEY) {
-    await secure(['CATEGORY:PREVIEW']);
-  }
-
   // Use Better Auth to get session
   const session = await auth.api.getSession({
     headers: await headers(),

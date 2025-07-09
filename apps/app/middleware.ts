@@ -4,16 +4,21 @@ import {
   noseconeOptions,
   noseconeOptionsWithToolbar,
 } from '@packages/security/middleware';
-import type { NextMiddleware } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { env } from './env';
 
 const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-export default authMiddleware(() =>
-  securityHeaders()
-) as unknown as NextMiddleware;
+export default async function middleware(request: NextRequest) {
+  const authResponse = await authMiddleware(request);
+  if (authResponse) {
+    return authResponse;
+  }
+
+  return securityHeaders();
+}
 
 export const config = {
   matcher: [

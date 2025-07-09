@@ -2,7 +2,6 @@ import { env } from '@/env';
 import { authMiddleware } from '@packages/auth/middleware';
 import { internationalizationMiddleware } from '@packages/internationalization/middleware';
 import { parseError } from '@packages/observability/error';
-import { secure } from '@packages/security';
 import {
   noseconeMiddleware,
   noseconeOptions,
@@ -24,7 +23,7 @@ const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-const middleware = authMiddleware(async (_auth, request) => {
+const middleware = authMiddleware((_auth, request) => {
   const i18nResponse = internationalizationMiddleware(
     request as unknown as NextRequest
   );
@@ -32,21 +31,7 @@ const middleware = authMiddleware(async (_auth, request) => {
     return i18nResponse;
   }
 
-  if (!env.ARCJET_KEY) {
-    return securityHeaders();
-  }
-
   try {
-    await secure(
-      [
-        // See https://docs.arcjet.com/bot-protection/identifying-bots
-        'CATEGORY:SEARCH_ENGINE', // Allow search engines
-        'CATEGORY:PREVIEW', // Allow preview links to show OG images
-        'CATEGORY:MONITOR', // Allow uptime monitoring services
-      ],
-      request
-    );
-
     return securityHeaders();
   } catch (error) {
     const message = parseError(error);
