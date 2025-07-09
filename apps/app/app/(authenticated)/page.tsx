@@ -1,22 +1,12 @@
-import { env } from '@/env';
 import { auth } from '@packages/auth/server';
 import { database } from '@packages/database';
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { AvatarStack } from './components/avatar-stack';
-import { Cursors } from './components/cursors';
 import { Header } from './components/header';
 
 const title = 'Acme Inc';
 const description = 'My application.';
-
-const CollaborationProvider = dynamic(() =>
-  import('./components/collaboration-provider').then(
-    (mod) => mod.CollaborationProvider
-  )
-);
 
 export const metadata: Metadata = {
   title,
@@ -35,19 +25,9 @@ const App = async () => {
     notFound();
   }
 
-  // Get active organization ID from session
-  const orgId = session.session.activeOrganizationId;
-
   return (
     <>
-      <Header pages={['Building Your Application']} page="Data Fetching">
-        {env.LIVEBLOCKS_SECRET && orgId && (
-          <CollaborationProvider orgId={orgId}>
-            <AvatarStack />
-            <Cursors />
-          </CollaborationProvider>
-        )}
-      </Header>
+      <Header pages={['Building Your Application']} page="Data Fetching" />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">
           {pages.map((page) => (

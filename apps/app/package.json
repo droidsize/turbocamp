@@ -13,7 +13,6 @@
   "dependencies": {
     "@packages/analytics": "workspace:*",
     "@packages/auth": "workspace:*",
-    "@packages/collaboration": "workspace:*",
     "@packages/database": "workspace:*",
     "@packages/design-system": "workspace:*",
     "@packages/feature-flags": "workspace:*",

@@ -1,14 +1,14 @@
 'use server';
 
 import { auth } from '@packages/auth/server';
-import { database } from '@packages/database';
+import { type User, database } from '@packages/database';
 import { headers } from 'next/headers';
 
 export const getUsers = async (
   userIds: string[]
 ): Promise<
   | {
-      data: Liveblocks['UserMeta']['info'][];
+      data: Pick<User, 'id' | 'name' | 'image' | 'email'>[];
     }
   | {
       error: unknown;
@@ -49,50 +49,11 @@ export const getUsers = async (
       },
     });
 
-    // Transform users to Liveblocks UserMeta format
-    const transformedUsers: Liveblocks['UserMeta']['info'][] = users.map(
-      (user) => ({
-        name: user.name || user.email || 'Unknown User',
-        avatar: user.image || undefined,
-        // Generate a consistent color for each user based on their ID
-        color: generateUserColor(user.id),
-      })
-    );
-
     return {
-      data: transformedUsers,
+      data: users,
     };
   } catch (error) {
     console.error('Error fetching users:', error);
     return { error };
   }
 };
-
-// Helper function to generate a consistent color for each user
-function generateUserColor(userId: string): string {
-  const colors = [
-    '#FF6B6B',
-    '#4ECDC4',
-    '#45B7D1',
-    '#96CEB4',
-    '#FECA57',
-    '#FF9FF3',
-    '#54A0FF',
-    '#5F27CD',
-    '#00D2D3',
-    '#FF9F43',
-    '#10AC84',
-    '#EE5A24',
-    '#0984E3',
-    '#6C5CE7',
-    '#A29BFE',
-  ];
-
-  // Use a simple hash of the user ID to pick a color
-  let hash = 0;
-  for (let i = 0; i < userId.length; i++) {
-    hash = userId.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  return colors[Math.abs(hash) % colors.length];
-}
