@@ -18,7 +18,6 @@
     "@packages/i18n": "workspace:*",
     "@tooling/next-config": "workspace:*",
     "@packages/logging": "workspace:*",
-    "@packages/rate-limit": "workspace:*",
     "@packages/security": "workspace:*",
     "@packages/seo": "workspace:*",
     "@sentry/nextjs": "^9.22.0",
