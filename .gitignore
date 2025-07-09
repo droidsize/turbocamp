@@ -260,9 +260,6 @@ $RECYCLE.BIN/
 # Sentry Config File
 .env.sentry-build-plugin
 
-# BaseHub
-.basehub
-
 # content-collections
 .content-collections
 

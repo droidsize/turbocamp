@@ -9,7 +9,7 @@ let nextConfig: NextConfig = withToolbar(withLogging(config));
 
 nextConfig.images?.remotePatterns?.push({
   protocol: 'https',
-  hostname: 'assets.basehub.com',
+  hostname: 'assets.orama.com',
 });
 
 if (process.env.NODE_ENV === 'production') {

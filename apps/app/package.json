@@ -18,7 +18,6 @@
     "@packages/design-system": "workspace:*",
     "@packages/feature-flags": "workspace:*",
     "@packages/next-config": "workspace:*",
-    "@packages/notifications": "workspace:*",
     "@packages/observability": "workspace:*",
     "@packages/security": "workspace:*",
     "@packages/seo": "workspace:*",
