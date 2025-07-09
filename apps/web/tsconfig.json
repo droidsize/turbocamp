@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@packages/typescript-config/nextjs.json",
+    "@tooling/typescript-config/nextjs.json",
     "@packages/cms/typescript-config.json"
   ],
   "compilerOptions": {

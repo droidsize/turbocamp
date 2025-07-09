@@ -14,7 +14,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "@types/negotiator": "^0.6.3",
     "@types/node": "22.15.21",
     "@types/react": "19.1.5",

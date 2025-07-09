@@ -20,7 +20,7 @@
     "zod": "^3.25.28"
   },
   "devDependencies": {
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "@types/node": "22.15.21",
     "@types/ws": "^8.18.1",
     "bufferutil": "^4.0.9",

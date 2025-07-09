@@ -1,5 +1,5 @@
 {
-  "name": "@packages/next-config",
+  "name": "@tooling/next-config",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "devDependencies": {
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "next": "15.3.2"
   },
   "dependencies": {

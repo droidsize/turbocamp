@@ -1,13 +1,15 @@
 {
-  "name": "next-forge",
-  "version": "5.0.2",
+  "name": "turbobase",
+  "version": "1.0.0",
   "bin": {
-    "next-forge": "dist/index.js"
+    "turbobase": "dist/index.js"
   },
   "files": ["dist/index.js"],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "email:dev": "email dev --port 3003 --dir packages/email/templates",
+    "db:studio": "prisma studio --schema apps/api/prisma/schema.prisma --port 3005",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "test": "turbo test",
@@ -16,13 +18,13 @@
     "boundaries": "turbo boundaries",
     "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
     "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
-    "migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
+    "migrate": "cd apps/api && pnpm prisma format && pnpm prisma generate && pnpm prisma db push",
     "clean": "git clean -xdf node_modules"
   },
   "devDependencies": {
     "@auto-it/first-time-contributor": "^11.3.0",
     "@biomejs/biome": "1.9.4",
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "@turbo/gen": "^2.5.3",
     "@types/node": "^22.15.21",
     "tsup": "^8.5.0",

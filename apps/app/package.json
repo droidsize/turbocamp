@@ -16,7 +16,7 @@
     "@packages/database": "workspace:*",
     "@packages/design-system": "workspace:*",
     "@packages/feature-flags": "workspace:*",
-    "@packages/next-config": "workspace:*",
+    "@tooling/next-config": "workspace:*",
     "@packages/observability": "workspace:*",
     "@packages/security": "workspace:*",
     "@packages/seo": "workspace:*",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@packages/testing": "workspace:*",
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
     "@types/node": "22.15.21",

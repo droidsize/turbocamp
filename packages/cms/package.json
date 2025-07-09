@@ -20,7 +20,7 @@
     "@content-collections/cli": "^0.1.6",
     "@content-collections/core": "^0.9.1",
     "@content-collections/next": "^0.2.6",
-    "@packages/typescript-config": "workspace:*",
+    "@tooling/typescript-config": "workspace:*",
     "@types/node": "22.15.21",
     "@types/react": "19.1.5",
     "@types/react-dom": "^19.1.5",
