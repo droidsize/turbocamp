@@ -6,8 +6,8 @@ import { update } from './update.js';
 
 program
   .command('init')
-  .description('Initialize a new next-forge project')
-  .option('--name <name>', 'Name of the project')
+  .description('Initialize a new turbobase project')
+  .option('--name <n>', 'Name of the project')
   .option(
     '--package-manager <manager>',
     'Package manager to use (npm, yarn, bun, pnpm)'
