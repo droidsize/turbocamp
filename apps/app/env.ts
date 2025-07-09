@@ -8,7 +8,6 @@ import { keys as core } from '@packages/next-config/keys';
 import { keys as notifications } from '@packages/notifications/keys';
 import { keys as observability } from '@packages/observability/keys';
 import { keys as security } from '@packages/security/keys';
-import { keys as webhooks } from '@packages/webhooks/keys';
 import { createEnv } from '@t3-oss/env-nextjs';
 
 export const env = createEnv({
@@ -23,7 +22,6 @@ export const env = createEnv({
     notifications(),
     observability(),
     security(),
-    webhooks(),
   ],
   server: {},
   client: {},
