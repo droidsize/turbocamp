@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@packages/design-system/components/ui/dropdown-menu';
-import { SidebarMenuButton } from '@packages/design-system/components/ui/sidebar';
+} from '@packages/base/components/ui/dropdown-menu';
+import { SidebarMenuButton } from '@packages/base/components/ui/sidebar';
 import { ChevronsUpDown, LogOut, Settings, User, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 

@@ -1,10 +1,10 @@
 import './styles.css';
+import { BaseProvider } from '@packages/base';
+import { fonts } from '@packages/base/lib/fonts';
+import { cn } from '@packages/base/lib/utils';
 import { Toolbar as CMSToolbar } from '@packages/cms/components/toolbar';
-import { DesignSystemProvider } from '@packages/design-system';
-import { fonts } from '@packages/design-system/lib/fonts';
-import { cn } from '@packages/design-system/lib/utils';
 import { Toolbar } from '@packages/feature-flags/components/toolbar';
-import { getDictionary } from '@packages/internationalization';
+import { getDictionary } from '@packages/i18n';
 import type { ReactNode } from 'react';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
@@ -27,11 +27,11 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       suppressHydrationWarning
     >
       <body>
-        <DesignSystemProvider>
+        <BaseProvider>
           <Header dictionary={dictionary} />
           {children}
           <Footer />
-        </DesignSystemProvider>
+        </BaseProvider>
         <Toolbar />
         <CMSToolbar />
       </body>

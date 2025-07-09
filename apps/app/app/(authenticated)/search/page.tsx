@@ -1,5 +1,5 @@
 import { auth } from '@packages/auth/server';
-import { database } from '@packages/database';
+import { database } from '@packages/db';
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { Header } from '../components/header';

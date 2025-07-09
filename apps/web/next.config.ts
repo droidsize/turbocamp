@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { withCMS } from '@packages/cms/next-config';
 import { withToolbar } from '@packages/feature-flags/lib/toolbar';
-import { withLogging, withSentry } from '@packages/observability/next-config';
+import { withLogging, withSentry } from '@packages/logging/next-config';
 import { config, withAnalyzer } from '@tooling/next-config';
 import type { NextConfig } from 'next';
 

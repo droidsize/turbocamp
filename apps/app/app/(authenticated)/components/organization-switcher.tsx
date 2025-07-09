@@ -9,13 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@packages/design-system/components/ui/dropdown-menu';
+} from '@packages/base/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@packages/design-system/components/ui/sidebar';
+} from '@packages/base/components/ui/sidebar';
 import { Building2, Check, ChevronsUpDown, Plus } from 'lucide-react';
 import Image from 'next/image';
 import * as React from 'react';

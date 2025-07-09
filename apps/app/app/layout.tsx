@@ -1,6 +1,6 @@
 import './styles.css';
-import { DesignSystemProvider } from '@packages/design-system';
-import { fonts } from '@packages/design-system/lib/fonts';
+import { BaseProvider } from '@packages/base';
+import { fonts } from '@packages/base/lib/fonts';
 import { Toolbar } from '@packages/feature-flags/components/toolbar';
 import type { ReactNode } from 'react';
 
@@ -11,7 +11,7 @@ type RootLayoutProperties = {
 const RootLayout = ({ children }: RootLayoutProperties) => (
   <html lang="en" className={fonts} suppressHydrationWarning>
     <body>
-      <DesignSystemProvider>{children}</DesignSystemProvider>
+      <BaseProvider>{children}</BaseProvider>
       <Toolbar />
     </body>
   </html>

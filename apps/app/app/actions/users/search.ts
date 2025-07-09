@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@packages/auth/server';
-import { database } from '@packages/database';
+import { database } from '@packages/db';
 import Fuse from 'fuse.js';
 import { headers } from 'next/headers';
 

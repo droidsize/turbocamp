@@ -1,7 +1,7 @@
 import { keys as cms } from '@packages/cms/keys';
 import { keys as email } from '@packages/email/keys';
 import { keys as flags } from '@packages/feature-flags/keys';
-import { keys as observability } from '@packages/observability/keys';
+import { keys as logging } from '@packages/logging/keys';
 import { keys as rateLimit } from '@packages/rate-limit/keys';
 import { keys as security } from '@packages/security/keys';
 import { createEnv } from '@t3-oss/env-nextjs';
@@ -12,7 +12,7 @@ export const env = createEnv({
     cms(),
     core(),
     email(),
-    observability(),
+    logging(),
     flags(),
     security(),
     rateLimit(),

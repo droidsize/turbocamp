@@ -1,16 +1,16 @@
 'use client';
 
-import { Button } from '@packages/design-system/components/ui/button';
-import { Calendar } from '@packages/design-system/components/ui/calendar';
-import { Input } from '@packages/design-system/components/ui/input';
-import { Label } from '@packages/design-system/components/ui/label';
+import { Button } from '@packages/base/components/ui/button';
+import { Calendar } from '@packages/base/components/ui/calendar';
+import { Input } from '@packages/base/components/ui/input';
+import { Label } from '@packages/base/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@packages/design-system/components/ui/popover';
-import { cn } from '@packages/design-system/lib/utils';
-import type { Dictionary } from '@packages/internationalization';
+} from '@packages/base/components/ui/popover';
+import { cn } from '@packages/base/lib/utils';
+import type { Dictionary } from '@packages/i18n';
 import { format } from 'date-fns';
 import { CalendarIcon, Check, MoveRight } from 'lucide-react';
 import { useState } from 'react';

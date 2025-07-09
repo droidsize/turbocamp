@@ -1,5 +1,5 @@
 import { auth } from '@packages/auth/server';
-import { SidebarProvider } from '@packages/design-system/components/ui/sidebar';
+import { SidebarProvider } from '@packages/base/components/ui/sidebar';
 import { showBetaFeature } from '@packages/feature-flags';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';

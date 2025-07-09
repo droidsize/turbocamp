@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { authMiddleware } from '@packages/auth/middleware';
-import { internationalizationMiddleware } from '@packages/internationalization/middleware';
-import { parseError } from '@packages/observability/error';
+import { internationalizationMiddleware } from '@packages/i18n/middleware';
+import { parseError } from '@packages/logging/error';
 import {
   noseconeMiddleware,
   noseconeOptions,

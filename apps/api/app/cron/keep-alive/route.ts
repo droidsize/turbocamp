@@ -1,4 +1,4 @@
-import { database } from '@packages/database';
+import { database } from '@packages/db';
 
 export const GET = async () => {
   const newPage = await database.page.create({

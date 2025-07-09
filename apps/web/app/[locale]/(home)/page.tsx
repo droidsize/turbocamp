@@ -1,5 +1,5 @@
 import { showBetaFeature } from '@packages/feature-flags';
-import { getDictionary } from '@packages/internationalization';
+import { getDictionary } from '@packages/i18n';
 import { createMetadata } from '@packages/seo/metadata';
 import type { Metadata } from 'next';
 import { Cases } from './components/cases';

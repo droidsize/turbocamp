@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@packages/design-system/components/ui/button';
+import { Button } from '@packages/base/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@packages/design-system/components/ui/dropdown-menu';
+} from '@packages/base/components/ui/dropdown-menu';
 import { Languages } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 

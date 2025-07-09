@@ -1,5 +1,5 @@
 import { auth } from '@packages/auth/server';
-import { database } from '@packages/database';
+import { database } from '@packages/db';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';

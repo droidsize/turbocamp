@@ -3,7 +3,7 @@
 import { env } from '@/env';
 import { resend } from '@packages/email';
 import { ContactTemplate } from '@packages/email/templates/contact';
-import { parseError } from '@packages/observability/error';
+import { parseError } from '@packages/logging/error';
 import { createRateLimiter, slidingWindow } from '@packages/rate-limit';
 import { headers } from 'next/headers';
 

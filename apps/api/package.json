@@ -17,9 +17,9 @@
   "dependencies": {
     "@packages/analytics": "workspace:*",
     "@packages/auth": "workspace:*",
-    "@packages/database": "workspace:*",
-    "@packages/design-system": "workspace:*",
-    "@packages/observability": "workspace:*",
+    "@packages/db": "workspace:*",
+    "@packages/base": "workspace:*",
+    "@packages/logging": "workspace:*",
     "@packages/payments": "workspace:*",
     "@packages/testing": "workspace:*",
     "@sentry/nextjs": "^9.22.0",

@@ -1,5 +1,5 @@
 import { stripe } from '@better-auth/stripe';
-import { database } from '@packages/database';
+import { database } from '@packages/db';
 import { stripe as stripeClient } from '@packages/payments';
 import { keys } from '@packages/payments/keys';
 import { type BetterAuthOptions, betterAuth } from 'better-auth';

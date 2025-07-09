@@ -1,17 +1,17 @@
 'use client';
-import { ModeToggle } from '@packages/design-system/components/mode-toggle';
+import { ModeToggle } from '@packages/base/components/mode-toggle';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@packages/design-system/components/ui/collapsible';
+} from '@packages/base/components/ui/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@packages/design-system/components/ui/dropdown-menu';
+} from '@packages/base/components/ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -29,8 +29,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from '@packages/design-system/components/ui/sidebar';
-import { cn } from '@packages/design-system/lib/utils';
+} from '@packages/base/components/ui/sidebar';
+import { cn } from '@packages/base/lib/utils';
 import {
   AnchorIcon,
   BookOpenIcon,

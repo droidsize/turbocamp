@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '@packages/auth/server';
-import { type User, database } from '@packages/database';
+import { type User, database } from '@packages/db';
 import { headers } from 'next/headers';
 
 export const getUsers = async (

@@ -1,3 +1,3 @@
-import { initializeSentry } from '@packages/observability/client';
+import { initializeSentry } from '@packages/logging/client';
 
 initializeSentry();

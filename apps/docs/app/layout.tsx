@@ -1,5 +1,5 @@
 import '@/app/global.css';
-import { fonts } from '@packages/design-system/lib/fonts';
+import { fonts } from '@packages/base/lib/fonts';
 import { RootProvider } from 'fumadocs-ui/provider';
 import type { ReactNode } from 'react';
 

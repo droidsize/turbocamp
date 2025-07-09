@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@better-auth/stripe": "^1.2.12",
-    "@packages/database": "workspace:*",
+    "@packages/db": "workspace:*",
     "@packages/payments": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.4",
     "better-auth": "^1.1.1",
