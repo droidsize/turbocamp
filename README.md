@@ -1,103 +1,75 @@
-# 🚀 turbobase
+<a href="https://github.com/droidsize/turbobase">
+  <img alt="Turbobase - Open-source SaaS Starter" src="public/og-image.png">
+  <h1 align="center">Turbobase</h1>
+</a>
 
-**A modern, open-source Turborepo template for Next.js applications**
+<p align="center">
+  🚀 Open-source SaaS starter that gets you to production fast without breaking the bank!
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-8%2B-blue.svg)](https://pnpm.io/)
+<p align="center">
+  <a href="https://twitter.com/droidsize">
+    <img src="https://img.shields.io/twitter/follow/droidsize?style=flat&label=droidsize&logo=twitter&color=0bf&logoColor=fff" alt="Droidsize Twitter follower count" />
+  </a>
+  <a href="https://github.com/droidsize/turbobase">
+    <img src="https://img.shields.io/github/stars/droidsize/turbobase?style=flat&logo=github&color=0bf&logoColor=fff" alt="GitHub stars" />
+  </a>
+</p>
 
-## Overview
+<p align="center">
+  <a href="#introduction"><strong>Introduction</strong></a> ·
+  <a href="#installation"><strong>Installation</strong></a> ·
+  <a href="#tech-stack--features"><strong>Tech Stack + Features</strong></a> ·
+  <a href="#project-structure"><strong>Project Structure</strong></a> ·
+  <a href="#deployment"><strong>Deployment</strong></a> ·
+  <a href="#roadmap"><strong>Roadmap</strong></a> ·
+  <a href="#author"><strong>Author</strong></a> ·
+  <a href="#credits"><strong>Credits</strong></a>
+</p>
+<br/>
 
-**turbobase** is a production-ready monorepo template inspired by [next-forge](https://github.com/vercel/next-forge), designed to leverage the rich open-source ecosystem instead of relying on proprietary SaaS platforms. Built with [Turborepo](https://turbo.build/) and [Next.js](https://nextjs.org/), it provides a solid foundation for building scalable web applications.
+## Introduction
 
-### 🎯 Philosophy
+Turbobase is a modern, open-source SaaS starter template that gets you to production fast without breaking the bank. Built with [Next.js 15](https://nextjs.org/), [Turborepo](https://turbo.build/), [Prisma](https://prisma.io/), [Better Auth](https://www.better-auth.com/), [Stripe](https://stripe.com/), [Resend](https://resend.com/), [PostHog](https://posthog.com/), [Sentry](https://sentry.io/), [Fumadocs](https://fumadocs.vercel.app/), and production-grade SEO tools.
 
-Our goal is to **maximize the use of open-source tools** and minimize vendor lock-in, giving you:
+This template features **role-based access control**, **centralized API**, **admin dashboard**, **payments**, **internationalization**, **email systems**, **rate-limiting**, **logging**, and **AI-ready components** - all seamlessly integrated to accelerate your SaaS development journey.
+
+**Turbobase** is designed to maximize the use of open-source tools and minimize vendor lock-in, giving you complete control over your data and infrastructure while keeping costs low. It's inspired by [next-forge](https://github.com/vercel/next-forge) but focuses on cost-effective, open-source alternatives.
+
+### 🎯 Why Turbobase?
 
 - 🔓 **Freedom**: No dependency on external SaaS platforms to get started
 - 🛠️ **Control**: Full control over your data and infrastructure  
-- 💰 **Cost-effective**: Leverage free, open-source alternatives
+- 💰 **Cost-effective**: Leverage free, open-source alternatives first
 - 🚀 **Production-ready**: Battle-tested tools and patterns
 - 📈 **Scalable**: Easy migration to premium services when needed
+- 🔐 **Secure**: Built-in security, rate limiting, and best practices
 
-## ✨ Features
+## Installation
 
-- **🏗️ Monorepo Structure**: Organized with Turborepo for optimal DX
-- **🔐 Authentication**: [Better Auth](https://www.better-auth.com/) - open-source auth solution
-- **🎨 UI Components**: [shadcn/ui](https://ui.shadcn.com/) with Tailwind CSS
-- **📄 Content Management**: File-based CMS with [content-collections](https://content-collections.dev/)
-- **🌐 Internationalization**: Built-in i18n support
-- **💳 Payments**: [Stripe](https://stripe.com/) integration ready
-- **📧 Email**: [React Email](https://react.email/) templates
-- **📊 Analytics**: [PostHog](https://posthog.com/) integration
-- **🗃️ Database**: [Prisma](https://prisma.io/) ORM with PostgreSQL
-- **🧪 Testing**: [Vitest](https://vitest.dev/) test framework
-- **📚 Documentation**: [Fumadocs](https://fumadocs.vercel.app/) for beautiful docs
-
-## 📁 Project Structure
-
-```
-turbobase/
-├── apps/                          # Applications
-│   ├── web/                       # Marketing website (Next.js)
-│   ├── app/                       # Main application (Next.js)
-│   ├── api/                       # API routes & services
-│   └── docs/                      # Documentation site
-├── packages/                      # Shared packages
-│   ├── base/                      # UI components & design system
-│   ├── auth/                      # Authentication logic
-│   ├── db/                        # Database utilities, client & Prisma schema
-│   ├── email/                     # Email templates
-│   ├── cms/                       # Content management
-│   ├── analytics/                 # Analytics integration
-│   ├── payments/                  # Payment processing
-│   ├── storage/                   # File storage utilities
-│   ├── security/                  # Security middleware & rate limiting
-│   ├── logging/                   # Logging & observability
-│   ├── i18n/                      # Internationalization
-│   ├── seo/                       # SEO utilities
-│   ├── feature-flags/             # Feature flag management
-│   ├── ai/                        # AI/LLM integrations
-│   └── testing/                   # Testing utilities
-├── tooling/                       # Development tooling
-│   ├── typescript-config/         # Shared TypeScript configs
-│   └── next-config/               # Shared Next.js configs
-└── scripts/                       # Build & deployment scripts
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- **Node.js** 18+ ([Download](https://nodejs.org/))
-- **pnpm** 8+ ([Install](https://pnpm.io/installation))
-- **PostgreSQL** database (local or hosted)
-
-### 1. Get the Template
+Clone & create this repo locally with the following command:
 
 ```bash
-# Use the CLI tool (recommended)
-npx turbobase@latest init
-
-# Or use this template on GitHub
-git clone https://github.com/droidsize/turbobase.git my-app
-cd my-app
+npx turbobase@latest init my-saas-project
 ```
 
-### 2. Install Dependencies
+Or, deploy with Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdroidsize%2Fturbobase)
+
+### Steps
+
+1. **Install dependencies** using pnpm:
 
 ```bash
-# Install all dependencies for the monorepo
 pnpm install
 ```
 
-### 3. Environment Setup
-
-Create environment files for each app:
+2. **Copy environment files** and update the variables:
 
 ```bash
 # Database Environment
-cp packages/db/.env.example packages/db/.env.local
+cp packages/db/.env.example packages/db/.env
 
 # API Environment
 cp apps/api/.env.example apps/api/.env.local
@@ -107,28 +79,29 @@ cp apps/app/.env.example apps/app/.env.local
 
 # Web Environment
 cp apps/web/.env.example apps/web/.env.local
+
+# CMS Environment
+cp packages/cms/.env.example packages/cms/.env.local
+
+# i18n Environment
+cp packages/i18n/.env.example packages/i18n/.env.local
 ```
 
-### 4. Configure Your Database
-
-Update `packages/db/.env.local` with your database connection:
+3. **Set up your database** in `packages/db/.env`:
 
 ```bash
-# Database
 DATABASE_URL="postgresql://username:password@localhost:5432/turbobase?schema=public"
 ```
 
-### 5. Database Setup
+4. **Run database migrations**:
 
 ```bash
-# Generate Prisma client and push schema
 pnpm migrate
 ```
 
-### 6. Start Development
+5. **Start the development server**:
 
 ```bash
-# Start all apps in development mode
 pnpm dev
 ```
 
@@ -136,110 +109,159 @@ Your applications will be available at:
 - **Main App**: http://localhost:3000
 - **Marketing Site**: http://localhost:3001  
 - **API**: http://localhost:3002
+- **Email Preview**: http://localhost:3003
 - **Documentation**: http://localhost:3004
+- **Database Studio**: http://localhost:3005
 
-## 🔧 Development Commands
+> **Note**: Use `pnpm` for best compatibility. You can also use `bun` or `npm` but pnpm is recommended for monorepos.
 
-```bash
-# Development
-pnpm dev                    # Start all apps
-pnpm dev:email             # Preview email templates
-pnpm dev:studio            # Open Prisma Studio
+## Tech Stack + Features
 
-# Building
-pnpm build                 # Build all apps
-pnpm test                  # Run tests
+### Frameworks
 
-# Database
-pnpm migrate              # Run migrations
-pnpm db:studio            # Open database studio
+- **[Next.js 15](https://nextjs.org/)** – React framework with App Router, Server Components, and Server Actions
+- **[Turborepo](https://turbo.build/)** – High-performance monorepo build system with caching and parallel execution
+- **[Better Auth](https://www.better-auth.com/)** – Type-safe, open-source authentication with built-in providers
+- **[Prisma](https://prisma.io/)** – Next-generation TypeScript ORM with type safety and migrations
+- **[React Email](https://react.email/)** – Build beautiful emails with React components
 
-# Code Quality
-pnpm lint                 # Lint all packages
-pnpm format               # Format code
+### Platforms & Services
+
+- **[Vercel](https://vercel.com/)** – Deploy and preview with git integration
+- **[Resend](https://resend.com/)** – Developer-first email API for transactional emails
+- **[Stripe](https://stripe.com/)** – Complete payment processing and subscription management
+- **[PostHog](https://posthog.com/)** – Open-source product analytics and feature flags
+- **[Sentry](https://sentry.io/)** – Error monitoring and performance tracking
+
+### UI & Design
+
+- **[Tailwind CSS](https://tailwindcss.com/)** – Utility-first CSS framework for rapid UI development
+- **[shadcn/ui](https://ui.shadcn.com/)** – Beautiful, accessible components built with Radix UI and Tailwind CSS
+- **[Lucide Icons](https://lucide.dev/)** – Beautiful, customizable SVG icons
+- **[Framer Motion](https://www.framer.com/motion/)** – Production-ready motion library for React
+- **Custom Fonts** – Optimized font loading with `next/font`
+
+### Development & Code Quality
+
+- **[TypeScript](https://www.typescriptlang.org/)** – Static type checking for reliability and developer experience
+- **[Biome](https://biomejs.dev/)** – Fast formatter and linter for JavaScript and TypeScript
+- **[Vitest](https://vitest.dev/)** – Fast unit test framework powered by Vite
+- **[Content Collections](https://content-collections.dev/)** – Type-safe, file-based content management
+- **[Fumadocs](https://fumadocs.vercel.app/)** – Documentation framework built for Next.js
+
+### Features
+
+- 🔐 **Authentication & Authorization** - Role-based access control with user and organization management
+- 📊 **Admin Dashboard** - Complete admin interface with user management, analytics, and settings
+- 💳 **Payment Processing** - Stripe integration with subscriptions, one-time payments, and billing
+- 🌐 **Internationalization** - Multi-language support with automatic locale detection
+- 📧 **Email System** - Transactional emails, newsletters, and beautiful templates
+- 🛡️ **Security** - Rate limiting, CORS protection, input validation, and security headers
+- 📈 **Analytics & Monitoring** - User analytics, error tracking, and performance monitoring
+- 🤖 **AI-Ready** - Prepared for AI integrations with OpenAI, Anthropic, and more
+- 📱 **Responsive Design** - Mobile-first design that works on all devices
+- ⚡ **Performance** - Optimized builds, caching, and Core Web Vitals optimization
+
+## Project Structure
+
+```
+turbobase/
+├── apps/                          # Applications
+│   ├── web/                       # Marketing website (Next.js)
+│   ├── app/                       # Main SaaS application (Next.js)
+│   ├── api/                       # API routes & serverless functions
+│   └── docs/                      # Documentation site (Fumadocs)
+├── packages/                      # Shared packages
+│   ├── base/                      # UI components & design system (shadcn/ui)
+│   ├── auth/                      # Authentication logic (Better Auth)
+│   ├── db/                        # Database schema, client & utilities (Prisma)
+│   ├── email/                     # Email templates (React Email)
+│   ├── cms/                       # Content management (Content Collections)
+│   ├── analytics/                 # Analytics integration (PostHog)
+│   ├── payments/                  # Payment processing (Stripe)
+│   ├── storage/                   # File storage utilities
+│   ├── security/                  # Security middleware & rate limiting
+│   ├── logging/                   # Error tracking & logging (Sentry)
+│   ├── i18n/                      # Internationalization
+│   ├── seo/                       # SEO utilities & metadata
+│   ├── feature-flags/             # Feature flag management
+│   ├── ai/                        # AI/LLM integrations
+│   └── testing/                   # Testing utilities & configurations
+├── tooling/                       # Development tooling
+│   ├── typescript-config/         # Shared TypeScript configurations
+│   └── next-config/               # Shared Next.js configurations
+└── scripts/                       # CLI tool & deployment scripts
 ```
 
-## 🔧 Configuration
-
-### Authentication Setup
-
-1. Configure Better Auth in `packages/auth/server.ts`
-2. Set up your auth providers (Google, GitHub, etc.)
-3. Update environment variables in your apps
-
-### Database Configuration
-
-1. Update `packages/db/prisma/schema.prisma` with your models
-2. Run `pnpm migrate` to apply changes
-3. Use the `@packages/db` package throughout your apps
-
-### Email Templates
-
-1. Create templates in `packages/email/templates/`
-2. Preview with `pnpm dev:email`
-3. Configure your email provider (Resend, SendGrid, etc.)
-
-## 🌍 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
+1. **Connect your repository** to Vercel
+2. **Set environment variables** in the Vercel dashboard
+3. **Deploy** - Vercel will automatically build and deploy your apps
 
-# Deploy
-vercel
+Or use the Vercel CLI:
+
+```bash
+npx vercel
 ```
 
 ### Docker
 
 ```bash
-# Build and run
+# Build the application
 docker build -t turbobase .
+
+# Run the container
 docker run -p 3000:3000 turbobase
 ```
 
-### Self-Hosted
+### Manual Deployment
 
-1. Build the project: `pnpm build`
-2. Configure your reverse proxy (nginx, caddy)
-3. Set up environment variables
-4. Start with PM2 or similar process manager
+```bash
+# Build all applications
+pnpm build
 
-## 🤝 Contributing
+# Start production server
+pnpm start
+```
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+## Roadmap
 
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+- [ ] **Enhanced AI Integration** - More AI providers and pre-built AI components
+- [ ] **Advanced Analytics** - Custom analytics dashboard and reporting
+- [ ] **Mobile App Template** - React Native or Expo template
+- [ ] **E-commerce Features** - Product catalog, inventory management, and orders
+- [ ] **Advanced Workflows** - Automation and workflow management
+- [ ] **Multi-tenancy** - Advanced organization and workspace management
+- [ ] **CRM Integration** - Customer relationship management features
+- [ ] **API Documentation** - Auto-generated API docs with examples
 
-## 📖 Documentation
+## Author
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Architecture Overview](docs/architecture.md)
-- [Deployment Guide](docs/deployment.md)
-- [API Reference](docs/api.md)
+Created by [@droidsize](https://twitter.com/droidsize) in 2025, released under the MIT license.
 
-## 🛡️ Security
+Want to support this project? Give it a ⭐ on GitHub!
 
-- Built-in rate limiting and security headers
-- CSRF protection with Better Auth
-- Input validation with Zod
-- Environment variable validation
+## Credits
 
-## 📄 License
+This project was inspired by and builds upon the excellent work of:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- **[Vercel next-forge](https://github.com/vercel/next-forge)** - The original inspiration for this template
+- **[Midday v1](https://github.com/midday/v1)** - Another excellent turborepo template, inspiration for the project structure
+- **[shadcn](https://ui.shadcn.com/)** - For the amazing UI components and design system
 
-## 🙏 Acknowledgments
-
-- Inspired by [next-forge](https://github.com/vercel/next-forge) by Vercel
-- Built with amazing open-source tools from the community
-- Special thanks to all contributors
+Special thanks to the entire open-source community for creating the amazing tools that make this template possible.
 
 ---
 
-**Built with ❤️ using open-source tools**
+<p align="center">
+  <strong>Built with ❤️ by Droidsize and the open-source community</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/droidsize/turbobase/issues">Report Bug</a> ·
+  <a href="https://github.com/droidsize/turbobase/issues">Request Feature</a> ·
+  <a href="https://github.com/droidsize/turbobase/discussions">Discussions</a>
+</p>
