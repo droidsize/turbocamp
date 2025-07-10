@@ -2,7 +2,7 @@
   "name": "web",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001 --turbopack",
+    "dev": "next dev -p 3000 --turbopack",
     "build": "next build",
     "start": "next start",
     "analyze": "ANALYZE=true npm run build",
@@ -20,6 +20,7 @@
     "@packages/logging": "workspace:*",
     "@packages/security": "workspace:*",
     "@packages/seo": "workspace:*",
+    "@content-collections/mdx": "^0.2.2",
     "@sentry/nextjs": "^9.22.0",
     "@t3-oss/env-nextjs": "^0.13.4",
     "date-fns": "^4.1.0",
@@ -37,6 +38,9 @@
   },
   "devDependencies": {
     "@tooling/typescript-config": "workspace:*",
+    "@content-collections/cli": "^0.1.6",
+    "@content-collections/core": "^0.9.1",
+    "@content-collections/next": "^0.2.6",
     "@types/node": "22.15.21",
     "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",

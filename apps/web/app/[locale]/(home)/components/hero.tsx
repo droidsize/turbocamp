@@ -1,7 +1,7 @@
 import { env } from '@/env';
+import { Button } from '@packages/base/components/ui/button';
 import { blog } from '@packages/cms';
 import { Feed } from '@packages/cms/components/feed';
-import { Button } from '@packages/base/components/ui/button';
 import type { Dictionary } from '@packages/i18n';
 import { MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ export const Hero = async ({ dictionary }: HeroProps) => (
             </Link>
           </Button>
           <Button size="lg" className="gap-4" asChild>
-            <Link href={env.NEXT_PUBLIC_APP_URL}>
+            <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
               Sign up <MoveRight className="h-4 w-4" />
             </Link>
           </Button>

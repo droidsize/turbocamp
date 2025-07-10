@@ -1,7 +1,6 @@
 import { env } from '@/env';
 import { legal } from '@packages/cms';
 import { Feed } from '@packages/cms/components/feed';
-import { Status } from '@packages/logging/status';
 import Link from 'next/link';
 
 export const Footer = () => (
@@ -56,7 +55,6 @@ export const Footer = () => (
                       This is the start of something new.
                     </p>
                   </div>
-                  <Status />
                 </div>
                 <div className="grid items-start gap-10 lg:grid-cols-3">
                   {navigationItems.map((item) => (

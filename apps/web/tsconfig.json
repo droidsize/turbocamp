@@ -7,7 +7,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@packages/*": ["../../packages/*"]
+      "@packages/*": ["../../packages/*"],
+      "content-collections": [
+        "../../packages/cms/.content-collections/generated"
+      ]
     }
   },
   "include": [

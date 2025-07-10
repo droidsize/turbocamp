@@ -74,8 +74,8 @@ cp packages/db/.env.example packages/db/.env
 # API Environment
 cp apps/api/.env.example apps/api/.env.local
 
-# Main App Environment  
-cp apps/app/.env.example apps/app/.env.local
+# Dashboard App Environment  
+cp apps/dashboard/.env.example apps/dashboard/.env.local
 
 # Web Environment
 cp apps/web/.env.example apps/web/.env.local
@@ -106,12 +106,12 @@ pnpm dev
 ```
 
 Your applications will be available at:
-- **Main App**: http://localhost:3000
-- **Marketing Site**: http://localhost:3001  
+- **Marketing Site**: http://localhost:3000
+- **Dashboard**: http://localhost:3001  
 - **API**: http://localhost:3002
 - **Email Preview**: http://localhost:3003
 - **Documentation**: http://localhost:3004
-- **Database Studio**: http://localhost:3005
+- **Database Studio**: http://localhost:5555
 
 > **Note**: Use `pnpm` for best compatibility. You can also use `bun` or `npm` but pnpm is recommended for monorepos.
 
@@ -168,8 +168,8 @@ Your applications will be available at:
 turbobase/
 ├── apps/                          # Applications
 │   ├── web/                       # Marketing website (Next.js)
-│   ├── app/                       # Main SaaS application (Next.js)
-│   ├── api/                       # API routes & serverless functions
+│   ├── dashboard/                 # Main dashboard application (Next.js)
+│   ├── api/                       # Centralized API routes & serverless functions
 │   └── docs/                      # Documentation site (Fumadocs)
 ├── packages/                      # Shared packages
 │   ├── base/                      # UI components & design system (shadcn/ui)

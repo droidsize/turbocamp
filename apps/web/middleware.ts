@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { authMiddleware } from '@packages/auth/middleware';
+import { authMiddlewareWrapper } from '@packages/auth/middleware';
 import { internationalizationMiddleware } from '@packages/i18n/middleware';
 import { parseError } from '@packages/logging/error';
 import {
@@ -23,7 +23,7 @@ const securityHeaders = env.FLAGS_SECRET
   ? noseconeMiddleware(noseconeOptionsWithToolbar)
   : noseconeMiddleware(noseconeOptions);
 
-const middleware = authMiddleware((_auth, request) => {
+const middleware = authMiddlewareWrapper((_auth, request) => {
   const i18nResponse = internationalizationMiddleware(
     request as unknown as NextRequest
   );
@@ -32,7 +32,9 @@ const middleware = authMiddleware((_auth, request) => {
   }
 
   try {
-    return securityHeaders();
+    // Apply security headers and continue
+    securityHeaders();
+    return NextResponse.next();
   } catch (error) {
     const message = parseError(error);
 

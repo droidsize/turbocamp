@@ -48,7 +48,7 @@ Structure of how project files are setup. Making changes to files should be in t
 - `pnpm build` - Build all apps and packages  
 - `pnpm test` - Run tests across all packages
 - `pnpm migrate` - Run Prisma migrations
-- `pnpm db:studio` - Open Prisma Studio on port 3005
+- `pnpm db:studio` - Open Prisma Studio on port 5555
 - `pnpm email:dev` - Preview email templates on port 3003
 
 ## Nesting

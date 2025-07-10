@@ -28,7 +28,7 @@ const Pricing = () => (
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
             <Button variant="outline" className="mt-8 gap-4" asChild>
-              <Link href={env.NEXT_PUBLIC_APP_URL}>
+              <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
                 Try it <MoveRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -44,7 +44,7 @@ const Pricing = () => (
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
             <Button className="mt-8 gap-4" asChild>
-              <Link href={env.NEXT_PUBLIC_APP_URL}>
+              <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
                 Try it <MoveRight className="h-4 w-4" />
               </Link>
             </Button>

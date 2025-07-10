@@ -9,7 +9,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "email:dev": "email dev --port 3003 --dir packages/email/templates",
-    "db:studio": "prisma studio --schema apps/api/prisma/schema.prisma --port 3005",
+    "db:studio": "prisma studio --schema packages/db/prisma/schema.prisma",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "test": "turbo test",
