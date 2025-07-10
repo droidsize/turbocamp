@@ -32,16 +32,17 @@
 
 **Stop spending months building the same SaaS foundations.** Turbobase is a production-ready starter that ships with everything you need to launch your SaaS - authentication, payments, database, email, analytics, and more.
 
-Built for **indie hackers** and **startups** who want to focus on their unique features, not infrastructure. Get from idea to paying customers in days, not months.
+Built for **indie hackers** and **startups** who want to focus on their product, not infrastructure. Get from idea to paying customers in days, not months.
 
 ### 🎯 What You Get
 
-- **🏗️ Complete SaaS Foundation** - Auth, payments, database, email, analytics all working together
+- **🏗️ Complete SaaS Foundation** - Auth, payments, database, email, analytics, ai, logging all working together
 - **💰 Cost-Optimized** - Open-source first approach keeps your expenses low while scaling
 - **🚀 Multi-Platform Ready** - Centralized API works with web, mobile, desktop, or any client
 - **🔐 Production Security** - Rate limiting, input validation, security headers built-in
-- **📊 Business Intelligence** - User analytics, error tracking, and performance monitoring
+- **📊 Track your vitals** - User analytics, error tracking, and performance monitoring
 - **🌍 Global Ready** - Multi-language support and optimized for worldwide audiences
+- **📖 Documentation Platform** - Beautiful docs site with Fumadocs for user guides and API references
 
 ### 🎪 Why Choose Turbobase?
 
@@ -130,7 +131,16 @@ BETTER_AUTH_SECRET="same-secret-from-api"
 AUTH_API_URL="http://localhost:3002"
 ```
 
-#### 5. Web Setup (Marketing Site)
+#### 5. Internationalization Setup (Multi-language Support)
+
+Set up i18n for global reach. This is used by your web app for multi-language support.
+
+```bash
+# Copy i18n environment for multi-language support
+cp packages/i18n/.env.example packages/i18n/.env.local
+```
+
+#### 6. Web Setup (Marketing Site)
 
 Your marketing site showcases your product and converts visitors into users.
 
@@ -147,7 +157,7 @@ NEXT_PUBLIC_API_URL="http://localhost:3002"
 AUTH_API_URL="http://localhost:3002"
 ```
 
-#### 6. Launch Your Applications
+#### 7. Launch Your Applications
 
 ```bash
 pnpm dev
@@ -160,7 +170,7 @@ pnpm dev
 - **Email Preview**: http://localhost:3003 - Preview your email templates
 - **Database Studio**: http://localhost:5555 - Visual database management
 
-#### 7. Content Management (Optional)
+#### 8. Content Management (Optional)
 
 We use **Content Collections** for type-safe, file-based content management. Perfect for blogs, documentation, and marketing pages.
 
@@ -169,15 +179,19 @@ We use **Content Collections** for type-safe, file-based content management. Per
 cp packages/cms/.env.example packages/cms/.env.local
 ```
 
-Your content lives in `apps/web/content/` and `apps/docs/content/` - edit `.mdx` files and see changes instantly!
+Your content lives in `apps/web/content/` - edit `.mdx` files and see changes instantly!
 
-#### 8. Documentation Site (Optional)
+#### 9. Documentation Site (Optional)
 
-Want to add documentation? We've got you covered with **Fumadocs**.
+Want to add documentation? We've got you covered with **Fumadocs** - a beautiful, fast documentation framework.
 
 ```bash
-# Copy i18n environment for multi-language support
-cp packages/i18n/.env.example packages/i18n/.env.local
+# Copy docs environment (optional)
+cp apps/docs/.env.example apps/docs/.env.local
+```
+
+```bash
+pnpm dev --filter=docs
 ```
 
 Your docs will be available at: http://localhost:3004
@@ -211,6 +225,7 @@ Your docs will be available at: http://localhost:3004
 - **[Vitest](https://vitest.dev/)** – Testing that's actually fast. Write tests that run in milliseconds.
 - **[Biome](https://biomejs.dev/)** – Formatting and linting without the complexity. One tool, fast performance.
 - **[Content Collections](https://content-collections.dev/)** – Markdown content with TypeScript safety. Perfect for blogs and docs.
+- **[Fumadocs](https://fumadocs.vercel.app/)** – Beautiful documentation framework. Auto-generated navigation, search, and mobile-friendly.
 
 ### 🚀 What You Get Out of the Box
 
@@ -222,6 +237,8 @@ Your docs will be available at: http://localhost:3004
 - **🛡️ Production Security** - Rate limiting, input validation, CORS protection, and security headers
 - **📱 Responsive Design** - Looks perfect on mobile, tablet, and desktop
 - **⚡ Performance Optimized** - Fast loading, optimized images, and excellent Core Web Vitals
+- **📖 Documentation System** - Fumadocs-powered docs with search, navigation, and beautiful theming
+- **🚩 Feature Flags** - Control rollouts and A/B test features without deployments
 
 ## Project Structure
 
@@ -239,14 +256,21 @@ turbobase/
 │   ├── auth/                      # 🔐 Authentication & authorization
 │   ├── db/                        # 🗄️ Database schema & queries
 │   ├── email/                     # 📧 Email templates & sending
-│   ├── payments/                  # 💳 Stripe integration & billing
+│   ├── cms/                       # 📝 Content management (Content Collections)
 │   ├── analytics/                 # 📈 User tracking & insights
+│   ├── payments/                  # 💳 Stripe integration & billing
+│   ├── storage/                   # 🗂️ File storage utilities
 │   ├── security/                  # 🛡️ Rate limiting & protection
 │   ├── logging/                   # 🔍 Error tracking & monitoring
-│   └── ai/                        # 🤖 AI/LLM integrations
-└── tooling/                       # 🛠️ Development tools & configs
-    ├── typescript-config/         # Shared TypeScript settings
-    └── next-config/               # Shared Next.js configurations
+│   ├── i18n/                      # 🌐 Internationalization
+│   ├── seo/                       # 🎯 SEO utilities & metadata
+│   ├── feature-flags/             # 🚩 Feature flag management
+│   ├── ai/                        # 🤖 AI/LLM integrations
+│   └── testing/                   # 🧪 Testing utilities & configurations
+├── tooling/                       # 🛠️ Development tools & configs
+│   ├── typescript-config/         # Shared TypeScript settings
+│   └── next-config/               # Shared Next.js configurations
+└── scripts/                       # ⚙️ CLI tool & deployment scripts
 ```
 
 ### 🎯 Architecture Benefits
@@ -258,6 +282,8 @@ turbobase/
 **Independent Deployment**: Deploy each app separately. Scale your API independently from your marketing site.
 
 **Developer Velocity**: New team members understand the structure instantly. Everything has its place.
+
+**Complete Documentation**: Fumadocs powers your docs site with automatic navigation, full-text search, and beautiful theming.
 
 ## Deployment
 
