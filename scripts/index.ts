@@ -6,7 +6,7 @@ import { update } from './update.js';
 
 program
   .command('init')
-  .description('Initialize a new turbobase project')
+  .description('Initialize a new turbocamp project')
   .option('--name <n>', 'Name of the project')
   .option(
     '--package-manager <manager>',

@@ -19,7 +19,7 @@ import {
   supportedPackageManagers,
 } from './utils.js';
 
-const cloneTurbobase = async (name: string, packageManager: string) => {
+const cloneTurbocamp = async (name: string, packageManager: string) => {
   const command = [
     'npx create-next-app@latest',
     name,
@@ -211,7 +211,7 @@ export const initialize = async (options: {
   disableGit?: boolean;
 }) => {
   try {
-    intro("Let's start a turbobase project!");
+    intro("Let's start a turbocamp project!");
 
     const cwd = process.cwd();
     const name = options.name || (await getName());
@@ -225,8 +225,8 @@ export const initialize = async (options: {
     const s = spinner();
     const projectDir = join(cwd, name);
 
-    s.start('Cloning turbobase...');
-    await cloneTurbobase(name, packageManager);
+    s.start('Cloning turbocamp...');
+    await cloneTurbocamp(name, packageManager);
 
     s.message('Moving into repository...');
     process.chdir(projectDir);

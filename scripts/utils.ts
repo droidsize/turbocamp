@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 
-export const url = 'https://github.com/droidsize/turbobase';
+export const url = 'https://github.com/droidsize/turbocamp';
 
 export const cleanFileName = (file: string) =>
   file.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\\/g, '/');
@@ -28,7 +28,7 @@ export const allInternalContent = [
 
 export const semver = /^\d+\.\d+\.\d+$/;
 
-export const tempDirName = 'turbobase-update';
+export const tempDirName = 'turbocamp-update';
 
 export const exec = promisify(execRaw);
 

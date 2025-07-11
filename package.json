@@ -1,8 +1,8 @@
 {
-  "name": "turbobase",
+  "name": "turbocamp",
   "version": "1.0.0",
   "bin": {
-    "turbobase": "dist/index.js"
+    "turbocamp": "dist/index.js"
   },
   "files": ["dist/index.js"],
   "scripts": {

@@ -1,6 +1,6 @@
-<a href="https://github.com/droidsize/turbobase">
-  <img alt="Turbobase - Open-source SaaS Starter" src="public/og-image.png">
-  <h1 align="center">Turbobase</h1>
+<a href="https://github.com/droidsize/turbocamp">
+  <img alt="Turbocamp - Open-source SaaS Starter" src="public/og-image.png">
+  <h1 align="center">Turbocamp</h1>
 </a>
 
 <p align="center">
@@ -8,11 +8,11 @@
 </p>
 
 <p align="center">
-  <a href="https://x.com/droidsize">
-    <img src="https://img.shields.io/x/follow/droidsize?style=flat&label=droidsize&logo=twitter&color=0bf&logoColor=fff" alt="Droidsize Twitter follower count" />
+  <a href="https://twitter.com/droidsize">
+    <img src="https://img.shields.io/twitter/follow/droidsize?style=flat&label=droidsize&logo=twitter&color=0bf&logoColor=fff" alt="Droidsize Twitter follower count" />
   </a>
-  <a href="https://github.com/droidsize/turbobase">
-    <img src="https://img.shields.io/github/stars/droidsize/turbobase?style=flat&logo=github&color=0bf&logoColor=fff" alt="GitHub stars" />
+  <a href="https://github.com/droidsize/turbocamp">
+    <img src="https://img.shields.io/github/stars/droidsize/turbocamp?style=flat&logo=github&color=0bf&logoColor=fff" alt="GitHub stars" />
   </a>
 </p>
 
@@ -31,7 +31,7 @@
 
 ## Introduction
 
-**Stop spending months building the same SaaS foundations.** Turbobase is a production-ready starter that ships with everything you need to launch your SaaS - authentication, payments, database, email, analytics, and more.
+**Stop spending months building the same SaaS foundations.** Turbocamp is a production-ready starter that ships with everything you need to launch your SaaS - authentication, payments, database, email, analytics, ai, logging, and more.
 
 Built for **indie hackers** and **startups** who want to focus on their product, not infrastructure. Get from idea to paying customers in days, not months.
 
@@ -45,7 +45,7 @@ Built for **indie hackers** and **startups** who want to focus on their product,
 - **🌍 Global Ready** - Multi-language support and optimized for worldwide audiences
 - **📖 Documentation Platform** - Beautiful docs site with Fumadocs for user guides and API references
 
-### 🎪 Why Choose Turbobase?
+### 🎪 Why Choose Turbocamp?
 
 **Freedom Over Vendor Lock-in**: Own your data and infrastructure from day one. Start with open-source tools, upgrade to premium services only when your revenue justifies it.
 
@@ -58,12 +58,12 @@ Built for **indie hackers** and **startups** who want to focus on their product,
 Clone & create this repo locally with the following command:
 
 ```bash
-npx turbobase@latest init my-saas-project
+npx Turbocamp@latest init my-saas-project
 ```
 
 Or, deploy with Vercel:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdroidsize%2Fturbobase)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdroidsize%2FTurbocamp)
 
 ### Quick Start
 
@@ -88,8 +88,8 @@ cp packages/db/.env.example packages/db/.env
 
 Edit `packages/db/.env` and add your database URL:
 ```bash
-DATABASE_URL="postgresql://username:password@localhost:5432/turbobase?schema=public"
-# Or use Neon: postgresql://username:password@your-neon-url/turbobase?schema=public
+DATABASE_URL="postgresql://username:password@localhost:5432/Turbocamp?schema=public"
+# Or use Neon: postgresql://username:password@your-neon-url/turbocamp?schema=public
 ```
 
 Run migrations to set up your database:
@@ -284,7 +284,7 @@ Your docs will be available at: http://localhost:3004
 **Organized for growth.** Our monorepo structure separates concerns while sharing code efficiently:
 
 ```
-turbobase/
+turbocamp/
 ├── apps/                          # Your Applications
 │   ├── web/                       # 🌐 Marketing website - Convert visitors to customers
 │   ├── dashboard/                 # 📊 Main SaaS application - Where users live
@@ -346,10 +346,10 @@ npx vercel
 
 ```bash
 # Build the application
-docker build -t turbobase .
+docker build -t turbocamp .
 
 # Run the container
-docker run -p 3000:3000 turbobase
+docker run -p 3000:3000 turbocamp
 ```
 
 ### 🔧 Manual Deployment
@@ -390,7 +390,7 @@ pnpm start
 - [ ] **SaaS Marketplace** - Multi-vendor platform with payments and reviews
 - [ ] **Learning Management** - Course creation, student management, and progress tracking
 
-**Vote on features** you want to see next in our [GitHub Discussions](https://github.com/droidsize/turbobase/discussions)!
+**Vote on features** you want to see next in our [GitHub Discussions](https://github.com/droidsize/turbocamp/discussions)!
 
 ## Author
 
@@ -415,7 +415,7 @@ Special thanks to the entire open-source community for creating the amazing tool
 </p>
 
 <p align="center">
-  <a href="https://github.com/droidsize/turbobase/issues">Report Bug</a> ·
-  <a href="https://github.com/droidsize/turbobase/issues">Request Feature</a> ·
-  <a href="https://github.com/droidsize/turbobase/discussions">Discussions</a>
+  <a href="https://github.com/droidsize/turbocamp/issues">Report Bug</a> ·
+  <a href="https://github.com/droidsize/turbocamp/issues">Request Feature</a> ·
+  <a href="https://github.com/droidsize/turbocamp/discussions">Discussions</a>
 </p>
