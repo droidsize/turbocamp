@@ -18,8 +18,9 @@
 
 <p align="center">
   <a href="#introduction"><strong>Introduction</strong></a> ·
-  <a href="#installation"><strong>Installation</strong></a> ·
-  <a href="#tech-stack--features"><strong>Tech Stack + Features</strong></a> ·
+  <a href="#quick-start"><strong>Quick Start</strong></a> ·
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
   <a href="#project-structure"><strong>Project Structure</strong></a> ·
   <a href="#deployment"><strong>Deployment</strong></a> ·
   <a href="#roadmap"><strong>Roadmap</strong></a> ·
@@ -68,7 +69,7 @@ Or, deploy with Vercel:
 
 Get up and running in under 5 minutes! We'll set up your **Marketing Site**, **Dashboard**, and **API** - the three core components that power your application.
 
-> **🚀 Architecture Highlight**: Our centralized API structure makes this template incredibly flexible - you can easily add mobile apps (React Native/Expo), desktop apps (Electron), or any other client that needs to connect to your backend.
+> **🚀 Architecture Note**: Our centralized API structure makes this template incredibly flexible - you can easily add mobile apps (React Native/Expo), desktop apps (Electron), or any other client that needs to connect to your backend.
 
 #### 1. Install Dependencies
 
@@ -198,7 +199,58 @@ Your docs will be available at: http://localhost:3004
 
 > **💡 Pro Tip**: Use `pnpm` for best compatibility with monorepos. You can also use `bun` or `npm`, but pnpm is recommended for optimal performance.
 
-## Tech Stack + Features
+## Features
+
+**Everything you need to launch and scale your SaaS.** Here's what's included out of the box:
+
+### 🔐 Authentication & User Management
+- **Complete Auth System** - Sign up, sign in, password reset, email verification
+- **Role-Based Access Control** - Manage user permissions and organization access
+- **Session Management** - Secure, scalable session handling across all devices
+
+### 💳 Payment & Billing
+- **Stripe Integration** - Accept payments, manage subscriptions, and handle billing
+- **Multiple Payment Methods** - Credit cards, digital wallets, and bank transfers
+- **Billing Portals** - Let customers manage their own subscriptions and invoices
+- **Tax Calculation** - Automatic tax handling for global customers
+
+### 📊 Analytics & Insights
+- **User Behavior Tracking** - Understand how users interact with your product
+- **Conversion Funnels** - Track user journeys from signup to payment
+- **Business Metrics** - Revenue, churn, growth, and engagement analytics
+- **Custom Events** - Track specific actions important to your business
+
+### 📧 Email System
+- **Transactional Emails** - Welcome, password reset, billing notifications
+- **Marketing Campaigns** - Newsletters, product updates, and announcements
+- **Email Templates** - Beautiful, responsive email designs ready to use
+- **Delivery Tracking** - Monitor email opens, clicks, and deliverability
+
+### 🌐 Global Ready
+- **Multi-language Support** - Reach international markets with i18n
+- **Responsive Design** - Perfect experience on mobile, tablet, and desktop
+- **SEO Optimized** - Built-in metadata, JSON-LD, and search engine optimization
+- **Performance First** - Fast loading, optimized images, excellent Core Web Vitals
+
+### 🛡️ Production Security
+- **Rate Limiting** - Protect against abuse and DDoS attacks
+- **Input Validation** - Sanitize and validate all user inputs
+- **CORS Protection** - Secure cross-origin requests
+- **Security Headers** - Industry-standard security configurations
+
+### 📖 Content & Documentation
+- **CMS Integration** - Type-safe, file-based content management
+- **Documentation Site** - Beautiful docs with search, navigation, and theming
+- **Blog System** - Ready-to-use blog for marketing and announcements
+- **Content Collections** - Manage content with TypeScript safety
+
+### 🚩 Developer Tools
+- **Feature Flags** - Control rollouts and A/B test features without deployments
+- **Error Tracking** - Monitor and debug issues in production
+- **Performance Monitoring** - Track application performance and bottlenecks
+- **Testing Suite** - Comprehensive testing setup with fast unit tests
+
+## Tech Stack
 
 **Every tool chosen for maximum developer productivity and minimal vendor lock-in.** Here's what powers your SaaS and why:
 
@@ -226,19 +278,6 @@ Your docs will be available at: http://localhost:3004
 - **[Biome](https://biomejs.dev/)** – Formatting and linting without the complexity. One tool, fast performance.
 - **[Content Collections](https://content-collections.dev/)** – Markdown content with TypeScript safety. Perfect for blogs and docs.
 - **[Fumadocs](https://fumadocs.vercel.app/)** – Beautiful documentation framework. Auto-generated navigation, search, and mobile-friendly.
-
-### 🚀 What You Get Out of the Box
-
-- **🔐 Complete Auth System** - Sign up, sign in, password reset, email verification, role-based access
-- **💳 Payment Infrastructure** - Stripe integration with subscriptions, one-time payments, and billing portals
-- **📊 Analytics Dashboard** - User behavior tracking, conversion funnels, and business metrics
-- **📧 Email Templates** - Welcome emails, password resets, and marketing campaigns ready to go
-- **🌐 Multi-language Support** - Reach global markets with built-in internationalization
-- **🛡️ Production Security** - Rate limiting, input validation, CORS protection, and security headers
-- **📱 Responsive Design** - Looks perfect on mobile, tablet, and desktop
-- **⚡ Performance Optimized** - Fast loading, optimized images, and excellent Core Web Vitals
-- **📖 Documentation System** - Fumadocs-powered docs with search, navigation, and beautiful theming
-- **🚩 Feature Flags** - Control rollouts and A/B test features without deployments
 
 ## Project Structure
 
