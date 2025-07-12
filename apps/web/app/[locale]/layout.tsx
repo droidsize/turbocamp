@@ -1,8 +1,9 @@
 import './styles.css';
+import { AuthProvider } from '@packages/auth/provider';
 import { BaseProvider } from '@packages/base';
 import { fonts } from '@packages/base/lib/fonts';
 import { cn } from '@packages/base/lib/utils';
-import { Toolbar as CMSToolbar } from '@packages/cms/components/toolbar';
+//import { Toolbar as CMSToolbar } from '@packages/cms/components/toolbar';
 import { Toolbar } from '@packages/feature-flags/components/toolbar';
 import { getDictionary } from '@packages/i18n';
 import type { ReactNode } from 'react';
@@ -28,12 +29,14 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
     >
       <body>
         <BaseProvider>
-          <Header dictionary={dictionary} />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <Header dictionary={dictionary} />
+            {children}
+            <Footer />
+          </AuthProvider>
         </BaseProvider>
         <Toolbar />
-        <CMSToolbar />
+        {/*<CMSToolbar />*/}
       </body>
     </html>
   );

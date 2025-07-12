@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/sidebar';
+import { Sidebar } from '@/app/[locale]/components/sidebar';
 import { env } from '@/env';
 import { blog } from '@packages/cms';
 import { Body } from '@packages/cms/components/body';

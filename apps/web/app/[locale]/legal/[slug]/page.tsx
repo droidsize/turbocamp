@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/sidebar';
+import { Sidebar } from '@/app/[locale]/components/sidebar';
 import { legal } from '@packages/cms';
 import { Body } from '@packages/cms/components/body';
 import { Feed } from '@packages/cms/components/feed';

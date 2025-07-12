@@ -11,12 +11,44 @@ const authOptions = {
   database: prismaAdapter(database, {
     provider: 'postgresql',
   }),
+
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain:
+        process.env.NODE_ENV === 'production' ? '.turbocamp.dev' : 'localhost',
+    },
+  },
+  trustedOrigins: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    ...(process.env.NODE_ENV === 'production'
+      ? [
+          'https://turbocamp.dev',
+          'https://dashboard.turbocamp.dev',
+          'https://api.turbocamp.dev',
+          'https://*.turbocamp.dev',
+        ]
+      : []),
+
+    ...(process.env.ADDITIONAL_TRUSTED_ORIGINS
+      ? process.env.ADDITIONAL_TRUSTED_ORIGINS.split(',').map((origin) =>
+          origin.trim()
+        )
+      : []),
+  ],
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false,
+  },
+
   plugins: [
     nextCookies(),
     organization(),
     stripe({
       stripeClient,
-      stripeWebhookSecret: keys().STRIPE_WEBHOOK_SECRET,
+      stripeWebhookSecret: keys().STRIPE_WEBHOOK_SECRET || '',
     }),
   ],
 } satisfies BetterAuthOptions;

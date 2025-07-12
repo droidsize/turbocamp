@@ -3,6 +3,7 @@ import { log } from './log';
 
 export const parseError = (error: unknown): string => {
   let message = 'An error occurred';
+  console.log('parse error', error);
 
   if (error instanceof Error) {
     message = error.message;
@@ -14,7 +15,7 @@ export const parseError = (error: unknown): string => {
 
   try {
     captureException(error);
-    log.error(`Parsing error: ${message}`);
+    log.error(`Parsing error: ${JSON.stringify(message)}`);
   } catch (newError) {
     // biome-ignore lint/suspicious/noConsole: Need console here
     console.error('Error parsing error:', newError);

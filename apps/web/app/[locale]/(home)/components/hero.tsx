@@ -5,6 +5,7 @@ import { Feed } from '@packages/cms/components/feed';
 import type { Dictionary } from '@packages/i18n';
 import { MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
+import { AuthModal } from '../../components/auth-modal';
 
 type HeroProps = {
   dictionary: Dictionary;
@@ -45,11 +46,16 @@ export const Hero = async ({ dictionary }: HeroProps) => (
               Get in touch <PhoneCall className="h-4 w-4" />
             </Link>
           </Button>
-          <Button size="lg" className="gap-4" asChild>
-            <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
+          <AuthModal
+            defaultTab="sign-up"
+            title="Get Started with Turbocamp"
+            description="Create your account to start building amazing things."
+            redirectTo={env.NEXT_PUBLIC_DASHBOARD_URL}
+          >
+            <Button size="lg" className="gap-4">
               Sign up <MoveRight className="h-4 w-4" />
-            </Link>
-          </Button>
+            </Button>
+          </AuthModal>
         </div>
       </div>
     </div>

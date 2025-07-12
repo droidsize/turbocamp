@@ -1,4 +1,5 @@
 import { env } from '@/env';
+import { AuthModal } from '@packages/auth';
 import { Button } from '@packages/base/components/ui/button';
 import { Check, Minus, MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
@@ -27,11 +28,16 @@ const Pricing = () => (
               <span className="text-4xl">$40</span>
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
-            <Button variant="outline" className="mt-8 gap-4" asChild>
-              <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
+            <AuthModal
+              defaultTab="sign-up"
+              title="Start with Startup Plan"
+              description="Create your account to get started with our Startup plan."
+              redirectTo={env.NEXT_PUBLIC_DASHBOARD_URL}
+            >
+              <Button variant="outline" className="mt-8 gap-4">
                 Try it <MoveRight className="h-4 w-4" />
-              </Link>
-            </Button>
+              </Button>
+            </AuthModal>
           </div>
           <div className="flex flex-col gap-2 px-3 py-1 md:px-6 md:py-4">
             <p className="text-2xl">Growth</p>
@@ -43,11 +49,16 @@ const Pricing = () => (
               <span className="text-4xl">$40</span>
               <span className="text-muted-foreground text-sm"> / month</span>
             </p>
-            <Button className="mt-8 gap-4" asChild>
-              <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
+            <AuthModal
+              defaultTab="sign-up"
+              title="Start with Growth Plan"
+              description="Create your account to get started with our Growth plan."
+              redirectTo={env.NEXT_PUBLIC_DASHBOARD_URL}
+            >
+              <Button className="mt-8 gap-4">
                 Try it <MoveRight className="h-4 w-4" />
-              </Link>
-            </Button>
+              </Button>
+            </AuthModal>
           </div>
           <div className="flex flex-col gap-2 px-3 py-1 md:px-6 md:py-4">
             <p className="text-2xl">Enterprise</p>
@@ -73,79 +84,53 @@ const Pricing = () => (
           <div />
           {/* New Line */}
           <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">SSO</div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
-          </div>
-          {/* New Line */}
-          <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">
-            AI Assistant
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Minus className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
           {/* New Line */}
           <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">
-            Version Control
+            Advanced Analytics
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Minus className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Minus className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
-          </div>
-          {/* New Line */}
-          <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">
-            Members
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <p className="text-muted-foreground text-sm">5 members</p>
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <p className="text-muted-foreground text-sm">25 members</p>
-          </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <p className="text-muted-foreground text-sm">100+ members</p>
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
           {/* New Line */}
           <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">
-            Multiplayer Mode
+            Priority Support
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Minus className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Minus className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Minus className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
           {/* New Line */}
           <div className="col-span-3 px-3 py-4 lg:col-span-1 lg:px-6">
-            Orchestration
+            Custom Integrations
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Minus className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Minus className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Minus className="h-4 w-4" />
           </div>
-          <div className="flex justify-center px-3 py-1 md:px-6 md:py-4">
-            <Check className="h-4 w-4 text-primary" />
+          <div className="flex items-center justify-center px-3 py-4 lg:px-6">
+            <Check className="h-4 w-4" />
           </div>
         </div>
       </div>

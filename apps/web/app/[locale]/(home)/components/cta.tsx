@@ -3,6 +3,7 @@ import { Button } from '@packages/base/components/ui/button';
 import type { Dictionary } from '@packages/i18n';
 import { MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
+import { AuthModal } from '../../components/auth-modal';
 
 type CTAProps = {
   dictionary: Dictionary;
@@ -27,12 +28,17 @@ export const CTA = ({ dictionary }: CTAProps) => (
               <PhoneCall className="h-4 w-4" />
             </Link>
           </Button>
-          <Button className="gap-4" asChild>
-            <Link href={env.NEXT_PUBLIC_DASHBOARD_URL}>
+          <AuthModal
+            defaultTab="sign-up"
+            title="Get Started with Turbocamp"
+            description="Create your account to start building amazing things."
+            redirectTo={env.NEXT_PUBLIC_DASHBOARD_URL}
+          >
+            <Button className="gap-4">
               {dictionary.web.global.secondaryCta}{' '}
               <MoveRight className="h-4 w-4" />
-            </Link>
-          </Button>
+            </Button>
+          </AuthModal>
         </div>
       </div>
     </div>
