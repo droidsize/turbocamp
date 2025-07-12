@@ -279,6 +279,110 @@ Your docs will be available at: http://localhost:3004
 - **[Content Collections](https://content-collections.dev/)** – Markdown content with TypeScript safety. Perfect for blogs and docs.
 - **[Fumadocs](https://fumadocs.vercel.app/)** – Beautiful documentation framework. Auto-generated navigation, search, and mobile-friendly.
 
+## API Architecture & Authentication Flow
+
+**One API to rule them all.** Our centralized API architecture gives you superpowers - build once, connect everywhere.
+
+### 🏗️ Centralized API Design
+
+**Why centralized?** Your API at `localhost:3002` becomes the single source of truth for all your applications. Whether you're building a web app, mobile app, or desktop client, they all speak to the same backend.
+
+```mermaid
+graph TD
+    A[Web App<br/>localhost:3000] --> |"API Calls"| D[API Server<br/>localhost:3002]
+    B[Dashboard App<br/>localhost:3001] --> |"API Calls"| D
+    C[Mobile App<br/>Future] --> |"REST API"| D
+    
+    D --> E[Better Auth<br/>Authentication]
+    D --> F[Prisma ORM<br/>Database]
+    D --> G[Stripe<br/>Payments]
+    
+    E --> H[(PostgreSQL<br/>Database)]
+    F --> H
+    
+    subgraph "Authentication Flow"
+        I[Sign Up/Sign In] --> J{Where?}
+        J -->|Web App| K[Auth Modal<br/>Quick & Easy]
+        J -->|Dashboard| L[Full Auth Pages<br/>Complete Experience]
+        K --> M[Redirect to Dashboard]
+        L --> N[Stay in Dashboard]
+    end
+    
+    subgraph "Cross-Domain Sessions"
+        O[Session Cookie] --> P[.turbocamp.dev]
+        P --> Q[Shared across all apps]
+        Q --> R[Secure & Seamless]
+    end
+    
+    style D fill:#e1f5fe
+    style E fill:#f3e5f5
+    style H fill:#e8f5e8
+    style K fill:#fff3e0
+    style L fill:#fff3e0
+```
+
+### 🔐 Dual Authentication Strategy
+
+**Best of both worlds.** We've implemented a smart dual-auth approach that optimizes for different user journeys:
+
+#### 🌐 Web App (Marketing Site)
+- **Auth Modal** - Quick signup/signin without leaving the page
+- **Perfect for conversions** - Users can sign up instantly from CTA buttons
+- **Seamless experience** - Modal opens, user signs up, gets redirected to dashboard
+- **Mobile-optimized** - Works beautifully on all screen sizes
+
+#### 📊 Dashboard App (Main Application)
+- **Full Auth Pages** - Complete signup/signin experience with proper navigation
+- **Enhanced UX** - Welcome messages, forgot password flows, and cross-navigation
+- **Professional feel** - Dedicated pages that feel like a complete application
+- **Accessibility first** - Proper focus management and screen reader support
+
+### 🔄 Cross-Domain Session Management
+
+**One login, everywhere access.** Our session management works across all your applications:
+
+```typescript
+// Your sessions work across all domains
+const session = await auth.getSession();
+// ✅ Works on web app (localhost:3000)
+// ✅ Works on dashboard (localhost:3001)  
+// ✅ Works on API (localhost:3002)
+// ✅ Works on production (.turbocamp.dev)
+```
+
+**Key Features:**
+- **Secure cookies** with proper SameSite and Secure flags
+- **Cross-subdomain sharing** for seamless multi-app experience
+- **Automatic refresh** - sessions extend automatically with activity
+- **Proper cleanup** - logout clears sessions across all apps
+
+### 📱 Mobile & API First
+
+**Built for the future.** Your API is RESTful and mobile-ready from day one:
+
+```bash
+# Your API endpoints work with any client
+curl -X POST http://localhost:3002/api/auth/sign-up/email \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "securepass123"}'
+```
+
+**Perfect for:**
+- **React Native apps** - Use the same auth endpoints
+- **Flutter applications** - REST API integration out of the box
+- **Third-party integrations** - Webhook endpoints and API keys ready
+- **Desktop applications** - Electron or Tauri apps can connect easily
+
+### 🛡️ Production Security
+
+**Security is not an afterthought.** Every API call is protected:
+
+- **CORS configured** - Proper cross-origin request handling
+- **Rate limiting** - Protect against abuse and DDoS attacks
+- **Input validation** - Zod schemas validate all inputs
+- **Secure headers** - CSRF protection and security headers
+- **Environment isolation** - Different configs for dev/staging/production
+
 ## Project Structure
 
 **Organized for growth.** Our monorepo structure separates concerns while sharing code efficiently:
