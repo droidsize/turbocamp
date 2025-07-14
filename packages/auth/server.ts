@@ -45,7 +45,17 @@ const authOptions = {
 
   plugins: [
     nextCookies(),
-    organization(),
+    organization({
+      allowUserToCreateOrganization: true,
+      organizationLimit: 5, // Limit users to 5 organizations
+      membershipLimit: 100, // Max 100 members per organization
+      creatorRole: 'owner', // Creator gets 'owner' role
+      sendInvitationEmail: async (data) => {
+        // TODO: Implement email sending for invitations
+        console.log('Organization invitation:', data);
+        // This will be implemented with the email package
+      },
+    }),
     stripe({
       stripeClient,
       stripeWebhookSecret: keys().STRIPE_WEBHOOK_SECRET || '',

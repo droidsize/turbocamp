@@ -1,4 +1,5 @@
 'use client';
+import { useActiveOrganization } from '@packages/auth/client';
 import { ModeToggle } from '@packages/base/components/mode-toggle';
 import {
   Collapsible,
@@ -32,21 +33,14 @@ import {
 } from '@packages/base/components/ui/sidebar';
 import { cn } from '@packages/base/lib/utils';
 import {
-  AnchorIcon,
-  BookOpenIcon,
-  BotIcon,
-  ChevronRightIcon,
-  FolderIcon,
-  FrameIcon,
+  Building2Icon,
+  CreditCardIcon,
   LifeBuoyIcon,
-  MapIcon,
-  MoreHorizontalIcon,
-  PieChartIcon,
   SendIcon,
   Settings2Icon,
-  ShareIcon,
   SquareTerminalIcon,
-  Trash2Icon,
+  UserIcon,
+  UsersIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -58,142 +52,72 @@ type GlobalSidebarProperties = {
   readonly children: ReactNode;
 };
 
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
-  navMain: [
-    {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminalIcon,
-      isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Models',
-      url: '#',
-      icon: BotIcon,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpenIcon,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2Icon,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: 'Webhooks',
-      url: '/webhooks',
-      icon: AnchorIcon,
-    },
-    {
-      title: 'Support',
-      url: '#',
-      icon: LifeBuoyIcon,
-    },
-    {
-      title: 'Feedback',
-      url: '#',
-      icon: SendIcon,
-    },
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: FrameIcon,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChartIcon,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: MapIcon,
-    },
-  ],
+// Function to generate navigation data with active organization
+const useNavData = () => {
+  const { data: activeOrg } = useActiveOrganization();
+  
+  return {
+    navMain: [
+      {
+        title: 'Dashboard',
+        url: '/',
+        icon: SquareTerminalIcon,
+        isActive: true,
+      },
+    ],
+    navOrganization: activeOrg ? [
+      {
+        title: 'Settings',
+        url: `/organization/${activeOrg.id}/settings`,
+        icon: Settings2Icon,
+      },
+      {
+        title: 'Members',
+        url: `/organization/${activeOrg.id}/members`,
+        icon: UsersIcon,
+      },
+    ] : [
+      {
+        title: 'Create Organization',
+        url: '/organization/new',
+        icon: Building2Icon,
+      },
+    ],
+    navUser: [
+      {
+        title: 'Profile',
+        url: '/settings/profile',
+        icon: UserIcon,
+      },
+      {
+        title: 'Billing',
+        url: '/settings/billing',
+        icon: CreditCardIcon,
+      },
+    ],
+    navSecondary: [
+      {
+        title: 'Support',
+        url: '#',
+        icon: LifeBuoyIcon,
+      },
+      {
+        title: 'Feedback',
+        url: '#',
+        icon: SendIcon,
+      },
+    ],
+  };
 };
 
 export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
   const sidebar = useSidebar();
+  const data = useNavData();
 
   return (
     <>
       <Sidebar variant="inset">
-        <SidebarHeader>
+        <SidebarHeader className="pb-2">
           <SidebarMenu>
             <SidebarMenuItem>
               <div
@@ -213,92 +137,49 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarMenu>
               {data.navMain.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  defaultOpen={item.isActive}
-                >
-                  <SidebarMenuItem>
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+          
+          {data.navOrganization && data.navOrganization.length > 0 && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Organization</SidebarGroupLabel>
+              <SidebarMenu>
+                {data.navOrganization.map((item) => (
+                  <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
-                    {item.items?.length ? (
-                      <>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuAction className="data-[state=open]:rotate-90">
-                            <ChevronRightIcon />
-                            <span className="sr-only">Toggle</span>
-                          </SidebarMenuAction>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items?.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton asChild>
-                                  <Link href={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                  </Link>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </>
-                    ) : null}
                   </SidebarMenuItem>
-                </Collapsible>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          )}
+          
+          <SidebarGroup>
+            <SidebarGroupLabel>Account</SidebarGroupLabel>
             <SidebarMenu>
-              {data.projects.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
+              {data.navUser.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
                     <Link href={item.url}>
                       <item.icon />
-                      <span>{item.name}</span>
+                      <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction showOnHover>
-                        <MoreHorizontalIcon />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-48"
-                      side="bottom"
-                      align="end"
-                    >
-                      <DropdownMenuItem>
-                        <FolderIcon className="text-muted-foreground" />
-                        <span>View Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ShareIcon className="text-muted-foreground" />
-                        <span>Share Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Trash2Icon className="text-muted-foreground" />
-                        <span>Delete Project</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <MoreHorizontalIcon />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
           <SidebarGroup className="mt-auto">

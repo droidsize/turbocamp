@@ -11,6 +11,7 @@ import {
 import { SidebarMenuButton } from '@packages/base/components/ui/sidebar';
 import { ChevronsUpDown, LogOut, Settings, User, UserIcon } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface UserButtonProps {
   showName?: boolean;
@@ -26,6 +27,7 @@ interface UserButtonProps {
 export function UserButton({ showName = false, appearance }: UserButtonProps) {
   const { data: session } = useSession();
   const user = session?.user;
+  const router = useRouter();
 
   const handleSignOut = async () => {
     try {
@@ -38,13 +40,11 @@ export function UserButton({ showName = false, appearance }: UserButtonProps) {
   };
 
   const handleSettings = () => {
-    // TODO: Navigate to settings page
-    console.log('Navigate to settings');
+    router.push('/settings/billing');
   };
 
   const handleProfile = () => {
-    // TODO: Navigate to profile page
-    console.log('Navigate to profile');
+    router.push('/settings/profile');
   };
 
   if (!user) {

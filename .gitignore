@@ -276,3 +276,6 @@ packages/db/generated
 
 # Sentry
 .sentryclirc
+
+# Testing Screenshots
+screenshots/
