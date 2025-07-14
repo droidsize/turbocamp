@@ -37,7 +37,7 @@ Built for **indie hackers** and **startups** who want to focus on their product,
 
 ### 🎯 What You Get
 
-- **🏗️ Complete SaaS Foundation** - Auth, payments, database, email, analytics, ai, logging all working together
+- **🏗️ Complete SaaS Foundation** - Auth, organizations, payments, database, email, analytics, ai, logging all working together
 - **💰 Cost-Optimized** - Open-source first approach keeps your expenses low while scaling
 - **🚀 Multi-Platform Ready** - Centralized API works with web, mobile, desktop, or any client
 - **🔐 Production Security** - Rate limiting, input validation, security headers built-in
@@ -207,6 +207,16 @@ Your docs will be available at: http://localhost:3004
 - **Complete Auth System** - Sign up, sign in, password reset, email verification
 - **Role-Based Access Control** - Manage user permissions and organization access
 - **Session Management** - Secure, scalable session handling across all devices
+- **Social Login Ready** - Easy integration with Google, GitHub, and other providers
+
+### 🏢 Organization Management
+- **Multi-Tenant Architecture** - Built-in support for teams and organizations
+- **Organization Creation** - Users can create up to 5 organizations
+- **Team Management** - Invite members, manage roles (owner, admin, member)
+- **Organization Switching** - Seamless context switching between organizations
+- **Member Permissions** - Fine-grained access control at organization level
+- **Invitation System** - Email-based invitations with expiration
+- **Organization Settings** - Profile management, billing per organization
 
 ### 💳 Payment & Billing
 - **Stripe Integration** - Accept payments, manage subscriptions, and handle billing

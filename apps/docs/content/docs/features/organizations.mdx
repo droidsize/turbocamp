@@ -1,0 +1,286 @@
+---
+title: Organizations
+description: Multi-tenant organization management for your SaaS
+icon: Building2
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Organizations
+
+Turbocamp includes a comprehensive multi-tenant organization system built with Better Auth's organization plugin. This allows your users to create teams, invite members, and manage permissions.
+
+## Overview
+
+The organization system provides:
+
+- **Multi-tenant Architecture** - Users can belong to multiple organizations
+- **Role-Based Access Control** - Owner, admin, and member roles
+- **Team Management** - Invite, remove, and manage team members
+- **Organization Switching** - Seamless context switching
+- **Scoped Resources** - Data isolation between organizations
+
+<Callout type="info">
+  Organizations are limited to 5 per user and 100 members per organization by default. These limits can be adjusted in the auth configuration.
+</Callout>
+
+## Key Features
+
+### Organization Creation
+
+Users can create organizations with:
+- Custom organization name
+- URL-friendly slug
+- Logo upload (coming soon)
+- Metadata storage for custom fields
+
+### Member Management
+
+Organization owners and admins can:
+- Invite new members via email
+- Assign roles (admin or member)
+- Remove members
+- Update member permissions
+
+### Role Hierarchy
+
+<Tabs items={['Owner', 'Admin', 'Member']}>
+  <Tab value="Owner">
+    - Full control over organization
+    - Can delete the organization
+    - Can manage all members and roles
+    - Cannot be removed by others
+  </Tab>
+  <Tab value="Admin">
+    - Can invite and remove members
+    - Can change member roles (except owner)
+    - Can update organization settings
+    - Cannot delete the organization
+  </Tab>
+  <Tab value="Member">
+    - Basic access to organization resources
+    - Cannot manage other members
+    - Cannot change organization settings
+    - Can leave the organization
+  </Tab>
+</Tabs>
+
+## Implementation Guide
+
+### Creating an Organization
+
+<Steps>
+  <Step>
+    Navigate to the dashboard and click "Create Organization" in the sidebar
+  </Step>
+  <Step>
+    Enter organization details:
+    ```typescript
+    const result = await organization.create({
+      name: "Acme Inc",
+      slug: "acme-inc", // Optional, auto-generated if not provided
+    });
+    ```
+  </Step>
+  <Step>
+    The new organization is automatically set as active:
+    ```typescript
+    await organization.setActive({
+      organizationId: result.data.id,
+    });
+    ```
+  </Step>
+</Steps>
+
+### Managing Members
+
+#### Inviting Members
+
+```typescript
+await organization.inviteMember({
+  organizationId: activeOrg.id,
+  email: "colleague@example.com",
+  role: "member", // or "admin"
+});
+```
+
+<Callout type="warning">
+  Email invitations require email service configuration. Until configured, invitations are logged to the console.
+</Callout>
+
+#### Updating Member Roles
+
+```typescript
+await organization.updateMemberRole({
+  organizationId: activeOrg.id,
+  memberIdOrEmail: memberId,
+  role: "admin",
+});
+```
+
+#### Removing Members
+
+```typescript
+await organization.removeMember({
+  organizationId: activeOrg.id,
+  memberIdOrEmail: memberId,
+});
+```
+
+### Organization Switching
+
+The organization switcher is available in the dashboard sidebar:
+
+```typescript
+// Get list of user's organizations
+const { data: organizations } = useListOrganizations();
+
+// Get current active organization
+const { data: activeOrg } = useActiveOrganization();
+
+// Switch to a different organization
+await organization.setActive({
+  organizationId: orgId,
+});
+```
+
+## Database Schema
+
+The organization system uses these Prisma models:
+
+```prisma
+model Organization {
+  id          String       @id
+  name        String
+  slug        String?
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  members     Member[]
+  invitations Invitation[]
+  
+  @@unique([slug])
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(...)
+  userId         String
+  user           User         @relation(...)
+  role           String
+  createdAt      DateTime
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(...)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(...)
+}
+```
+
+## API Endpoints
+
+Better Auth automatically provides these endpoints:
+
+- `POST /api/auth/organization.create` - Create new organization
+- `POST /api/auth/organization.update` - Update organization details
+- `POST /api/auth/organization.delete` - Delete organization
+- `POST /api/auth/organization.setActive` - Switch active organization
+- `POST /api/auth/organization.inviteMember` - Send invitation
+- `POST /api/auth/organization.removeMember` - Remove member
+- `POST /api/auth/organization.updateMemberRole` - Change member role
+- `GET /api/auth/organization.getFullOrganization` - Get organization with members
+
+## Configuration
+
+Organizations are configured in `packages/auth/server.ts`:
+
+```typescript
+import { organization } from 'better-auth/plugins';
+
+export const auth = betterAuth({
+  plugins: [
+    organization({
+      allowUserToCreateOrganization: true,
+      organizationLimit: 5,
+      membershipLimit: 100,
+      creatorRole: 'owner',
+      sendInvitationEmail: async (data) => {
+        // Implement email sending
+        await sendEmail({
+          to: data.email,
+          subject: `Invitation to join ${data.organization.name}`,
+          // ... email template
+        });
+      },
+    }),
+  ],
+});
+```
+
+## Best Practices
+
+1. **Scope All Resources** - Always filter data by organization ID
+2. **Check Permissions** - Verify user roles before allowing actions
+3. **Handle Edge Cases** - Users with no organizations, deleted organizations
+4. **Audit Logging** - Track organization changes for compliance
+5. **Rate Limiting** - Prevent abuse of invitation system
+
+## Troubleshooting
+
+### Common Issues
+
+<Tabs items={['No Organizations', 'Permission Denied', 'Invitation Failed']}>
+  <Tab value="No Organizations">
+    **Problem**: User sees "No Organization" after sign up
+    
+    **Solution**: Redirect new users to `/organization/new` or auto-create a default organization:
+    ```typescript
+    if (!activeOrg && organizations.length === 0) {
+      router.push('/organization/new');
+    }
+    ```
+  </Tab>
+  <Tab value="Permission Denied">
+    **Problem**: User cannot perform organization actions
+    
+    **Solution**: Check user role in the organization:
+    ```typescript
+    const member = organization.members.find(m => m.userId === user.id);
+    if (member.role !== 'owner' && member.role !== 'admin') {
+      throw new Error('Insufficient permissions');
+    }
+    ```
+  </Tab>
+  <Tab value="Invitation Failed">
+    **Problem**: Email invitations not being sent
+    
+    **Solution**: Configure email service in auth settings:
+    ```typescript
+    sendInvitationEmail: async (data) => {
+      // Ensure email service is configured
+      if (!process.env.RESEND_API_KEY) {
+        console.log('Email invitation:', data);
+        return;
+      }
+      // Send actual email
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Next Steps
+
+- [Set up email service](/docs/setup/email) for invitations
+- [Configure billing](/docs/features/billing) per organization
+- [Implement webhooks](/docs/api/webhooks) for organization events
+- [Add custom roles](/docs/advanced/custom-roles) beyond owner/admin/member
