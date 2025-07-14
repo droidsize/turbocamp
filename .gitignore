@@ -264,6 +264,10 @@ $RECYCLE.BIN/
 .cursorrules
 .github/copilot-instructions.md
 
+# Claude Code files
+CLAUDE.md
+CLAUDE_PLAN.md
+
 # Database
 packages/db/generated
 

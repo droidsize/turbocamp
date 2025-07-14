@@ -16,6 +16,8 @@ import {
   TabsTrigger,
 } from '@packages/base/components/ui/tabs';
 import { useState } from 'react';
+import { SignInForm } from './auth-forms/sign-in-form';
+import { SignUpForm } from './auth-forms/sign-up-form';
 
 interface AuthModalProps {
   children: React.ReactNode;
@@ -60,6 +62,7 @@ export const AuthModal = ({
           </TabsList>
 
           <TabsContent value="sign-in" className="space-y-4">
+            <SignInForm onSuccess={handleSuccess} redirectTo={redirectTo} />
             <div className="text-center">
               <Button
                 variant="link"
@@ -72,6 +75,7 @@ export const AuthModal = ({
           </TabsContent>
 
           <TabsContent value="sign-up" className="space-y-4">
+            <SignUpForm onSuccess={handleSuccess} redirectTo={redirectTo} />
             <div className="text-center">
               <Button
                 variant="link"

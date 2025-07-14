@@ -1,0 +1,951 @@
+# 📱 Mobile Integration Guide - Expo/React Native
+
+## Overview
+
+This guide shows you how to integrate your Expo/React Native app with the Turbocamp centralized API. The API provides a consistent authentication experience across all platforms.
+
+## 🚀 Quick Start
+
+### 1. Installation
+
+```bash
+# Install required dependencies
+npm install @react-native-async-storage/async-storage
+# or
+yarn add @react-native-async-storage/async-storage
+```
+
+### 2. Basic Setup
+
+Create an auth service that handles all authentication:
+
+```typescript
+// services/auth.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const API_BASE_URL = __DEV__ 
+  ? 'http://localhost:3002' 
+  : 'https://api.turbocamp.dev';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  image?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Session {
+  id: string;
+  userId: string;
+  expiresAt: string;
+  token: string;
+}
+
+interface AuthResponse {
+  user: User;
+  session: Session;
+}
+
+class AuthService {
+  private sessionToken: string | null = null;
+  private user: User | null = null;
+
+  async initialize() {
+    try {
+      this.sessionToken = await AsyncStorage.getItem('session_token');
+      const userString = await AsyncStorage.getItem('user');
+      this.user = userString ? JSON.parse(userString) : null;
+    } catch (error) {
+      console.error('Failed to initialize auth:', error);
+    }
+  }
+
+  async signUp(email: string, password: string, name: string): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/sign-up/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error.message);
+      }
+
+      const data = await response.json();
+      await this.setAuthData(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async signIn(email: string, password: string): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/sign-in/email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error.message);
+      }
+
+      const data = await response.json();
+      await this.setAuthData(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getSession(): Promise<AuthResponse | null> {
+    if (!this.sessionToken) return null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/get-session`, {
+        headers: {
+          'Cookie': `better-auth.session_token=${this.sessionToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        await this.signOut();
+        return null;
+      }
+
+      const data = await response.json();
+      this.user = data.user;
+      return data;
+    } catch (error) {
+      await this.signOut();
+      return null;
+    }
+  }
+
+  async signOut(): Promise<void> {
+    if (this.sessionToken) {
+      try {
+        await fetch(`${API_BASE_URL}/api/auth/sign-out`, {
+          method: 'POST',
+          headers: {
+            'Cookie': `better-auth.session_token=${this.sessionToken}`,
+          },
+        });
+      } catch (error) {
+        // Ignore errors during sign out
+      }
+    }
+    
+    await this.clearAuthData();
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/forget-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error.message);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private async setAuthData(data: AuthResponse): Promise<void> {
+    this.sessionToken = data.session.token;
+    this.user = data.user;
+    
+    await AsyncStorage.setItem('session_token', this.sessionToken);
+    await AsyncStorage.setItem('user', JSON.stringify(this.user));
+  }
+
+  private async clearAuthData(): Promise<void> {
+    this.sessionToken = null;
+    this.user = null;
+    
+    await AsyncStorage.removeItem('session_token');
+    await AsyncStorage.removeItem('user');
+  }
+
+  getCurrentUser(): User | null {
+    return this.user;
+  }
+
+  getSessionToken(): string | null {
+    return this.sessionToken;
+  }
+
+  isAuthenticated(): boolean {
+    return this.sessionToken !== null && this.user !== null;
+  }
+}
+
+export const authService = new AuthService();
+```
+
+### 3. React Context for Authentication
+
+```typescript
+// contexts/AuthContext.tsx
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { authService } from '../services/auth';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  image?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  refreshSession: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
+  const initializeAuth = async () => {
+    try {
+      await authService.initialize();
+      const session = await authService.getSession();
+      setUser(session?.user || null);
+    } catch (error) {
+      console.error('Failed to initialize auth:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const response = await authService.signIn(email, password);
+      setUser(response.user);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async (email: string, password: string, name: string) => {
+    try {
+      setLoading(true);
+      const response = await authService.signUp(email, password, name);
+      setUser(response.user);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      setLoading(true);
+      await authService.signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const forgotPassword = async (email: string) => {
+    try {
+      await authService.forgotPassword(email);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const refreshSession = async () => {
+    try {
+      const session = await authService.getSession();
+      setUser(session?.user || null);
+    } catch (error) {
+      console.error('Failed to refresh session:', error);
+      setUser(null);
+    }
+  };
+
+  const value = {
+    user,
+    loading,
+    signIn,
+    signUp,
+    signOut,
+    forgotPassword,
+    refreshSession,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+```
+
+### 4. Auth Screens
+
+#### Sign In Screen
+
+```typescript
+// screens/SignInScreen.tsx
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import { useAuth } from '../contexts/AuthContext';
+
+export const SignInScreen: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
+
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.form}>
+        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.subtitle}>Sign in to your account</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleSignIn}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.linkButton}>
+          <Text style={styles.linkText}>Don't have an account? Sign up</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  form: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  linkButton: {
+    alignItems: 'center',
+  },
+  linkText: {
+    color: '#007AFF',
+    fontSize: 16,
+  },
+});
+```
+
+#### Sign Up Screen
+
+```typescript
+// screens/SignUpScreen.tsx
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import { useAuth } from '../contexts/AuthContext';
+
+export const SignUpScreen: React.FC = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+
+  const handleSignUp = async () => {
+    if (!name || !email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password.length < 8) {
+      Alert.alert('Error', 'Password must be at least 8 characters long');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await signUp(email, password, name);
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.form}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Join Turbocamp today</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Full Name"
+          value={name}
+          onChangeText={setName}
+          autoCapitalize="words"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Password (min 8 characters)"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleSignUp}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Creating Account...' : 'Create Account'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.linkButton}>
+          <Text style={styles.linkText}>Already have an account? Sign in</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  form: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  linkButton: {
+    alignItems: 'center',
+  },
+  linkText: {
+    color: '#007AFF',
+    fontSize: 16,
+  },
+});
+```
+
+### 5. App Setup
+
+```typescript
+// App.tsx
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { SignInScreen } from './screens/SignInScreen';
+import { SignUpScreen } from './screens/SignUpScreen';
+import { HomeScreen } from './screens/HomeScreen';
+
+const Stack = createStackNavigator();
+
+const AuthStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="SignIn" component={SignInScreen} />
+    <Stack.Screen name="SignUp" component={SignUpScreen} />
+  </Stack.Navigator>
+);
+
+const AppStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="Home" component={HomeScreen} />
+  </Stack.Navigator>
+);
+
+const Navigation = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    // Return loading screen
+    return null;
+  }
+
+  return (
+    <NavigationContainer>
+      {user ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
+};
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Navigation />
+    </AuthProvider>
+  );
+}
+```
+
+## 🛡️ Security Considerations
+
+### 1. Session Token Storage
+
+```typescript
+// Use encrypted storage for sensitive data
+import * as SecureStore from 'expo-secure-store';
+
+class SecureAuthService {
+  private static SESSION_KEY = 'turbocamp_session';
+
+  static async setSecureSession(token: string) {
+    await SecureStore.setItemAsync(this.SESSION_KEY, token);
+  }
+
+  static async getSecureSession(): Promise<string | null> {
+    return await SecureStore.getItemAsync(this.SESSION_KEY);
+  }
+
+  static async removeSecureSession() {
+    await SecureStore.deleteItemAsync(this.SESSION_KEY);
+  }
+}
+```
+
+### 2. Network Security
+
+```typescript
+// Add network security
+const API_CONFIG = {
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
+
+// Add request interceptor for debugging
+const makeRequest = async (url: string, options: RequestInit) => {
+  const fullUrl = `${API_BASE_URL}${url}`;
+  
+  if (__DEV__) {
+    console.log(`🌐 ${options.method || 'GET'} ${fullUrl}`);
+  }
+  
+  const response = await fetch(fullUrl, {
+    ...options,
+    timeout: 10000,
+  });
+  
+  if (__DEV__) {
+    console.log(`📡 ${response.status} ${fullUrl}`);
+  }
+  
+  return response;
+};
+```
+
+## 🔄 State Management with Redux (Optional)
+
+```typescript
+// store/authSlice.ts
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { authService } from '../services/auth';
+
+export const signIn = createAsyncThunk(
+  'auth/signIn',
+  async ({ email, password }: { email: string; password: string }) => {
+    const response = await authService.signIn(email, password);
+    return response;
+  }
+);
+
+export const signUp = createAsyncThunk(
+  'auth/signUp',
+  async ({ email, password, name }: { email: string; password: string; name: string }) => {
+    const response = await authService.signUp(email, password, name);
+    return response;
+  }
+);
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: {
+    user: null,
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+    signOut: (state) => {
+      state.user = null;
+      authService.signOut();
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signIn.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+      })
+      .addCase(signIn.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  },
+});
+
+export const { clearError, signOut } = authSlice.actions;
+export default authSlice.reducer;
+```
+
+## 📱 Testing
+
+### Unit Tests
+
+```typescript
+// __tests__/auth.test.ts
+import { authService } from '../services/auth';
+
+// Mock AsyncStorage
+jest.mock('@react-native-async-storage/async-storage', () => ({
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+  removeItem: jest.fn(),
+}));
+
+describe('AuthService', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should sign in successfully', async () => {
+    const mockResponse = {
+      user: { id: '1', email: 'test@example.com', name: 'Test User' },
+      session: { token: 'mock-token' },
+    };
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+    });
+
+    const result = await authService.signIn('test@example.com', 'password');
+    
+    expect(result).toEqual(mockResponse);
+    expect(fetch).toHaveBeenCalledWith(
+      'http://localhost:3002/api/auth/sign-in/email',
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: 'test@example.com', 
+          password: 'password' 
+        }),
+      })
+    );
+  });
+});
+```
+
+## 📊 Performance Optimization
+
+### 1. Request Caching
+
+```typescript
+class CachedAuthService {
+  private cache = new Map<string, any>();
+  private cacheTimeout = 5 * 60 * 1000; // 5 minutes
+
+  async getSessionCached() {
+    const cacheKey = 'session';
+    const cached = this.cache.get(cacheKey);
+    
+    if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
+      return cached.data;
+    }
+    
+    const session = await this.getSession();
+    this.cache.set(cacheKey, {
+      data: session,
+      timestamp: Date.now(),
+    });
+    
+    return session;
+  }
+}
+```
+
+### 2. Offline Support
+
+```typescript
+import NetInfo from '@react-native-netinfo';
+
+class OfflineAuthService {
+  private isOnline = true;
+
+  constructor() {
+    NetInfo.addEventListener(state => {
+      this.isOnline = state.isConnected ?? false;
+    });
+  }
+
+  async signIn(email: string, password: string) {
+    if (!this.isOnline) {
+      throw new Error('No internet connection');
+    }
+    
+    return authService.signIn(email, password);
+  }
+}
+```
+
+## 🐛 Error Handling
+
+```typescript
+class AuthError extends Error {
+  constructor(
+    message: string,
+    public code: string,
+    public statusCode?: number
+  ) {
+    super(message);
+    this.name = 'AuthError';
+  }
+}
+
+const handleAuthError = (error: any): AuthError => {
+  if (error.code === 'NETWORK_ERROR') {
+    return new AuthError('Network error', 'NETWORK_ERROR');
+  }
+  
+  if (error.code === 'USER_ALREADY_EXISTS') {
+    return new AuthError('User already exists', 'USER_ALREADY_EXISTS', 400);
+  }
+  
+  return new AuthError('An unexpected error occurred', 'UNKNOWN_ERROR');
+};
+```
+
+## 🎯 Next Steps
+
+1. **Add biometric authentication** (Face ID/Touch ID)
+2. **Implement push notifications** for auth events
+3. **Add social login** (Google, Apple, etc.)
+4. **Implement deep linking** for password reset
+5. **Add analytics** for user behavior tracking
+
+## 📚 Resources
+
+- [React Native Documentation](https://reactnative.dev/)
+- [Expo Documentation](https://docs.expo.dev/)
+- [AsyncStorage Documentation](https://react-native-async-storage.github.io/async-storage/)
+- [Better Auth Documentation](https://www.better-auth.com/docs)
+
+---
+
+**🎉 You're all set!** Your mobile app is now integrated with the Turbocamp centralized API. Users can seamlessly authenticate across all your platforms. 

@@ -1,0 +1,587 @@
+# 🔌 Turbocamp Centralized API Documentation
+
+## Overview
+
+Turbocamp uses a **centralized API architecture** where all authentication and business logic is handled by a single API server. This approach provides several advantages:
+
+- **🏗️ Single Source of Truth**: All business logic in one place
+- **📱 Multi-Platform Support**: Works with web, mobile, desktop, and third-party clients
+- **🔐 Unified Authentication**: Consistent auth flow across all platforms
+- **🛡️ Enhanced Security**: Centralized rate limiting and security controls
+- **⚡ Easy Scaling**: Scale API independently from frontend applications
+
+## API Base URL
+
+| Environment | URL |
+|-------------|-----|
+| Development | `http://localhost:3002` |
+| Production | `https://api.turbocamp.dev` |
+
+## Authentication Endpoints
+
+### Email & Password Authentication
+
+#### Sign Up
+```http
+POST /api/auth/sign-up/email
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword123",
+  "name": "John Doe"
+}
+```
+
+**Response Success (201):**
+```json
+{
+  "user": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "emailVerified": false,
+    "image": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  "session": {
+    "id": "session_456",
+    "userId": "user_123",
+    "expiresAt": "2024-01-08T00:00:00.000Z",
+    "token": "session_token_here"
+  }
+}
+```
+
+**Response Error (400):**
+```json
+{
+  "error": {
+    "code": "USER_ALREADY_EXISTS",
+    "message": "A user with this email already exists"
+  }
+}
+```
+
+#### Sign In
+```http
+POST /api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+**Response Success (200):**
+```json
+{
+  "user": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "emailVerified": true,
+    "image": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  "session": {
+    "id": "session_456",
+    "userId": "user_123",
+    "expiresAt": "2024-01-08T00:00:00.000Z",
+    "token": "session_token_here"
+  }
+}
+```
+
+#### Sign Out
+```http
+POST /api/auth/sign-out
+Cookie: better-auth.session_token=session_token_here
+```
+
+**Response Success (200):**
+```json
+{
+  "success": true
+}
+```
+
+#### Get Session
+```http
+GET /api/auth/get-session
+Cookie: better-auth.session_token=session_token_here
+```
+
+**Response Success (200):**
+```json
+{
+  "user": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "emailVerified": true,
+    "image": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  "session": {
+    "id": "session_456",
+    "userId": "user_123",
+    "expiresAt": "2024-01-08T00:00:00.000Z",
+    "token": "session_token_here"
+  }
+}
+```
+
+### Password Reset
+
+#### Request Password Reset
+```http
+POST /api/auth/forget-password
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "redirectTo": "https://yourapp.com/reset-password"
+}
+```
+
+#### Reset Password
+```http
+POST /api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "reset_token_here",
+  "password": "newpassword123"
+}
+```
+
+## Error Handling
+
+### Standard Error Response Format
+
+All API errors follow a consistent format:
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": {
+      "field": "Additional error details (optional)"
+    }
+  }
+}
+```
+
+### Common Error Codes
+
+| Code | Status | Description |
+|------|--------|-------------|
+| `USER_ALREADY_EXISTS` | 400 | Email already registered |
+| `INVALID_CREDENTIALS` | 401 | Invalid email or password |
+| `USER_NOT_FOUND` | 404 | User not found |
+| `INVALID_TOKEN` | 401 | Invalid or expired token |
+| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests |
+| `EMAIL_NOT_VERIFIED` | 403 | Email verification required |
+| `WEAK_PASSWORD` | 400 | Password doesn't meet requirements |
+
+## Rate Limiting
+
+The API implements rate limiting to prevent abuse:
+
+- **Default**: 100 requests per 10 seconds per IP
+- **Auth endpoints**: 10 requests per 10 seconds per IP
+- **Password reset**: 5 requests per hour per IP
+
+Rate limit headers are included in responses:
+```http
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 99
+X-RateLimit-Reset: 1640995200
+```
+
+## Security
+
+### CORS Configuration
+
+The API accepts requests from:
+- `localhost:3000` (Web app)
+- `localhost:3001` (Dashboard)
+- Production domains
+- Custom origins via `ADDITIONAL_TRUSTED_ORIGINS`
+
+### CSRF Protection
+
+CSRF protection is enabled by default. The API validates the `Origin` header on all requests.
+
+### Cookie Security
+
+- **HTTPOnly**: Cookies are not accessible via JavaScript
+- **Secure**: Cookies are only sent over HTTPS in production
+- **SameSite**: Set to `Lax` for cross-site compatibility
+- **Cross-Domain**: Shared across `*.turbocamp.dev` subdomains
+
+## Integration Examples
+
+### React Native / Expo
+
+```typescript
+// auth.ts
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const API_BASE_URL = 'https://api.turbocamp.dev';
+
+interface AuthResponse {
+  user: User;
+  session: Session;
+}
+
+class AuthService {
+  private sessionToken: string | null = null;
+
+  async initialize() {
+    this.sessionToken = await AsyncStorage.getItem('session_token');
+  }
+
+  async signUp(email: string, password: string, name: string): Promise<AuthResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/auth/sign-up/email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, name }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error.message);
+    }
+
+    const data = await response.json();
+    this.sessionToken = data.session.token;
+    await AsyncStorage.setItem('session_token', this.sessionToken);
+    
+    return data;
+  }
+
+  async signIn(email: string, password: string): Promise<AuthResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/auth/sign-in/email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error.message);
+    }
+
+    const data = await response.json();
+    this.sessionToken = data.session.token;
+    await AsyncStorage.setItem('session_token', this.sessionToken);
+    
+    return data;
+  }
+
+  async getSession(): Promise<AuthResponse | null> {
+    if (!this.sessionToken) return null;
+
+    const response = await fetch(`${API_BASE_URL}/api/auth/get-session`, {
+      headers: {
+        'Cookie': `better-auth.session_token=${this.sessionToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      await this.signOut();
+      return null;
+    }
+
+    return await response.json();
+  }
+
+  async signOut(): Promise<void> {
+    if (this.sessionToken) {
+      await fetch(`${API_BASE_URL}/api/auth/sign-out`, {
+        method: 'POST',
+        headers: {
+          'Cookie': `better-auth.session_token=${this.sessionToken}`,
+        },
+      });
+    }
+    
+    this.sessionToken = null;
+    await AsyncStorage.removeItem('session_token');
+  }
+}
+
+export const authService = new AuthService();
+```
+
+### Flutter / Dart
+
+```dart
+// auth_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class AuthService {
+  static const String _baseUrl = 'https://api.turbocamp.dev';
+  static const String _sessionKey = 'session_token';
+  
+  String? _sessionToken;
+  
+  Future<void> initialize() async {
+    final prefs = await SharedPreferences.getInstance();
+    _sessionToken = prefs.getString(_sessionKey);
+  }
+  
+  Future<Map<String, dynamic>> signUp({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/auth/sign-up/email'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+        'name': name,
+      }),
+    );
+    
+    if (response.statusCode != 201) {
+      final error = jsonDecode(response.body);
+      throw Exception(error['error']['message']);
+    }
+    
+    final data = jsonDecode(response.body);
+    _sessionToken = data['session']['token'];
+    
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_sessionKey, _sessionToken!);
+    
+    return data;
+  }
+  
+  Future<Map<String, dynamic>?> getSession() async {
+    if (_sessionToken == null) return null;
+    
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/auth/get-session'),
+      headers: {
+        'Cookie': 'better-auth.session_token=$_sessionToken',
+      },
+    );
+    
+    if (response.statusCode != 200) {
+      await signOut();
+      return null;
+    }
+    
+    return jsonDecode(response.body);
+  }
+  
+  Future<void> signOut() async {
+    if (_sessionToken != null) {
+      await http.post(
+        Uri.parse('$_baseUrl/api/auth/sign-out'),
+        headers: {
+          'Cookie': 'better-auth.session_token=$_sessionToken',
+        },
+      );
+    }
+    
+    _sessionToken = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_sessionKey);
+  }
+}
+```
+
+### Node.js / Express
+
+```javascript
+// auth.js
+const axios = require('axios');
+
+const API_BASE_URL = 'https://api.turbocamp.dev';
+
+class AuthService {
+  constructor() {
+    this.sessionToken = null;
+  }
+
+  async signUp(email, password, name) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/sign-up/email`, {
+        email,
+        password,
+        name
+      });
+      
+      this.sessionToken = response.data.session.token;
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error?.message || 'Sign up failed');
+    }
+  }
+
+  async signIn(email, password) {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/sign-in/email`, {
+        email,
+        password
+      });
+      
+      this.sessionToken = response.data.session.token;
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.error?.message || 'Sign in failed');
+    }
+  }
+
+  async getSession() {
+    if (!this.sessionToken) return null;
+
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/auth/get-session`, {
+        headers: {
+          'Cookie': `better-auth.session_token=${this.sessionToken}`
+        }
+      });
+      
+      return response.data;
+    } catch (error) {
+      this.sessionToken = null;
+      return null;
+    }
+  }
+
+  async signOut() {
+    if (this.sessionToken) {
+      try {
+        await axios.post(`${API_BASE_URL}/api/auth/sign-out`, {}, {
+          headers: {
+            'Cookie': `better-auth.session_token=${this.sessionToken}`
+          }
+        });
+      } catch (error) {
+        // Ignore errors during sign out
+      }
+    }
+    
+    this.sessionToken = null;
+  }
+}
+
+module.exports = new AuthService();
+```
+
+### cURL Examples
+
+#### Sign Up
+```bash
+curl -X POST https://api.turbocamp.dev/api/auth/sign-up/email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securepassword123",
+    "name": "John Doe"
+  }'
+```
+
+#### Sign In
+```bash
+curl -X POST https://api.turbocamp.dev/api/auth/sign-in/email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+#### Get Session
+```bash
+curl -X GET https://api.turbocamp.dev/api/auth/get-session \
+  -H "Cookie: better-auth.session_token=your_session_token_here"
+```
+
+## Environment Variables
+
+When integrating with your client applications, make sure to set these environment variables:
+
+```bash
+# Your client app
+NEXT_PUBLIC_API_URL=https://api.turbocamp.dev
+# or for development
+NEXT_PUBLIC_API_URL=http://localhost:3002
+
+# For Better Auth client
+NEXT_PUBLIC_BETTER_AUTH_URL=https://api.turbocamp.dev
+# or for development  
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3002
+```
+
+## Best Practices
+
+### 1. **Session Management**
+- Store session tokens securely (AsyncStorage, SharedPreferences, etc.)
+- Always check session validity before making authenticated requests
+- Implement automatic token refresh when possible
+
+### 2. **Error Handling**
+- Always handle network errors gracefully
+- Show user-friendly error messages
+- Implement retry logic for transient failures
+
+### 3. **Security**
+- Never store passwords in client applications
+- Use HTTPS in production
+- Validate all user inputs
+- Implement proper session timeout
+
+### 4. **Performance**
+- Cache session data when appropriate
+- Implement request deduplication
+- Use efficient data structures
+
+## Testing
+
+### Development Environment
+```bash
+# Start the API server
+cd apps/api
+pnpm dev
+
+# Test endpoints
+curl -X GET http://localhost:3002/health
+# Should return: OK
+```
+
+### Production Environment
+```bash
+# Test health endpoint
+curl -X GET https://api.turbocamp.dev/health
+# Should return: OK
+```
+
+## Support
+
+For integration support:
+- 📚 Check the [Better Auth Documentation](https://www.better-auth.com/docs)
+- 🐛 Report issues on [GitHub](https://github.com/your-org/turbocamp/issues)
+- 💬 Join our [Discord Community](https://discord.gg/turbocamp)
+
+---
+
+**✨ Happy Building!** This centralized API approach gives you the flexibility to build amazing applications across all platforms while maintaining consistency and security. 
