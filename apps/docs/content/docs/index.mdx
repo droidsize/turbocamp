@@ -1,13 +1,118 @@
 ---
-title: Hello World
-description: Your first document
+title: Welcome to Turbocamp
+description: The comprehensive SaaS starter template for modern web applications
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+import { Card, Cards } from 'fumadocs-ui/components/card';
 
-## What is Next?
+## Introduction
+
+Turbocamp is a comprehensive SaaS starter template built with modern web technologies. It provides everything you need to launch your SaaS application quickly and efficiently.
+
+### Key Features
+
+- 🔐 **Authentication** - Complete auth system with Better Auth
+- 💳 **Payments** - Stripe integration for subscriptions
+- 🗄️ **Database** - Prisma ORM with PostgreSQL
+- 📧 **Email** - React Email templates with Resend
+- 📊 **Analytics** - PostHog integration for user tracking
+- 🌍 **i18n** - Multi-language support
+- 🎨 **UI Components** - shadcn/ui design system
+- 📱 **Responsive** - Mobile-first design approach
+
+## Architecture Overview
+
+Turbocamp follows a monorepo structure using Turborepo for optimal build performance and code sharing.
+
+### Applications
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card 
+    title="Web App" 
+    description="Marketing site with auth modal and content management"
+    href="/docs/apps/web"
+  />
+  <Card 
+    title="Dashboard" 
+    description="Main SaaS application for authenticated users"
+    href="/docs/apps/dashboard"
+  />
+  <Card 
+    title="API Server" 
+    description="Centralized backend serving all clients"
+    href="/docs/apps/api"
+  />
+  <Card 
+    title="Documentation" 
+    description="This documentation site built with Fumadocs"
+    href="/docs/apps/docs"
+  />
+</Cards>
+
+### Core Packages
+
+<Cards>
+  <Card 
+    title="Authentication" 
+    description="Better Auth integration with session management"
+    href="/docs/packages/auth"
+  />
+  <Card 
+    title="Database" 
+    description="Prisma ORM with PostgreSQL and migrations"
+    href="/docs/packages/database"
+  />
+  <Card 
+    title="UI Components" 
+    description="Shared design system based on shadcn/ui"
+    href="/docs/packages/ui"
+  />
+  <Card 
+    title="Email" 
+    description="React Email templates and sending logic"
+    href="/docs/packages/email"
+  />
+</Cards>
+
+## Quick Start
+
+Get started with Turbocamp in minutes:
+
+```bash
+# Clone the repository
+git clone https://github.com/turbocamp/turbocamp.git
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Run development servers
+pnpm dev
+```
+
+## What's Next?
+
+<Cards>
+  <Card 
+    title="Installation" 
+    description="Set up your development environment"
+    href="/docs/getting-started/installation"
+  />
+  <Card 
+    title="Configuration" 
+    description="Configure environment variables and services"
+    href="/docs/getting-started/environment-variables"
+  />
+  <Card 
+    title="Authentication Setup" 
+    description="Set up user authentication with Better Auth"
+    href="/docs/setup/authentication"
+  />
+  <Card 
+    title="Database Setup" 
+    description="Configure PostgreSQL and run migrations"
+    href="/docs/setup/database"
+  />
 </Cards>

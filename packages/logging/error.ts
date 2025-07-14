@@ -1,4 +1,13 @@
-import { captureException } from '@sentry/nextjs';
+// Optional Sentry integration - falls back to console if not available
+let captureException: (error: unknown) => void;
+try {
+  captureException = require('@sentry/nextjs').captureException;
+} catch {
+  captureException = (error: unknown) => {
+    console.error('Error captured (Sentry not available):', error);
+  };
+}
+
 import { log } from './log';
 
 export const parseError = (error: unknown): string => {

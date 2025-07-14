@@ -1,44 +1,63 @@
-# 🔐 Authentication Setup Guide
+---
+title: Authentication Setup
+description: Complete guide to setting up authentication across all Turbocamp applications
+---
 
-This guide will help you set up the complete authentication system for Turbocamp across all applications.
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
-Turbocamp uses a **centralized authentication architecture** with BetterAuth:
+Turbocamp uses a **centralized authentication architecture** with Better Auth:
 
 - **API App** (`localhost:3002`) - Primary auth server handling all authentication
 - **Dashboard App** (`localhost:3001`) - Main application with full auth pages
 - **Web App** (`localhost:3000`) - Marketing site with auth modal + redirects
 - **Cross-domain cookies** - Seamless auth across all domains
 
-## 📋 Required Environment Variables
+## Required Environment Variables
 
-### 1. Database Configuration
+### Database Configuration
 
 ```bash
 # Required for all apps
 DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp?schema=public"
 ```
 
-**Setup Options:**
-- **Local Development:** Install PostgreSQL locally
-- **Cloud Database:** Use [Neon](https://neon.tech) (recommended) or [Supabase](https://supabase.com)
+<Tabs>
+<Tab title="Local Development" value="local">
+Install PostgreSQL locally and create a database:
 
-### 2. BetterAuth Configuration
+```bash
+createdb turbocamp
+```
+</Tab>
+<Tab title="Cloud Database" value="cloud">
+Use [Neon](https://neon.tech) (recommended) or [Supabase](https://supabase.com) for managed PostgreSQL.
+</Tab>
+</Tabs>
+
+### Better Auth Configuration
 
 ```bash
 # Required for authentication to work
 BETTER_AUTH_SECRET="your-32-character-secret-key-here"
 ```
 
-**Generate a secure secret:**
+Generate a secure secret:
 ```bash
 openssl rand -base64 32
 ```
 
-### 3. Application URLs
+<Callout type="warn">
+  Use the same `BETTER_AUTH_SECRET` across all applications for session sharing to work properly.
+</Callout>
 
-**Development URLs:**
+### Application URLs
+
+<Tabs>
+<Tab title="Development" value="development">
 ```bash
 # API App (Primary auth server)
 BETTER_AUTH_URL="http://localhost:3002"
@@ -49,8 +68,8 @@ NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
 NEXT_PUBLIC_WEB_URL="http://localhost:3000"
 NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
 ```
-
-**Production URLs (Update for your domains):**
+</Tab>
+<Tab title="Production" value="production">
 ```bash
 # API App
 BETTER_AUTH_URL="https://api.turbocamp.dev"
@@ -61,19 +80,23 @@ NEXT_PUBLIC_AUTH_API_URL="https://api.turbocamp.dev"
 NEXT_PUBLIC_WEB_URL="https://turbocamp.dev"
 NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
 
-# Optional: Additional trusted origins (comma-separated)
+# Optional: Additional trusted origins
 ADDITIONAL_TRUSTED_ORIGINS="https://staging.turbocamp.dev"
 ```
+</Tab>
+</Tabs>
 
-## 🚀 Quick Setup Instructions
+## Quick Setup
 
-### 1. Install Dependencies
+<Steps>
+
+### Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-### 2. Set Up Database
+### Set Up Database
 
 ```bash
 # Copy database environment
@@ -84,9 +107,10 @@ cp packages/db/.env.example packages/db/.env
 pnpm migrate
 ```
 
-### 3. Configure Each Application
+### Configure Applications
 
-**Copy environment files:**
+Copy environment files for each application:
+
 ```bash
 # API App (Primary auth server)
 cp .env.example apps/api/.env.local
@@ -98,16 +122,21 @@ cp .env.example apps/dashboard/.env.local
 cp .env.example apps/web/.env.local
 ```
 
-**Edit each `.env.local` file and add:**
+### Environment Configuration
 
-**`apps/api/.env.local`:**
+<Tabs>
+<Tab title="API App" value="api">
+Edit `apps/api/.env.local`:
+
 ```bash
 DATABASE_URL="your-database-url"
 BETTER_AUTH_SECRET="your-32-character-secret"
 BETTER_AUTH_URL="http://localhost:3002"
 ```
+</Tab>
+<Tab title="Dashboard App" value="dashboard">
+Edit `apps/dashboard/.env.local`:
 
-**`apps/dashboard/.env.local`:**
 ```bash
 AUTH_API_URL="http://localhost:3002"
 NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
@@ -115,27 +144,33 @@ NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
 NEXT_PUBLIC_WEB_URL="http://localhost:3000"
 BETTER_AUTH_SECRET="same-secret-as-api"
 ```
+</Tab>
+<Tab title="Web App" value="web">
+Edit `apps/web/.env.local`:
 
-**`apps/web/.env.local`:**
 ```bash
 AUTH_API_URL="http://localhost:3002"
 NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
 NEXT_PUBLIC_WEB_URL="http://localhost:3000"
 NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
 ```
+</Tab>
+</Tabs>
 
-### 4. Start Development
+### Start Development
 
 ```bash
 pnpm dev
 ```
 
-**Your applications will be running on:**
+Your applications will be running on:
 - 🌐 **Web App**: http://localhost:3000 (Marketing site)
-- 📊 **Dashboard**: http://localhost:3001 (Main application)
+- 📊 **Dashboard**: http://localhost:3001 (Main application)  
 - 🔌 **API**: http://localhost:3002 (Auth server)
 
-## 🔄 Authentication Flow
+</Steps>
+
+## Authentication Flow
 
 ### Dual Auth Experience
 
@@ -158,40 +193,97 @@ pnpm dev
 - **Trusted Origins**: CORS configured for secure cross-domain requests
 - **Automatic Redirects**: Seamless experience across applications
 
-## 🔧 Advanced Configuration
+## Advanced Configuration
 
-### Email Integration (Optional)
+### Email Integration
+
+For transactional emails with Resend:
 
 ```bash
-# Resend for transactional emails
 RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
 RESEND_FROM="noreply@yourdomain.com"
 ```
 
-### Rate Limiting (Recommended)
+### Rate Limiting
+
+Using Upstash Redis for rate limiting:
 
 ```bash
-# Upstash Redis for rate limiting
 UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
 UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
 ```
 
-### Analytics (Optional)
+### Analytics
+
+PostHog for user analytics:
 
 ```bash
-# PostHog for user analytics
 NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
 NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
 ```
 
-### Monitoring (Recommended)
+### Monitoring
+
+Sentry for error tracking:
 
 ```bash
-# Sentry for error tracking
 NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxxxxxxxxxx@sentry.io/xxxxxxxx"
 ```
 
-## 🌐 Production Deployment
+## Testing the Setup
+
+### Basic Authentication Test
+
+1. Visit http://localhost:3000
+2. Click "Get Started" - modal should open
+3. Create an account
+4. Should redirect to http://localhost:3001 (dashboard)
+
+### Cross-Domain Auth Test
+
+1. Visit http://localhost:3001/sign-in directly
+2. Sign in with your account
+3. Visit http://localhost:3000
+4. Should recognize you're already signed in
+
+### Sign Out Test
+
+1. Sign out from dashboard
+2. Visit web app - should not be signed in
+3. Cross-domain session clearing working correctly
+
+## Troubleshooting
+
+### Common Issues
+
+<Callout type="error" title="Authentication not working">
+- ✅ Check `BETTER_AUTH_SECRET` is the same across all apps
+- ✅ Verify `AUTH_API_URL` points to your API app
+- ✅ Ensure database is running and connected
+</Callout>
+
+<Callout type="error" title="Cross-domain issues">
+- ✅ Check `trustedOrigins` in auth configuration
+- ✅ Verify CORS headers are properly set
+- ✅ Ensure cookies domain is configured correctly
+</Callout>
+
+<Callout type="error" title="Modal not appearing">
+- ✅ Check if `AuthModal` is properly imported
+- ✅ Verify `BaseProvider` includes `Toaster` component
+- ✅ Check for JavaScript errors in console
+</Callout>
+
+### Debug Mode
+
+Enable debug logging:
+
+```bash
+NODE_ENV="development"
+DEBUG="better-auth:*"
+```
+
+## Production Deployment
 
 ### Domain Configuration
 
@@ -206,7 +298,7 @@ NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
 
 ### Cross-Domain Cookie Setup
 
-The system is configured to automatically handle cross-domain cookies:
+The system automatically handles cross-domain cookies:
 
 - **Development**: Uses `localhost` as cookie domain
 - **Production**: Uses `.turbocamp.dev` for subdomain sharing
@@ -216,62 +308,14 @@ The system is configured to automatically handle cross-domain cookies:
 ### DNS Configuration
 
 Set up your DNS records:
+
 ```
 A    turbocamp.dev              → Your web server IP
 A    dashboard.turbocamp.dev    → Your dashboard server IP  
 A    api.turbocamp.dev         → Your API server IP
 ```
 
-## 🧪 Testing the Setup
-
-### 1. Test Basic Authentication
-
-1. Visit http://localhost:3000
-2. Click "Get Started" - modal should open
-3. Create an account
-4. Should redirect to http://localhost:3001 (dashboard)
-
-### 2. Test Cross-Domain Auth
-
-1. Visit http://localhost:3001/sign-in directly
-2. Sign in with your account
-3. Visit http://localhost:3000
-4. Should recognize you're already signed in
-
-### 3. Test Sign Out
-
-1. Sign out from dashboard
-2. Visit web app - should not be signed in
-3. Cross-domain session clearing working correctly
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-**Authentication not working:**
-- ✅ Check `BETTER_AUTH_SECRET` is the same across all apps
-- ✅ Verify `AUTH_API_URL` points to your API app
-- ✅ Ensure database is running and connected
-
-**Cross-domain issues:**
-- ✅ Check `trustedOrigins` in auth configuration
-- ✅ Verify CORS headers are properly set
-- ✅ Ensure cookies domain is configured correctly
-
-**Modal not appearing:**
-- ✅ Check if `AuthModal` is properly imported
-- ✅ Verify `BaseProvider` includes `Toaster` component
-- ✅ Check for JavaScript errors in console
-
-### Debug Mode
-
-Enable debug logging:
-```bash
-NODE_ENV="development"
-DEBUG="better-auth:*"
-```
-
-## 🔐 Security Considerations
+## Security Considerations
 
 ### Required for Production
 
@@ -289,20 +333,9 @@ DEBUG="better-auth:*"
 - Regular security audits
 - Keep dependencies updated
 
-## 📱 Mobile App Integration
+## Mobile App Integration
 
 The centralized API is ready for mobile app integration:
-
-### React Native / Expo
-
-```typescript
-// Mobile app can directly call API endpoints
-const authResponse = await fetch('https://api.turbocamp.dev/api/auth/sign-in', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, password })
-});
-```
 
 ### REST API Endpoints
 
@@ -313,17 +346,28 @@ All auth operations available via REST:
 - `GET /api/auth/session` - Get current session
 - `POST /api/auth/reset-password` - Password reset
 
-## 🎯 Next Steps
+### React Native Example
+
+```typescript
+// Mobile app can directly call API endpoints
+const authResponse = await fetch('https://api.turbocamp.dev/api/auth/sign-in', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, password })
+});
+```
+
+## Next Steps
 
 Once authentication is working:
 
 1. **Customize UI**: Update auth modal and pages with your branding
-2. **Add OAuth**: Configure Google, GitHub, etc. in BetterAuth
+2. **Add OAuth**: Configure Google, GitHub, etc. in Better Auth
 3. **Email Features**: Set up welcome emails and notifications
 4. **User Profiles**: Add user profile management
 5. **Organizations**: Configure team/organization features
 6. **Mobile Apps**: Integrate with React Native or other mobile frameworks
 
----
-
-**Need help?** Check the [BetterAuth documentation](https://www.better-auth.com/docs) or open an issue in the repository. 
+<Callout type="info">
+  Need help? Check the [Better Auth documentation](https://www.better-auth.com/docs) or open an issue in the repository.
+</Callout>

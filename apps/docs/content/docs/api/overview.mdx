@@ -1,11 +1,17 @@
-# 🔌 Turbocamp Centralized API Documentation
+---
+title: API Overview
+description: Comprehensive guide to the Turbocamp centralized API architecture
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 ## Overview
 
 Turbocamp uses a **centralized API architecture** where all authentication and business logic is handled by a single API server. This approach provides several advantages:
 
 - **🏗️ Single Source of Truth**: All business logic in one place
-- **📱 Multi-Platform Support**: Works with web, mobile, desktop, and third-party clients
+- **📱 Multi-Platform Support**: Works with web, mobile, desktop, and third-party clients  
 - **🔐 Unified Authentication**: Consistent auth flow across all platforms
 - **🛡️ Enhanced Security**: Centralized rate limiting and security controls
 - **⚡ Easy Scaling**: Scale API independently from frontend applications
@@ -22,6 +28,7 @@ Turbocamp uses a **centralized API architecture** where all authentication and b
 ### Email & Password Authentication
 
 #### Sign Up
+
 ```http
 POST /api/auth/sign-up/email
 Content-Type: application/json
@@ -65,6 +72,7 @@ Content-Type: application/json
 ```
 
 #### Sign In
+
 ```http
 POST /api/auth/sign-in/email
 Content-Type: application/json
@@ -97,6 +105,7 @@ Content-Type: application/json
 ```
 
 #### Sign Out
+
 ```http
 POST /api/auth/sign-out
 Cookie: better-auth.session_token=session_token_here
@@ -110,6 +119,7 @@ Cookie: better-auth.session_token=session_token_here
 ```
 
 #### Get Session
+
 ```http
 GET /api/auth/get-session
 Cookie: better-auth.session_token=session_token_here
@@ -139,6 +149,7 @@ Cookie: better-auth.session_token=session_token_here
 ### Password Reset
 
 #### Request Password Reset
+
 ```http
 POST /api/auth/forget-password
 Content-Type: application/json
@@ -150,6 +161,7 @@ Content-Type: application/json
 ```
 
 #### Reset Password
+
 ```http
 POST /api/auth/reset-password
 Content-Type: application/json
@@ -230,6 +242,8 @@ CSRF protection is enabled by default. The API validates the `Origin` header on 
 
 ### React Native / Expo
 
+<Tabs>
+<Tab title="TypeScript" value="typescript">
 ```typescript
 // auth.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -324,6 +338,47 @@ class AuthService {
 
 export const authService = new AuthService();
 ```
+</Tab>
+<Tab title="Usage" value="usage">
+```typescript
+// App.tsx
+import { authService } from './auth';
+
+export default function App() {
+  useEffect(() => {
+    authService.initialize();
+  }, []);
+
+  const handleSignUp = async () => {
+    try {
+      const result = await authService.signUp(
+        'user@example.com',
+        'password123',
+        'John Doe'
+      );
+      console.log('Signed up:', result.user);
+    } catch (error) {
+      console.error('Sign up failed:', error.message);
+    }
+  };
+
+  const handleSignIn = async () => {
+    try {
+      const result = await authService.signIn(
+        'user@example.com',
+        'password123'
+      );
+      console.log('Signed in:', result.user);
+    } catch (error) {
+      console.error('Sign in failed:', error.message);
+    }
+  };
+
+  // ... rest of component
+}
+```
+</Tab>
+</Tabs>
 
 ### Flutter / Dart
 
@@ -408,85 +463,6 @@ class AuthService {
 }
 ```
 
-### Node.js / Express
-
-```javascript
-// auth.js
-const axios = require('axios');
-
-const API_BASE_URL = 'https://api.turbocamp.dev';
-
-class AuthService {
-  constructor() {
-    this.sessionToken = null;
-  }
-
-  async signUp(email, password, name) {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/sign-up/email`, {
-        email,
-        password,
-        name
-      });
-      
-      this.sessionToken = response.data.session.token;
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.error?.message || 'Sign up failed');
-    }
-  }
-
-  async signIn(email, password) {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/sign-in/email`, {
-        email,
-        password
-      });
-      
-      this.sessionToken = response.data.session.token;
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.error?.message || 'Sign in failed');
-    }
-  }
-
-  async getSession() {
-    if (!this.sessionToken) return null;
-
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/auth/get-session`, {
-        headers: {
-          'Cookie': `better-auth.session_token=${this.sessionToken}`
-        }
-      });
-      
-      return response.data;
-    } catch (error) {
-      this.sessionToken = null;
-      return null;
-    }
-  }
-
-  async signOut() {
-    if (this.sessionToken) {
-      try {
-        await axios.post(`${API_BASE_URL}/api/auth/sign-out`, {}, {
-          headers: {
-            'Cookie': `better-auth.session_token=${this.sessionToken}`
-          }
-        });
-      } catch (error) {
-        // Ignore errors during sign out
-      }
-    }
-    
-    this.sessionToken = null;
-  }
-}
-
-module.exports = new AuthService();
-```
-
 ### cURL Examples
 
 #### Sign Up
@@ -534,23 +510,23 @@ NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3002
 
 ## Best Practices
 
-### 1. **Session Management**
+### Session Management
 - Store session tokens securely (AsyncStorage, SharedPreferences, etc.)
 - Always check session validity before making authenticated requests
 - Implement automatic token refresh when possible
 
-### 2. **Error Handling**
+### Error Handling
 - Always handle network errors gracefully
 - Show user-friendly error messages
 - Implement retry logic for transient failures
 
-### 3. **Security**
+### Security
 - Never store passwords in client applications
 - Use HTTPS in production
 - Validate all user inputs
 - Implement proper session timeout
 
-### 4. **Performance**
+### Performance
 - Cache session data when appropriate
 - Implement request deduplication
 - Use efficient data structures
@@ -575,13 +551,13 @@ curl -X GET https://api.turbocamp.dev/health
 # Should return: OK
 ```
 
+<Callout type="info">
+  **✨ Happy Building!** This centralized API approach gives you the flexibility to build amazing applications across all platforms while maintaining consistency and security.
+</Callout>
+
 ## Support
 
 For integration support:
 - 📚 Check the [Better Auth Documentation](https://www.better-auth.com/docs)
 - 🐛 Report issues on [GitHub](https://github.com/your-org/turbocamp/issues)
-- 💬 Join our [Discord Community](https://discord.gg/turbocamp)
-
----
-
-**✨ Happy Building!** This centralized API approach gives you the flexibility to build amazing applications across all platforms while maintaining consistency and security. 
+- 💬 Join our Discord Community

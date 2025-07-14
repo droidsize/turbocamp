@@ -1,0 +1,626 @@
+---
+title: Project Structure
+description: Understanding the Turbocamp monorepo architecture and file organization
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+## Overview
+
+Turbocamp is built as a **Turborepo monorepo** with a clear separation of concerns across multiple applications and shared packages. This structure enables efficient development, shared code reuse, and independent deployment.
+
+## Repository Structure
+
+```
+turbocamp/
+├── 📁 apps/                    # Applications
+│   ├── 📁 api/                 # Authentication & API server
+│   ├── 📁 dashboard/           # Main application (SaaS dashboard)
+│   ├── 📁 web/                 # Marketing website
+│   └── 📁 docs/                # Documentation site
+│
+├── 📁 packages/                # Shared packages
+│   ├── 📁 auth/                # Authentication logic & configuration
+│   ├── 📁 cms/                 # Content management system
+│   ├── 📁 db/                  # Database schema & migrations
+│   ├── 📁 email/               # Email templates & utilities
+│   ├── 📁 ui/                  # Shared UI components
+│   ├── 📁 config/              # Shared configuration
+│   └── 📁 utils/               # Shared utilities
+│
+├── 📄 package.json             # Root package configuration
+├── 📄 turbo.json               # Turborepo configuration
+├── 📄 pnpm-workspace.yaml      # Workspace configuration
+└── 📄 CLAUDE_PLAN.md           # Development roadmap
+```
+
+## Applications (`apps/`)
+
+### API Server (`apps/api/`)
+
+**Purpose:** Primary authentication server and API backend
+
+```
+apps/api/
+├── 📁 app/
+│   ├── 📁 api/
+│   │   ├── 📁 auth/             # Better Auth endpoints
+│   │   │   ├── [...better-auth]/
+│   │   │   └── route.ts
+│   │   └── 📁 health/           # Health check endpoint
+│   └── 📄 layout.tsx
+│
+├── 📁 lib/
+│   ├── 📄 auth.ts              # Better Auth configuration
+│   └── 📄 utils.ts             # Utility functions
+│
+├── 📄 middleware.ts            # Request middleware
+├── 📄 next.config.js           # Next.js configuration
+└── 📄 package.json             # Dependencies
+```
+
+**Key Features:**
+- Better Auth implementation
+- Cross-domain cookie handling
+- CORS configuration
+- Rate limiting
+- Health monitoring
+
+**Port:** `3002` (development)
+
+### Dashboard App (`apps/dashboard/`)
+
+**Purpose:** Main SaaS application with full authentication pages
+
+```
+apps/dashboard/
+├── 📁 app/
+│   ├── 📁 (authenticated)/      # Protected routes
+│   │   ├── 📁 components/       # Dashboard-specific components
+│   │   │   ├── 📄 user-button.tsx
+│   │   │   └── 📄 sidebar.tsx
+│   │   ├── 📄 layout.tsx        # Authenticated layout
+│   │   └── 📄 page.tsx          # Dashboard home
+│   │
+│   ├── 📁 (auth)/              # Authentication routes
+│   │   ├── 📁 sign-in/
+│   │   ├── 📁 sign-up/
+│   │   └── 📄 layout.tsx        # Auth layout
+│   │
+│   └── 📁 api/                  # API routes (auth client)
+│       └── 📁 auth/
+│           └── [...better-auth]/
+│
+├── 📁 components/              # Shared dashboard components
+├── 📁 lib/                     # Dashboard utilities
+│   ├── 📄 auth-client.ts       # Better Auth client
+│   └── 📄 utils.ts
+│
+└── 📄 middleware.ts            # Auth middleware
+```
+
+**Key Features:**
+- Full authentication pages
+- Protected routes with middleware
+- User management interface
+- Dashboard functionality
+
+**Port:** `3001` (development)
+
+### Web App (`apps/web/`)
+
+**Purpose:** Marketing website with auth modal and redirects
+
+```
+apps/web/
+├── 📁 app/
+│   ├── 📁 [locale]/            # Internationalization support
+│   │   ├── 📁 components/      # Web-specific components
+│   │   │   ├── 📁 auth-forms/  # Auth modal forms
+│   │   │   │   ├── 📄 sign-in-form.tsx
+│   │   │   │   └── 📄 sign-up-form.tsx
+│   │   │   ├── 📁 header/      # Site header with auth
+│   │   │   └── 📄 auth-modal.tsx
+│   │   │
+│   │   ├── 📁 blog/            # Blog functionality
+│   │   │   ├── 📁 [slug]/
+│   │   │   └── 📄 page.tsx
+│   │   │
+│   │   ├── 📁 legal/           # Legal pages
+│   │   │   ├── 📁 [slug]/
+│   │   │   └── 📄 page.tsx
+│   │   │
+│   │   ├── 📁 lib/             # Web app utilities
+│   │   │   ├── 📄 auth-client.ts
+│   │   │   └── 📄 utils.ts
+│   │   │
+│   │   ├── 📄 layout.tsx       # Root layout
+│   │   ├── 📄 page.tsx         # Homepage
+│   │   └── 📄 providers.tsx    # Context providers
+│   │
+│   └── 📁 api/                 # API routes (auth client)
+│       └── 📁 auth/
+│           └── [...better-auth]/
+│
+├── 📁 public/                  # Static assets
+│   ├── 📄 logo.png
+│   └── 📁 images/
+│
+└── 📄 middleware.ts            # Auth detection middleware
+```
+
+**Key Features:**
+- Marketing pages
+- Auth modal with dual experience
+- Blog with content collections
+- Legal pages
+- Internationalization ready
+
+**Port:** `3000` (development)
+
+### Documentation Site (`apps/docs/`)
+
+**Purpose:** Comprehensive documentation using Fumadocs
+
+```
+apps/docs/
+├── 📁 app/
+│   ├── 📁 docs/
+│   │   ├── 📄 [[...slug]]/     # Dynamic doc pages
+│   │   └── 📄 layout.tsx       # Docs layout
+│   │
+│   ├── 📄 layout.config.tsx    # Fumadocs configuration
+│   ├── 📄 layout.tsx           # Root layout
+│   └── 📄 page.tsx             # Docs homepage
+│
+├── 📁 content/
+│   └── 📁 docs/                # MDX documentation files
+│       ├── 📁 getting-started/
+│       │   ├── 📄 installation.mdx
+│       │   ├── 📄 environment-variables.mdx
+│       │   └── 📄 project-structure.mdx
+│       │
+│       ├── 📁 setup/
+│       │   └── 📄 authentication.mdx
+│       │
+│       ├── 📁 api/
+│       │   └── 📄 overview.mdx
+│       │
+│       ├── 📁 integrations/
+│       │   └── 📄 mobile.mdx
+│       │
+│       └── 📄 index.mdx        # Main docs page
+│
+├── 📁 public/                  # Documentation assets
+└── 📄 source.config.ts         # Content source configuration
+```
+
+**Key Features:**
+- Fumadocs integration
+- MDX content support
+- Search functionality
+- Responsive design
+- Code highlighting
+
+**Port:** `3003` (development)
+
+## Shared Packages (`packages/`)
+
+### Authentication (`packages/auth/`)
+
+**Purpose:** Centralized authentication configuration and utilities
+
+```
+packages/auth/
+├── 📄 index.ts                 # Main exports
+├── 📄 auth.ts                  # Better Auth configuration
+├── 📄 client.ts                # Client-side auth utilities
+└── 📄 types.ts                 # TypeScript types
+```
+
+**Exports:**
+- Better Auth configuration
+- Auth client setup
+- TypeScript types
+- Utility functions
+
+### Database (`packages/db/`)
+
+**Purpose:** Database schema, migrations, and client
+
+```
+packages/db/
+├── 📁 prisma/
+│   ├── 📄 schema.prisma        # Database schema
+│   └── 📁 migrations/          # Database migrations
+│
+├── 📄 index.ts                 # Database client
+├── 📄 migrate.ts               # Migration utilities
+└── 📄 .env                     # Database configuration
+```
+
+**Features:**
+- Prisma ORM integration
+- PostgreSQL support
+- Conditional database setup (local vs cloud)
+- Migration management
+
+### Content Management (`packages/cms/`)
+
+**Purpose:** Content collections and blog functionality
+
+```
+packages/cms/
+├── 📄 index.ts                 # Content exports
+├── 📄 collections.ts           # Content collections config
+└── 📄 types.ts                 # Content types
+```
+
+**Features:**
+- Content Collections integration
+- Blog post management
+- Legal document handling
+- Metadata generation
+
+### UI Components (`packages/ui/`)
+
+**Purpose:** Shared React components and design system
+
+```
+packages/ui/
+├── 📁 src/
+│   ├── 📁 components/          # React components
+│   │   ├── 📄 button.tsx
+│   │   ├── 📄 input.tsx
+│   │   ├── 📄 modal.tsx
+│   │   └── 📄 index.ts
+│   │
+│   ├── 📁 styles/              # Shared styles
+│   │   ├── 📄 globals.css
+│   │   └── 📄 components.css
+│   │
+│   └── 📄 index.ts             # Main exports
+│
+├── 📄 tailwind.config.js       # Tailwind configuration
+└── 📄 package.json             # UI dependencies
+```
+
+**Features:**
+- shadcn/ui component library
+- Tailwind CSS integration
+- Consistent design system
+- TypeScript support
+
+### Email Templates (`packages/email/`)
+
+**Purpose:** Email templates and sending utilities
+
+```
+packages/email/
+├── 📁 templates/               # Email templates
+│   ├── 📄 welcome.tsx
+│   ├── 📄 reset-password.tsx
+│   └── 📄 verification.tsx
+│
+├── 📄 index.ts                 # Email utilities
+└── 📄 sender.ts                # Email sending logic
+```
+
+**Features:**
+- React Email templates
+- Resend integration
+- Template management
+- Type-safe email sending
+
+### Configuration (`packages/config/`)
+
+**Purpose:** Shared configuration files
+
+```
+packages/config/
+├── 📄 eslint.config.js         # ESLint configuration
+├── 📄 prettier.config.js       # Prettier configuration
+├── 📄 tailwind.config.js       # Tailwind base config
+└── 📄 tsconfig.json            # TypeScript base config
+```
+
+### Utilities (`packages/utils/`)
+
+**Purpose:** Shared utility functions
+
+```
+packages/utils/
+├── 📄 index.ts                 # Main exports
+├── 📄 cn.ts                    # Class name utilities
+├── 📄 dates.ts                 # Date utilities
+└── 📄 validation.ts            # Validation schemas
+```
+
+## Workspace Configuration
+
+### Package Manager (pnpm)
+
+**File:** `pnpm-workspace.yaml`
+
+```yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+```
+
+**Features:**
+- Efficient dependency management
+- Workspace linking
+- Shared lock file
+- Fast installs
+
+### Turborepo Configuration
+
+**File:** `turbo.json`
+
+```json
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "type-check": {
+      "dependsOn": ["^type-check"]
+    }
+  }
+}
+```
+
+**Benefits:**
+- Parallel task execution
+- Intelligent caching
+- Dependency-aware builds
+- Remote caching support
+
+## Development Workflow
+
+### Package Scripts
+
+**Root `package.json` scripts:**
+
+```json
+{
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "migrate": "pnpm --filter @turbocamp/db migrate",
+    "clean": "turbo clean && rm -rf node_modules"
+  }
+}
+```
+
+### Common Commands
+
+<Tabs>
+<Tab title="Development" value="development">
+```bash
+# Start all applications
+pnpm dev
+
+# Start specific app
+pnpm dev --filter api
+pnpm dev --filter dashboard
+pnpm dev --filter web
+pnpm dev --filter docs
+
+# Install dependencies
+pnpm install
+
+# Run database migrations
+pnpm migrate
+```
+</Tab>
+<Tab title="Building" value="building">
+```bash
+# Build all applications
+pnpm build
+
+# Build specific app
+pnpm build --filter dashboard
+
+# Type check all packages
+pnpm type-check
+
+# Lint all packages
+pnpm lint
+```
+</Tab>
+<Tab title="Package Management" value="package-management">
+```bash
+# Add dependency to specific app
+pnpm add react --filter dashboard
+
+# Add dependency to workspace root
+pnpm add -w typescript
+
+# Add shared package dependency
+pnpm add @turbocamp/ui --filter web
+
+# Remove dependency
+pnpm remove lodash --filter api
+```
+</Tab>
+</Tabs>
+
+## File Naming Conventions
+
+### React Components
+
+```typescript
+// PascalCase for components
+UserButton.tsx
+AuthModal.tsx
+DashboardLayout.tsx
+
+// camelCase for utilities
+authClient.ts
+userUtils.ts
+apiHelpers.ts
+
+// kebab-case for pages (Next.js convention)
+sign-in/page.tsx
+user-profile/page.tsx
+```
+
+### Directories
+
+```
+kebab-case/              # Preferred for directories
+camelCase/               # Acceptable for some contexts
+PascalCase/              # For component directories only
+```
+
+## Import Patterns
+
+### Package Imports
+
+```typescript
+// Shared packages (from packages/)
+import { Button } from '@turbocamp/ui'
+import { db } from '@turbocamp/db'
+import { authClient } from '@turbocamp/auth'
+
+// Internal imports
+import { UserButton } from './components/user-button'
+import { config } from '../lib/config'
+
+// External packages
+import { useState } from 'react'
+import { cn } from 'clsx'
+```
+
+### Path Mapping
+
+**TypeScript configuration includes path mapping:**
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"]
+    }
+  }
+}
+```
+
+## Best Practices
+
+### Code Organization
+
+<Callout type="info" title="Follow these patterns">
+- ✅ Keep shared logic in packages
+- ✅ App-specific code stays in apps
+- ✅ Use consistent naming conventions
+- ✅ Group related files together
+- ✅ Prefer composition over inheritance
+</Callout>
+
+### Package Dependencies
+
+<Callout type="warn" title="Dependency management">
+- ✅ Shared dependencies go in packages
+- ✅ App-specific dependencies stay in apps
+- ✅ Keep package.json files clean
+- ✅ Use peer dependencies wisely
+- ✅ Regular dependency updates
+</Callout>
+
+### Development Tips
+
+1. **Hot Reloading**: Changes in packages automatically trigger rebuilds
+2. **Type Safety**: Shared types ensure consistency across apps
+3. **Caching**: Turborepo caches build outputs for faster subsequent builds
+4. **Parallel Development**: Multiple developers can work on different apps simultaneously
+
+### Common Patterns
+
+**Sharing Components:**
+```typescript
+// In packages/ui/src/components/button.tsx
+export const Button = ({ children, ...props }) => (
+  <button {...props}>{children}</button>
+)
+
+// In apps/web/components/hero.tsx
+import { Button } from '@turbocamp/ui'
+```
+
+**Sharing Utilities:**
+```typescript
+// In packages/utils/src/dates.ts
+export const formatDate = (date: Date) => {
+  // utility implementation
+}
+
+// In apps/dashboard/lib/helpers.ts
+import { formatDate } from '@turbocamp/utils'
+```
+
+**Sharing Types:**
+```typescript
+// In packages/auth/src/types.ts
+export interface User {
+  id: string
+  email: string
+  name: string
+}
+
+// In apps/dashboard/components/user-button.tsx
+import type { User } from '@turbocamp/auth'
+```
+
+## Troubleshooting
+
+### Common Issues
+
+<Callout type="error" title="Build issues">
+- ✅ Run `pnpm install` after pulling changes
+- ✅ Clear Turborepo cache: `turbo clean`
+- ✅ Check dependency versions in package.json
+- ✅ Verify TypeScript paths are correct
+</Callout>
+
+<Callout type="error" title="Import errors">
+- ✅ Check package is listed in dependencies
+- ✅ Verify export exists in target package
+- ✅ Ensure TypeScript paths are configured
+- ✅ Restart TypeScript language server
+</Callout>
+
+### Debug Commands
+
+```bash
+# Check workspace dependencies
+pnpm list --depth=0
+
+# Verify package linking
+pnpm why @turbocamp/ui
+
+# Check Turborepo configuration
+turbo run build --dry-run
+
+# Clear all caches
+turbo clean && rm -rf node_modules && pnpm install
+```
+
+<Callout type="info">
+  **🏗️ Architecture Ready!** This monorepo structure provides a solid foundation for scalable development with clear separation of concerns and efficient tooling.
+</Callout>

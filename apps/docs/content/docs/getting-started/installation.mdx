@@ -1,0 +1,156 @@
+---
+title: Installation
+description: Set up your development environment for Turbocamp
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps } from 'fumadocs-ui/components/steps';
+
+## Prerequisites
+
+Before getting started with Turbocamp, make sure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **pnpm** (recommended package manager)
+- **PostgreSQL** (for local development)
+- **Git** (for version control)
+
+<Callout type="info">
+  Turbocamp uses pnpm for package management. While npm and yarn will work, pnpm is recommended for optimal performance.
+</Callout>
+
+## Quick Start
+
+<Steps>
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/turbocamp/turbocamp.git
+cd turbocamp
+```
+
+### Install Dependencies
+
+```bash
+pnpm install
+```
+
+This will install all dependencies for the monorepo, including all apps and packages.
+
+### Set Up Environment Variables
+
+Create environment files for each application:
+
+```bash
+# Root environment file
+cp .env.example .env.local
+
+# API environment file
+cp apps/api/.env.example apps/api/.env.local
+
+# Web app environment file
+cp apps/web/.env.example apps/web/.env.local
+
+# Dashboard environment file
+cp apps/dashboard/.env.example apps/dashboard/.env.local
+```
+
+### Set Up Database
+
+Create a local PostgreSQL database:
+
+```bash
+createdb turbocamp
+```
+
+Update the database URL in `packages/db/.env`:
+
+```bash
+DATABASE_URL="postgresql://username@localhost:5432/turbocamp"
+```
+
+Run database migrations:
+
+```bash
+pnpm migrate
+```
+
+### Start Development Servers
+
+Start all applications in development mode:
+
+```bash
+pnpm dev
+```
+
+This will start:
+- **Web app**: http://localhost:3000
+- **Dashboard**: http://localhost:3001
+- **API server**: http://localhost:3002
+- **Email templates**: http://localhost:3003
+- **Documentation**: http://localhost:3004
+
+</Steps>
+
+## Development Commands
+
+Here are the most commonly used commands:
+
+```bash
+# Start all development servers
+pnpm dev
+
+# Build all applications
+pnpm build
+
+# Run tests
+pnpm test
+
+# Lint code
+pnpm lint
+
+# Format code
+pnpm format
+
+# Type checking
+pnpm typecheck
+
+# Database commands
+pnpm db:studio    # Open Prisma Studio
+pnpm migrate      # Run database migrations
+
+# Clean installation
+pnpm clean        # Remove all node_modules
+pnpm install      # Reinstall dependencies
+```
+
+## Troubleshooting
+
+### Port Already in Use
+
+If you get port errors, make sure no other applications are running on the default ports (3000-3004).
+
+### Database Connection Issues
+
+1. Ensure PostgreSQL is running
+2. Check database URL in environment files
+3. Verify database exists: `psql -l | grep turbocamp`
+
+### Build Errors
+
+1. Clear build cache: `pnpm clean`
+2. Reinstall dependencies: `pnpm install`
+3. Check Node.js version: `node --version`
+
+<Callout type="tip">
+  For more detailed troubleshooting, see the [Troubleshooting](/docs/troubleshooting/common-issues) section.
+</Callout>
+
+## Next Steps
+
+Now that you have Turbocamp running locally, you can:
+
+1. [Configure environment variables](/docs/getting-started/environment-variables)
+2. [Set up authentication](/docs/setup/authentication)
+3. [Explore the project structure](/docs/getting-started/project-structure)

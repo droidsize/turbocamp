@@ -12,6 +12,7 @@
   "dependencies": {
     "@content-collections/mdx": "^0.2.2",
     "@t3-oss/env-nextjs": "^0.13.4",
+    "acorn": "^8.15.0",
     "fumadocs-core": "^15.4.0",
     "react": "^19.1.0",
     "zod": "^3.25.28"

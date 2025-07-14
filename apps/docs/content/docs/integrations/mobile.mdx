@@ -1,12 +1,21 @@
-# 📱 Mobile Integration Guide - Expo/React Native
+---
+title: Mobile Integration
+description: Complete guide to integrating your Expo/React Native app with the Turbocamp centralized API
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 ## Overview
 
 This guide shows you how to integrate your Expo/React Native app with the Turbocamp centralized API. The API provides a consistent authentication experience across all platforms.
 
-## 🚀 Quick Start
+## Quick Start
 
-### 1. Installation
+<Steps>
+
+### Install Dependencies
 
 ```bash
 # Install required dependencies
@@ -15,7 +24,7 @@ npm install @react-native-async-storage/async-storage
 yarn add @react-native-async-storage/async-storage
 ```
 
-### 2. Basic Setup
+### Basic Auth Service Setup
 
 Create an auth service that handles all authentication:
 
@@ -201,7 +210,7 @@ class AuthService {
 export const authService = new AuthService();
 ```
 
-### 3. React Context for Authentication
+### React Context for Authentication
 
 ```typescript
 // contexts/AuthContext.tsx
@@ -326,10 +335,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 };
 ```
 
-### 4. Auth Screens
+</Steps>
 
-#### Sign In Screen
+## Auth Screens
 
+### Sign In Screen
+
+<Tabs>
+<Tab title="TypeScript" value="typescript">
 ```typescript
 // screens/SignInScreen.tsx
 import React, { useState } from 'react';
@@ -473,169 +486,8 @@ const styles = StyleSheet.create({
   },
 });
 ```
-
-#### Sign Up Screen
-
-```typescript
-// screens/SignUpScreen.tsx
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
-
-export const SignUpScreen: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
-
-  const handleSignUp = async () => {
-    if (!name || !email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
-
-    if (password.length < 8) {
-      Alert.alert('Error', 'Password must be at least 8 characters long');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await signUp(email, password, name);
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.form}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join Turbocamp today</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Full Name"
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Password (min 8 characters)"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleSignUp}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.linkButton}>
-          <Text style={styles.linkText}>Already have an account? Sign in</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  form: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  linkButton: {
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#007AFF',
-    fontSize: 16,
-  },
-});
-```
-
-### 5. App Setup
-
+</Tab>
+<Tab title="Usage" value="usage">
 ```typescript
 // App.tsx
 import React from 'react';
@@ -684,10 +536,14 @@ export default function App() {
   );
 }
 ```
+</Tab>
+</Tabs>
 
-## 🛡️ Security Considerations
+## Security Considerations
 
-### 1. Session Token Storage
+### Secure Token Storage
+
+For production apps, use encrypted storage for sensitive data:
 
 ```typescript
 // Use encrypted storage for sensitive data
@@ -710,7 +566,9 @@ class SecureAuthService {
 }
 ```
 
-### 2. Network Security
+### Network Security
+
+Add proper network configuration and error handling:
 
 ```typescript
 // Add network security
@@ -743,8 +601,10 @@ const makeRequest = async (url: string, options: RequestInit) => {
 };
 ```
 
-## 🔄 State Management with Redux (Optional)
+## State Management with Redux (Optional)
 
+<Tabs>
+<Tab title="Redux Slice" value="redux-slice">
 ```typescript
 // store/authSlice.ts
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -802,8 +662,26 @@ const authSlice = createSlice({
 export const { clearError, signOut } = authSlice.actions;
 export default authSlice.reducer;
 ```
+</Tab>
+<Tab title="Store Configuration" value="store-config">
+```typescript
+// store/index.ts
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './authSlice';
 
-## 📱 Testing
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+```
+</Tab>
+</Tabs>
+
+## Testing
 
 ### Unit Tests
 
@@ -852,9 +730,9 @@ describe('AuthService', () => {
 });
 ```
 
-## 📊 Performance Optimization
+## Performance Optimization
 
-### 1. Request Caching
+### Request Caching
 
 ```typescript
 class CachedAuthService {
@@ -880,7 +758,7 @@ class CachedAuthService {
 }
 ```
 
-### 2. Offline Support
+### Offline Support
 
 ```typescript
 import NetInfo from '@react-native-netinfo';
@@ -904,7 +782,7 @@ class OfflineAuthService {
 }
 ```
 
-## 🐛 Error Handling
+## Error Handling
 
 ```typescript
 class AuthError extends Error {
@@ -931,7 +809,7 @@ const handleAuthError = (error: any): AuthError => {
 };
 ```
 
-## 🎯 Next Steps
+## Next Steps
 
 1. **Add biometric authentication** (Face ID/Touch ID)
 2. **Implement push notifications** for auth events
@@ -939,13 +817,13 @@ const handleAuthError = (error: any): AuthError => {
 4. **Implement deep linking** for password reset
 5. **Add analytics** for user behavior tracking
 
-## 📚 Resources
+## Resources
 
 - [React Native Documentation](https://reactnative.dev/)
 - [Expo Documentation](https://docs.expo.dev/)
 - [AsyncStorage Documentation](https://react-native-async-storage.github.io/async-storage/)
 - [Better Auth Documentation](https://www.better-auth.com/docs)
 
----
-
-**🎉 You're all set!** Your mobile app is now integrated with the Turbocamp centralized API. Users can seamlessly authenticate across all your platforms. 
+<Callout type="info">
+  **✨ You're all set!** Your mobile app is now integrated with the Turbocamp centralized API. Users can seamlessly authenticate across all your platforms.
+</Callout>

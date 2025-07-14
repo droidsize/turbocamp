@@ -1,0 +1,477 @@
+---
+title: Environment Variables
+description: Complete guide to configuring environment variables for all Turbocamp applications
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+## Overview
+
+Turbocamp uses environment variables to configure different aspects of the application across multiple environments. This guide covers all required and optional environment variables for each application.
+
+## Environment Structure
+
+Each application in the monorepo has its own environment file:
+
+```
+apps/
+├── api/.env.local          # API server configuration
+├── dashboard/.env.local    # Dashboard app configuration
+├── web/.env.local          # Web app configuration
+└── docs/.env.local         # Documentation site configuration
+
+packages/
+└── db/.env                 # Database configuration
+```
+
+## Core Environment Variables
+
+### Database Configuration
+
+**File:** `packages/db/.env`
+
+```bash
+# PostgreSQL database connection
+DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp?schema=public"
+```
+
+<Tabs>
+<Tab title="Local Development" value="local">
+```bash
+# Local PostgreSQL
+DATABASE_URL="postgresql://username@localhost:5432/turbocamp"
+
+# With password
+DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp"
+```
+</Tab>
+<Tab title="Neon (Cloud)" value="neon">
+```bash
+# Neon database URL (get from Neon dashboard)
+DATABASE_URL="postgresql://username:password@ep-xxx.region.aws.neon.tech/turbocamp?sslmode=require"
+```
+</Tab>
+<Tab title="Supabase" value="supabase">
+```bash
+# Supabase database URL (get from Supabase dashboard)
+DATABASE_URL="postgresql://username:password@db.project.supabase.co:5432/postgres"
+```
+</Tab>
+</Tabs>
+
+### Authentication Configuration
+
+**Required for all applications:**
+
+```bash
+# Better Auth secret (must be same across all apps)
+BETTER_AUTH_SECRET="your-32-character-secret-key-here"
+```
+
+Generate a secure secret:
+```bash
+openssl rand -base64 32
+```
+
+<Callout type="warn">
+  The `BETTER_AUTH_SECRET` must be identical across all applications for session sharing to work properly.
+</Callout>
+
+## Application-Specific Variables
+
+### API App Configuration
+
+**File:** `apps/api/.env.local`
+
+<Tabs>
+<Tab title="Development" value="development">
+```bash
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp"
+
+# Better Auth
+BETTER_AUTH_SECRET="your-32-character-secret"
+BETTER_AUTH_URL="http://localhost:3002"
+
+# Optional: Email service (Resend)
+RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
+RESEND_FROM="noreply@yourdomain.com"
+
+# Optional: Rate limiting (Upstash Redis)
+UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
+
+# Optional: Error tracking (Sentry)
+NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxxxxxxxxxx@sentry.io/xxxxxxxx"
+
+# Optional: Additional trusted origins
+ADDITIONAL_TRUSTED_ORIGINS="http://localhost:3003,http://localhost:3004"
+```
+</Tab>
+<Tab title="Production" value="production">
+```bash
+# Database (use your production database URL)
+DATABASE_URL="postgresql://username:password@production-host:5432/turbocamp"
+
+# Better Auth
+BETTER_AUTH_SECRET="your-production-secret"
+BETTER_AUTH_URL="https://api.turbocamp.dev"
+
+# Email service
+RESEND_API_KEY="re_live_xxxxxxxxxxxxxxxx"
+RESEND_FROM="noreply@turbocamp.dev"
+
+# Rate limiting
+UPSTASH_REDIS_REST_URL="https://production.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="production_token"
+
+# Error tracking
+NEXT_PUBLIC_SENTRY_DSN="https://production@sentry.io/project"
+
+# Trusted origins
+ADDITIONAL_TRUSTED_ORIGINS="https://staging.turbocamp.dev"
+```
+</Tab>
+</Tabs>
+
+### Dashboard App Configuration
+
+**File:** `apps/dashboard/.env.local`
+
+<Tabs>
+<Tab title="Development" value="development">
+```bash
+# Authentication API
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+
+# Application URLs
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+
+# Better Auth (same secret as API)
+BETTER_AUTH_SECRET="your-32-character-secret"
+
+# Optional: Analytics (PostHog)
+NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Optional: Error tracking
+NEXT_PUBLIC_SENTRY_DSN="https://dashboard@sentry.io/project"
+```
+</Tab>
+<Tab title="Production" value="production">
+```bash
+# Authentication API
+AUTH_API_URL="https://api.turbocamp.dev"
+NEXT_PUBLIC_AUTH_API_URL="https://api.turbocamp.dev"
+
+# Application URLs
+NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
+NEXT_PUBLIC_WEB_URL="https://turbocamp.dev"
+
+# Better Auth (same secret as API)
+BETTER_AUTH_SECRET="your-production-secret"
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY="your-production-posthog-key"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Error tracking
+NEXT_PUBLIC_SENTRY_DSN="https://production-dashboard@sentry.io/project"
+```
+</Tab>
+</Tabs>
+
+### Web App Configuration
+
+**File:** `apps/web/.env.local`
+
+<Tabs>
+<Tab title="Development" value="development">
+```bash
+# Authentication API
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+
+# Application URLs
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+
+# Optional: Analytics
+NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Optional: Error tracking
+NEXT_PUBLIC_SENTRY_DSN="https://web@sentry.io/project"
+```
+</Tab>
+<Tab title="Production" value="production">
+```bash
+# Authentication API
+AUTH_API_URL="https://api.turbocamp.dev"
+NEXT_PUBLIC_AUTH_API_URL="https://api.turbocamp.dev"
+
+# Application URLs
+NEXT_PUBLIC_WEB_URL="https://turbocamp.dev"
+NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY="your-production-posthog-key"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Error tracking
+NEXT_PUBLIC_SENTRY_DSN="https://production-web@sentry.io/project"
+```
+</Tab>
+</Tabs>
+
+### Documentation Site Configuration
+
+**File:** `apps/docs/.env.local`
+
+```bash
+# Application URLs (for navigation links)
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+
+# Optional: Search service
+ALGOLIA_APP_ID="your-algolia-app-id"
+ALGOLIA_API_KEY="your-algolia-search-key"
+ALGOLIA_INDEX_NAME="turbocamp-docs"
+```
+
+## Optional Service Integrations
+
+### Email Service (Resend)
+
+For transactional emails like password resets and welcome emails:
+
+```bash
+# Get these from https://resend.com/
+RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
+RESEND_FROM="noreply@yourdomain.com"
+```
+
+### Rate Limiting (Upstash Redis)
+
+For API rate limiting and caching:
+
+```bash
+# Get these from https://upstash.com/
+UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
+```
+
+### Analytics (PostHog)
+
+For user behavior tracking and product analytics:
+
+```bash
+# Get these from https://posthog.com/
+NEXT_PUBLIC_POSTHOG_KEY="phc_xxxxxxxxxxxxxxxx"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+```
+
+### Error Tracking (Sentry)
+
+For error monitoring and performance tracking:
+
+```bash
+# Get these from https://sentry.io/
+NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxxxxxxxxxx@sentry.io/xxxxxxxx"
+```
+
+### Search Service (Algolia)
+
+For documentation search functionality:
+
+```bash
+# Get these from https://algolia.com/
+ALGOLIA_APP_ID="your-app-id"
+ALGOLIA_API_KEY="your-search-only-api-key"
+ALGOLIA_INDEX_NAME="turbocamp-docs"
+```
+
+## Environment Setup Scripts
+
+### Quick Setup Script
+
+Create a setup script to quickly configure all environment files:
+
+```bash
+#!/bin/bash
+# setup-env.sh
+
+echo "🚀 Setting up Turbocamp environment variables..."
+
+# Generate Better Auth secret
+BETTER_AUTH_SECRET=$(openssl rand -base64 32)
+
+# Create database environment
+cat > packages/db/.env << EOF
+DATABASE_URL="postgresql://\$USER@localhost:5432/turbocamp"
+EOF
+
+# Create API environment
+cat > apps/api/.env.local << EOF
+DATABASE_URL="postgresql://\$USER@localhost:5432/turbocamp"
+BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
+BETTER_AUTH_URL="http://localhost:3002"
+EOF
+
+# Create Dashboard environment
+cat > apps/dashboard/.env.local << EOF
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
+EOF
+
+# Create Web environment
+cat > apps/web/.env.local << EOF
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+EOF
+
+echo "✅ Environment files created successfully!"
+echo "📝 Generated Better Auth Secret: $BETTER_AUTH_SECRET"
+echo "🔧 Edit the files to add optional services (email, analytics, etc.)"
+```
+
+Make it executable and run:
+```bash
+chmod +x setup-env.sh
+./setup-env.sh
+```
+
+## Environment Validation
+
+### Runtime Validation
+
+Validate required environment variables at startup:
+
+```typescript
+// utils/env.ts
+const requiredEnvVars = {
+  api: ['DATABASE_URL', 'BETTER_AUTH_SECRET', 'BETTER_AUTH_URL'],
+  dashboard: ['AUTH_API_URL', 'NEXT_PUBLIC_AUTH_API_URL', 'BETTER_AUTH_SECRET'],
+  web: ['AUTH_API_URL', 'NEXT_PUBLIC_AUTH_API_URL'],
+} as const;
+
+export function validateEnv(app: keyof typeof requiredEnvVars) {
+  const missing = requiredEnvVars[app].filter(
+    (envVar) => !process.env[envVar]
+  );
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables for ${app}: ${missing.join(', ')}`
+    );
+  }
+}
+```
+
+Use in your app startup:
+```typescript
+// In your app initialization
+import { validateEnv } from './utils/env';
+
+validateEnv('api'); // or 'dashboard', 'web'
+```
+
+## Security Best Practices
+
+### Environment Variable Security
+
+<Callout type="error" title="Never commit secrets">
+- ✅ Add `.env*` files to `.gitignore`
+- ✅ Use different secrets for each environment
+- ✅ Rotate secrets regularly
+- ✅ Use a secret management service in production
+</Callout>
+
+### Production Considerations
+
+1. **Use Secret Management**: Consider AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault
+2. **Environment Separation**: Different values for dev/staging/production
+3. **Access Control**: Limit who can access production environment variables
+4. **Audit Logging**: Track changes to environment variables
+5. **Backup**: Secure backup of environment configurations
+
+### Example Production Setup
+
+```bash
+# Use a secret management service
+DATABASE_URL="${SECRET_MANAGER_DATABASE_URL}"
+BETTER_AUTH_SECRET="${SECRET_MANAGER_AUTH_SECRET}"
+RESEND_API_KEY="${SECRET_MANAGER_RESEND_KEY}"
+```
+
+## Troubleshooting
+
+### Common Issues
+
+<Callout type="error" title="Authentication not working">
+- ✅ Check `BETTER_AUTH_SECRET` is the same across all apps
+- ✅ Verify `AUTH_API_URL` points to your API server
+- ✅ Ensure database connection is working
+</Callout>
+
+<Callout type="error" title="Cross-domain issues">
+- ✅ Check application URLs are correctly configured
+- ✅ Verify `ADDITIONAL_TRUSTED_ORIGINS` includes all your domains
+- ✅ Ensure CORS configuration is correct
+</Callout>
+
+<Callout type="error" title="Build errors">
+- ✅ Check all `NEXT_PUBLIC_` variables are set for client-side code
+- ✅ Verify environment file paths are correct
+- ✅ Ensure no syntax errors in environment files
+</Callout>
+
+### Debug Mode
+
+Enable debug logging for environment issues:
+
+```bash
+# Enable debug mode
+NODE_ENV="development"
+DEBUG="*"
+
+# Better Auth specific debugging
+DEBUG="better-auth:*"
+```
+
+### Environment Health Check
+
+Create a health check endpoint to verify environment configuration:
+
+```typescript
+// pages/api/health.ts
+export default function handler(req: Request, res: Response) {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    config: {
+      hasDatabase: !!process.env.DATABASE_URL,
+      hasAuthSecret: !!process.env.BETTER_AUTH_SECRET,
+      hasAuthUrl: !!process.env.BETTER_AUTH_URL,
+      // Add other checks as needed
+    }
+  };
+
+  res.status(200).json(health);
+}
+```
+
+Access via: `http://localhost:3002/api/health`
+
+<Callout type="info">
+  **✅ Environment Ready!** With proper environment configuration, your Turbocamp applications will run smoothly across all environments.
+</Callout>
