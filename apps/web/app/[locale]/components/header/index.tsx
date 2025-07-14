@@ -67,15 +67,15 @@ const UserMenu = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 rounded-full">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground text-sm">
+        <Button variant="ghost" className="h-10 w-10 rounded-full">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-background font-medium text-foreground text-sm">
             {user.image ? (
               <Image
                 src={user.image}
                 alt={`${displayName} avatar`}
                 width={32}
                 height={32}
-                className="h-8 w-8 rounded-full"
+                className="h-10 w-10 rounded-full"
               />
             ) : (
               userInitials

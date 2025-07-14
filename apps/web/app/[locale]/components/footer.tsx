@@ -1,11 +1,21 @@
 import { env } from '@/env';
-import { legal } from '@packages/cms';
+import { legal, type Legal } from '@packages/cms';
 import Link from 'next/link';
+
+type NavigationItem = {
+  title: string;
+  href?: string;
+  description?: string;
+  items?: Array<{
+    title: string;
+    href: string;
+  }>;
+};
 
 export const Footer = () => {
   const legalPages = legal.getPosts();
 
-  const navigationItems = [
+  const navigationItems: NavigationItem[] = [
     {
       title: 'Home',
       href: '/',
@@ -24,7 +34,7 @@ export const Footer = () => {
     {
       title: 'Legal',
       description: 'We stay on top of the latest legal requirements.',
-      items: legalPages && legalPages.length > 0 ? legalPages.map((post: any) => ({
+      items: legalPages && legalPages.length > 0 ? legalPages.map((post: Legal) => ({
         title: post._title,
         href: `/legal/${post._slug}`,
       })) : [],
@@ -78,7 +88,7 @@ export const Footer = () => {
                     ) : (
                       <p className="text-xl">{item.title}</p>
                     )}
-                    {item.items?.map((subItem: any) => (
+                    {item.items?.map((subItem) => (
                       <Link
                         key={subItem.title}
                         href={subItem.href}

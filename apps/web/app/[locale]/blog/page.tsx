@@ -1,4 +1,4 @@
-import { blog } from '@packages/cms';
+import { blog, type Post } from '@packages/cms';
 import { Image } from '@packages/cms/components/image';
 import { cn } from '@packages/base/lib/utils';
 import { getDictionary } from '@packages/i18n';
@@ -45,7 +45,7 @@ const BlogIndex = async ({ params }: BlogProps) => {
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {posts && posts.length > 0 ? (
-              posts.map((post: any, index: number) => (
+              posts.map((post: Post, index: number) => (
                 <Link
                   href={`/blog/${post._slug}`}
                   className={cn(

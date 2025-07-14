@@ -1,6 +1,6 @@
 import { Sidebar } from '@/app/[locale]/components/sidebar';
 import { env } from '@/env';
-import { blog } from '@packages/cms';
+import { blog, type Post } from '@packages/cms';
 import { Body } from '@packages/cms/components/body';
 import { CodeBlock } from '@packages/cms/components/code-block';
 import { Image } from '@packages/cms/components/image';
@@ -11,6 +11,7 @@ import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type React from 'react';
 
 const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith('https')
   ? 'https'
@@ -42,7 +43,7 @@ export const generateMetadata = async ({
 
 export const generateStaticParams = (): { slug: string }[] => {
   const posts = blog.getPosts();
-  return posts.map(({ _slug }: any) => ({ slug: _slug }));
+  return posts.map(({ _slug }: Post) => ({ slug: _slug }));
 };
 
 const BlogPost = async ({ params }: BlogPostProperties) => {
@@ -102,12 +103,11 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                 <Body
                   content={page.body}
                   components={{
-                    pre: ({ code, language }) => {
+                    pre: ({ children, ...props }: { children: React.ReactNode } & React.ComponentProps<'pre'>) => {
                       return (
-                        <CodeBlock
-                          theme="vesper"
-                          snippets={[{ code, language }]}
-                        />
+                        <CodeBlock {...props}>
+                          {children}
+                        </CodeBlock>
                       );
                     },
                   }}

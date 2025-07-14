@@ -1,5 +1,5 @@
 import { Sidebar } from '@/app/[locale]/components/sidebar';
-import { legal } from '@packages/cms';
+import { legal, type Legal } from '@packages/cms';
 import { Body } from '@packages/cms/components/body';
 import { TableOfContents } from '@packages/cms/components/toc';
 import { createMetadata } from '@packages/seo/metadata';
@@ -32,7 +32,7 @@ export const generateMetadata = async ({
 
 export const generateStaticParams = (): { slug: string }[] => {
   const posts = legal.getPosts();
-  return posts.map(({ _slug }: any) => ({ slug: _slug }));
+  return posts.map(({ _slug }: Legal) => ({ slug: _slug }));
 };
 
 const LegalPage = async ({ params }: LegalPageProperties) => {
