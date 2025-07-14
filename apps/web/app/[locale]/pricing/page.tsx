@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { AuthModal } from '@packages/auth';
+import { AuthModal } from '../components/auth-modal';
 import { Button } from '@packages/base/components/ui/button';
 import { Check, Minus, MoveRight, PhoneCall } from 'lucide-react';
 import Link from 'next/link';

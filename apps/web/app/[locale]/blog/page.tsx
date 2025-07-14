@@ -1,5 +1,4 @@
 import { blog } from '@packages/cms';
-import { Feed } from '@packages/cms/components/feed';
 import { Image } from '@packages/cms/components/image';
 import { cn } from '@packages/base/lib/utils';
 import { getDictionary } from '@packages/i18n';
@@ -27,6 +26,7 @@ export const generateMetadata = async ({
 const BlogIndex = async ({ params }: BlogProps) => {
   const { locale } = await params;
   const dictionary = await getDictionary(locale);
+  const posts = blog.getPosts();
 
   const jsonLd: WithContext<Blog> = {
     '@type': 'Blog',
@@ -44,50 +44,44 @@ const BlogIndex = async ({ params }: BlogProps) => {
             </h4>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <Feed queries={[blog.postsQuery]}>
-              {async ([data]) => {
-                'use server';
-
-                if (!data.blog.posts.items.length) {
-                  return null;
-                }
-
-                return data.blog.posts.items.map((post, index) => (
-                  <Link
-                    href={`/blog/${post._slug}`}
-                    className={cn(
-                      'flex cursor-pointer flex-col gap-4 hover:opacity-75',
-                      !index && 'md:col-span-2'
-                    )}
-                    key={post._slug}
-                  >
-                    <Image
-                      src={post.image.url}
-                      alt={post.image.alt ?? ''}
-                      width={post.image.width}
-                      height={post.image.height}
-                    />
-                    <div className="flex flex-row items-center gap-4">
-                      <p className="text-muted-foreground text-sm">
-                        {new Date(post.date).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <h3 className="max-w-3xl text-4xl tracking-tight">
-                        {post._title}
-                      </h3>
-                      <p className="max-w-3xl text-base text-muted-foreground">
-                        {post.description}
-                      </p>
-                    </div>
-                  </Link>
-                ));
-              }}
-            </Feed>
+            {posts && posts.length > 0 ? (
+              posts.map((post: any, index: number) => (
+                <Link
+                  href={`/blog/${post._slug}`}
+                  className={cn(
+                    'flex cursor-pointer flex-col gap-4 hover:opacity-75',
+                    !index && 'md:col-span-2'
+                  )}
+                  key={post._slug}
+                >
+                  <Image
+                    src={post.image}
+                    alt=""
+                    width={600}
+                    height={300}
+                  />
+                  <div className="flex flex-row items-center gap-4">
+                    <p className="text-muted-foreground text-sm">
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="max-w-3xl text-4xl tracking-tight">
+                      {post._title}
+                    </h3>
+                    <p className="max-w-3xl text-base text-muted-foreground">
+                      {post.description}
+                    </p>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <p className="text-muted-foreground">No blog posts available.</p>
+            )}
           </div>
         </div>
       </div>

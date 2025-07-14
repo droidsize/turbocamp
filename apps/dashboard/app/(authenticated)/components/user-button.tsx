@@ -119,7 +119,6 @@ export function UserButton({ showName = false, appearance }: UserButtonProps) {
                   </span>
                 </div>
               )}
-              'muted-foregroundxs'
               {showName && <ChevronsUpDown className="ml-auto size-4" />}
             </div>
           </SidebarMenuButton>

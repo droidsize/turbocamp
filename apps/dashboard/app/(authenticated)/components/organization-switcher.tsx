@@ -161,9 +161,11 @@ export function OrganizationSwitcher({
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {displayOrg?.name || 'Organization'}
+                  {displayOrg?.name || 'No Organization'}
                 </span>
-                <span className="truncate text-xs">Organization</span>
+                <span className="truncate text-sidebar-foreground/70 text-xs">
+                  {displayOrg ? 'Organization' : 'Create or join one'}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>

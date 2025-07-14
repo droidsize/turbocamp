@@ -1,8 +1,17 @@
 'use client';
 
 import { env } from '@/env';
+import { useSession } from '@packages/auth/client';
 import { ModeToggle } from '@packages/base/components/mode-toggle';
 import { Button } from '@packages/base/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@packages/base/components/ui/dropdown-menu';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,20 +20,115 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@packages/base/components/ui/navigation-menu';
-import { Menu, MoveRight, X } from 'lucide-react';
+import {
+  Building2,
+  LogOut,
+  Menu,
+  MoveRight,
+  Settings,
+  User,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import type { Dictionary } from '@packages/i18n';
 import Image from 'next/image';
+import Logo from '../../logo.png';
+import { AuthModal } from '../auth-modal';
 import { LanguageSwitcher } from './language-switcher';
-import Logo from './logo.svg';
 
 type HeaderProps = {
   dictionary: Dictionary;
 };
 
+const UserMenu = ({
+  user,
+  onSignOut,
+}: { user: any; onSignOut: () => void }) => {
+  const getInitials = (name?: string, email?: string) => {
+    if (name) {
+      return name
+        .split(' ')
+        .map((part) => part[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (email) {
+      return email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
+  const userInitials = getInitials(user.name, user.email);
+  const displayName = user.name || user.email || 'User';
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 rounded-full">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground text-sm">
+            {user.image ? (
+              <Image
+                src={user.image}
+                alt={`${displayName} avatar`}
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-full"
+              />
+            ) : (
+              userInitials
+            )}
+          </div>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="font-medium text-sm leading-none">{displayName}</p>
+            <p className="text-muted-foreground text-xs leading-none">
+              {user.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link
+            href={`${env.NEXT_PUBLIC_DASHBOARD_URL}`}
+            className="cursor-pointer"
+          >
+            <User className="mr-2 h-4 w-4" />
+            <span>Go to Dashboard</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Building2 className="mr-2 h-4 w-4" />
+          <span>Create Organization</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Settings className="mr-2 h-4 w-4" />
+          <span>Settings</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onSignOut} className="text-red-600">
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Sign out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 export const Header = ({ dictionary }: HeaderProps) => {
+  const { data: session } = useSession();
+  const [isOpen, setOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    const { signOut } = await import('@packages/auth/client');
+    await signOut();
+  };
+
   const navigationItems = [
     {
       title: dictionary.web.header.home,
@@ -56,7 +160,6 @@ export const Header = ({ dictionary }: HeaderProps) => {
     });
   }
 
-  const [isOpen, setOpen] = useState(false);
   return (
     <header className="sticky top-0 left-0 z-40 w-full border-b bg-background">
       <div className="container relative mx-auto flex min-h-20 flex-row items-center gap-4 lg:grid lg:grid-cols-3">
@@ -117,12 +220,12 @@ export const Header = ({ dictionary }: HeaderProps) => {
         <div className="flex items-center gap-2 lg:justify-center">
           <Image
             src={Logo}
-            alt="Logo"
+            alt="Turbocamp Logo"
             width={24}
             height={24}
-            className="dark:invert"
+            className="rounded-sm"
           />
-          <p className="whitespace-nowrap font-semibold">next-forge</p>
+          <p className="whitespace-nowrap font-semibold">Turbocamp</p>
         </div>
         <div className="flex w-full justify-end gap-4">
           <Button variant="ghost" className="hidden md:inline" asChild>
@@ -135,16 +238,24 @@ export const Header = ({ dictionary }: HeaderProps) => {
           <div className="hidden md:inline">
             <ModeToggle />
           </div>
-          <Button variant="outline" asChild className="hidden md:inline">
-            <Link href={`${env.NEXT_PUBLIC_DASHBOARD_URL}/sign-in`}>
-              {dictionary.web.header.signIn}
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href={`${env.NEXT_PUBLIC_DASHBOARD_URL}/sign-up`}>
-              {dictionary.web.header.signUp}
-            </Link>
-          </Button>
+          {session?.user ? (
+            <UserMenu user={session.user} onSignOut={handleSignOut} />
+          ) : (
+            <>
+              <AuthModal
+                defaultTab="sign-in"
+                title="Welcome back"
+                description="Sign in to your account"
+              >
+                <Button variant="outline" className="hidden md:inline">
+                  {dictionary.web.header.signIn}
+                </Button>
+              </AuthModal>
+              <AuthModal defaultTab="sign-up">
+                <Button>{dictionary.web.header.signUp}</Button>
+              </AuthModal>
+            </>
+          )}
         </div>
         <div className="flex w-12 shrink items-end justify-end lg:hidden">
           <Button variant="ghost" onClick={() => setOpen(!isOpen)}>

@@ -2,37 +2,33 @@
 import { allLegals, allPosts } from 'content-collections';
 
 export const blog = {
-  postsQuery: null,
-  latestPostQuery: null,
-  postQuery: (slug: string) => null,
-  getPosts: async () => allPosts,
-  getLatestPost: async () =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allPosts
+  getPosts: () => allPosts || [],
+  getLatestPost: () => {
+    if (!allPosts || allPosts.length === 0) return null;
+    return allPosts
       .sort(
         (a: any, b: any) =>
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-      )
-      .at(0),
-  getPost: async (slug: string) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allPosts.find(({ _meta }: any) => _meta.path === slug),
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      )[0];
+  },
+  getPost: (slug: string) => {
+    if (!allPosts) return null;
+    return allPosts.find((post: any) => post._slug === slug);
+  },
 };
 
 export const legal = {
-  postsQuery: null,
-  latestPostQuery: null,
-  postQuery: (slug: string) => null,
-  getPosts: async () => allLegals,
-  getLatestPost: async () =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allLegals
+  getPosts: () => allLegals || [],
+  getLatestPost: () => {
+    if (!allLegals || allLegals.length === 0) return null;
+    return allLegals
       .sort(
         (a: any, b: any) =>
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-      )
-      .at(0),
-  getPost: async (slug: string) =>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    allLegals.find(({ _meta }: any) => _meta.path === slug),
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      )[0];
+  },
+  getPost: (slug: string) => {
+    if (!allLegals) return null;
+    return allLegals.find((legal: any) => legal._slug === slug);
+  },
 };
