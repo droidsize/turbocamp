@@ -1,6 +1,11 @@
 'use client';
 
 import { useSession } from '@packages/auth/client';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@packages/base/components/ui/avatar';
 import { Button } from '@packages/base/components/ui/button';
 import {
   Card,
@@ -12,7 +17,6 @@ import {
 } from '@packages/base/components/ui/card';
 import { Input } from '@packages/base/components/ui/input';
 import { Label } from '@packages/base/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@packages/base/components/ui/avatar';
 import { useState } from 'react';
 import { Header } from '../../components/header';
 
@@ -51,7 +55,9 @@ export default function ProfilePage() {
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="max-w-2xl">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold tracking-tight">Profile Settings</h2>
+            <h2 className="font-bold text-2xl tracking-tight">
+              Profile Settings
+            </h2>
             <p className="text-muted-foreground">
               Manage your personal account information and preferences.
             </p>
@@ -67,7 +73,7 @@ export default function ProfilePage() {
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={session.user.image} />
+                    <AvatarImage src={session.user.image || undefined} />
                     <AvatarFallback>
                       {session.user.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
@@ -76,7 +82,7 @@ export default function ProfilePage() {
                     <Button variant="outline" type="button">
                       Change Avatar
                     </Button>
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="mt-2 text-muted-foreground text-sm">
                       JPG, GIF or PNG. Max size of 2MB.
                     </p>
                   </div>
@@ -101,7 +107,7 @@ export default function ProfilePage() {
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
                   />
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Your email address is used for login and notifications
                   </p>
                 </div>
@@ -126,7 +132,7 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button variant="outline">Change Password</Button>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Last changed 3 months ago
               </p>
             </CardContent>

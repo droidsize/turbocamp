@@ -1,5 +1,6 @@
 'use client';
 
+import { ERROR_MESSAGES, useErrorHandler } from '@/hooks/use-error-handler';
 import { organization } from '@packages/auth/client';
 import { Button } from '@packages/base/components/ui/button';
 import {
@@ -13,6 +14,7 @@ import { Input } from '@packages/base/components/ui/input';
 import { Label } from '@packages/base/components/ui/label';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function NewOrganizationPage() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function NewOrganizationPage() {
   const [slug, setSlug] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const { handleError } = useErrorHandler();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ export default function NewOrganizationPage() {
     try {
       const result = await organization.create({
         name,
-        slug: slug || undefined,
+        slug: slug || generateSlug(name),
       });
 
       if (result.data) {
@@ -37,12 +40,17 @@ export default function NewOrganizationPage() {
         await organization.setActive({
           organizationId: result.data.id,
         });
+        toast.success('Organization created successfully!');
         router.push('/');
         router.refresh();
       }
-    } catch (err) {
-      setError('Failed to create organization. Please try again.');
-      console.error('Failed to create organization:', err);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error && err.message?.includes('limit')
+          ? ERROR_MESSAGES.ORGANIZATION_LIMIT
+          : 'Failed to create organization. Please try again.';
+      setError(errorMessage);
+      handleError(err, { fallbackMessage: errorMessage });
     } finally {
       setIsLoading(false);
     }
@@ -95,9 +103,7 @@ export default function NewOrganizationPage() {
               </p>
             </div>
 
-            {error && (
-              <p className="text-destructive text-sm">{error}</p>
-            )}
+            {error && <p className="text-destructive text-sm">{error}</p>}
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading || !name}>

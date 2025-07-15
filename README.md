@@ -71,6 +71,8 @@ Get up and running in under 5 minutes! We'll set up your **Marketing Site**, **D
 
 > **🚀 Architecture Note**: Our centralized API structure makes this template incredibly flexible - you can easily add mobile apps (React Native/Expo), desktop apps (Electron), or any other client that needs to connect to your backend.
 
+> **🔒 Type-Safe Environment**: Turbocamp uses [@t3-oss/env-nextjs](https://env.t3.gg/) for type-safe environment variables. All env vars are validated at build time with full TypeScript support!
+
 #### 1. Install Dependencies
 
 ```bash
@@ -268,6 +270,7 @@ Your docs will be available at: http://localhost:3004
 - **[Next.js 15](https://nextjs.org/)** – The React framework that scales with you. Server Components, App Router, and edge-ready.
 - **[Turborepo](https://turbo.build/)** – Monorepo done right. Caching, parallel builds, and shared packages that just work.
 - **[TypeScript](https://www.typescriptlang.org/)** – Your safety net. Catch bugs at compile time, not in production.
+- **[@t3-oss/env-nextjs](https://env.t3.gg/)** – Type-safe environment variables. Validated at build time with Zod schemas.
 
 ### 🔐 Authentication & Data
 - **[Better Auth](https://www.better-auth.com/)** – Open-source auth that doesn't break the bank. Type-safe, secure, and yours to control.

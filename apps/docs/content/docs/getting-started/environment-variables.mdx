@@ -1,6 +1,6 @@
 ---
 title: Environment Variables
-description: Complete guide to configuring environment variables for all Turbocamp applications
+description: Complete guide to configuring type-safe environment variables for all Turbocamp applications
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
@@ -8,7 +8,57 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 ## Overview
 
-Turbocamp uses environment variables to configure different aspects of the application across multiple environments. This guide covers all required and optional environment variables for each application.
+Turbocamp uses a **type-safe environment variable system** powered by [@t3-oss/env-nextjs](https://env.t3.gg/). This ensures all environment variables are validated at build time and provides full TypeScript support throughout your application.
+
+<Callout type="info">
+  **Type Safety First**: All environment variables are validated using Zod schemas and accessed through typed `env` objects. Never use `process.env` directly!
+</Callout>
+
+## Type-Safe Environment System
+
+### How It Works
+
+Each package and app defines its environment variables in a `keys.ts` file:
+
+```typescript
+// packages/auth/keys.ts
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const keys = () =>
+  createEnv({
+    server: {
+      BETTER_AUTH_SECRET: z.string().min(32),
+      BETTER_AUTH_URL: z.string().url().optional(),
+    },
+    client: {
+      NEXT_PUBLIC_AUTH_API_URL: z.string().url(),
+    },
+    runtimeEnv: {
+      BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+      BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+      NEXT_PUBLIC_AUTH_API_URL: process.env.NEXT_PUBLIC_AUTH_API_URL,
+    },
+  });
+```
+
+### Using Environment Variables
+
+Always import and use the typed `env` object:
+
+```typescript
+// ✅ CORRECT - Type-safe access
+import { env } from '@/env';
+
+if (env.VERCEL) {
+  // This is type-safe and validated
+}
+
+// ❌ WRONG - Never do this
+if (process.env.VERCEL) {
+  // This bypasses type safety
+}
+```
 
 ## Environment Structure
 
@@ -22,17 +72,45 @@ apps/
 └── docs/.env.local         # Documentation site configuration
 
 packages/
-└── db/.env                 # Database configuration
+├── db/.env                 # Database configuration
+└── i18n/.env.local         # Internationalization configuration
 ```
 
 ## Core Environment Variables
 
-### Database Configuration
-
-**File:** `packages/db/.env`
+### Authentication (packages/auth)
 
 ```bash
-# PostgreSQL database connection
+# Required: Better Auth secret (min 32 characters)
+BETTER_AUTH_SECRET="your-32-character-secret-key-here"
+
+# Optional: Better Auth URL
+BETTER_AUTH_URL="http://localhost:3002"
+
+# API URL for auth endpoints
+AUTH_API_URL="http://localhost:3002"
+
+# Optional: Additional trusted origins for CORS
+ADDITIONAL_TRUSTED_ORIGINS="http://localhost:3003,http://localhost:3004"
+
+# Client-side auth URLs
+NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+```
+
+Generate a secure secret:
+```bash
+openssl rand -base64 32
+```
+
+<Callout type="warn">
+  The `BETTER_AUTH_SECRET` must be identical across all applications for session sharing to work properly.
+</Callout>
+
+### Database (packages/db)
+
+```bash
+# Required: PostgreSQL connection URL
 DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp?schema=public"
 ```
 
@@ -40,10 +118,10 @@ DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp?schema=pub
 <Tab title="Local Development" value="local">
 ```bash
 # Local PostgreSQL
-DATABASE_URL="postgresql://username@localhost:5432/turbocamp"
+DATABASE_URL="postgresql://postgres@localhost:5432/turbocamp"
 
 # With password
-DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/turbocamp"
 ```
 </Tab>
 <Tab title="Neon (Cloud)" value="neon">
@@ -60,418 +138,323 @@ DATABASE_URL="postgresql://username:password@db.project.supabase.co:5432/postgre
 </Tab>
 </Tabs>
 
-### Authentication Configuration
-
-**Required for all applications:**
+### Application URLs (tooling/next-config)
 
 ```bash
-# Better Auth secret (must be same across all apps)
-BETTER_AUTH_SECRET="your-32-character-secret-key-here"
+# Required: Application URLs
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+
+# Optional: API and docs URLs
+NEXT_PUBLIC_API_URL="http://localhost:3002"
+NEXT_PUBLIC_DOCS_URL="http://localhost:3004"
+
+# Build/deployment variables
+ANALYZE="true"              # Enable bundle analysis
+VERCEL="1"                  # Set by Vercel automatically
+VERCEL_PROJECT_PRODUCTION_URL="your-app.vercel.app"
+NEXT_RUNTIME="nodejs"       # or "edge"
 ```
 
-Generate a secure secret:
+## Service Integrations
+
+### Email Service (packages/email)
+
 ```bash
-openssl rand -base64 32
-```
-
-<Callout type="warn">
-  The `BETTER_AUTH_SECRET` must be identical across all applications for session sharing to work properly.
-</Callout>
-
-## Application-Specific Variables
-
-### API App Configuration
-
-**File:** `apps/api/.env.local`
-
-<Tabs>
-<Tab title="Development" value="development">
-```bash
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/turbocamp"
-
-# Better Auth
-BETTER_AUTH_SECRET="your-32-character-secret"
-BETTER_AUTH_URL="http://localhost:3002"
-
-# Optional: Email service (Resend)
-RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
+# Required: Resend configuration
 RESEND_FROM="noreply@yourdomain.com"
-
-# Optional: Rate limiting (Upstash Redis)
-UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
-UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
-
-# Optional: Error tracking (Sentry)
-NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxxxxxxxxxx@sentry.io/xxxxxxxx"
-
-# Optional: Additional trusted origins
-ADDITIONAL_TRUSTED_ORIGINS="http://localhost:3003,http://localhost:3004"
-```
-</Tab>
-<Tab title="Production" value="production">
-```bash
-# Database (use your production database URL)
-DATABASE_URL="postgresql://username:password@production-host:5432/turbocamp"
-
-# Better Auth
-BETTER_AUTH_SECRET="your-production-secret"
-BETTER_AUTH_URL="https://api.turbocamp.dev"
-
-# Email service
-RESEND_API_KEY="re_live_xxxxxxxxxxxxxxxx"
-RESEND_FROM="noreply@turbocamp.dev"
-
-# Rate limiting
-UPSTASH_REDIS_REST_URL="https://production.upstash.io"
-UPSTASH_REDIS_REST_TOKEN="production_token"
-
-# Error tracking
-NEXT_PUBLIC_SENTRY_DSN="https://production@sentry.io/project"
-
-# Trusted origins
-ADDITIONAL_TRUSTED_ORIGINS="https://staging.turbocamp.dev"
-```
-</Tab>
-</Tabs>
-
-### Dashboard App Configuration
-
-**File:** `apps/dashboard/.env.local`
-
-<Tabs>
-<Tab title="Development" value="development">
-```bash
-# Authentication API
-AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
-
-# Application URLs
-NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
-NEXT_PUBLIC_WEB_URL="http://localhost:3000"
-
-# Better Auth (same secret as API)
-BETTER_AUTH_SECRET="your-32-character-secret"
-
-# Optional: Analytics (PostHog)
-NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
-NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
-
-# Optional: Error tracking
-NEXT_PUBLIC_SENTRY_DSN="https://dashboard@sentry.io/project"
-```
-</Tab>
-<Tab title="Production" value="production">
-```bash
-# Authentication API
-AUTH_API_URL="https://api.turbocamp.dev"
-NEXT_PUBLIC_AUTH_API_URL="https://api.turbocamp.dev"
-
-# Application URLs
-NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
-NEXT_PUBLIC_WEB_URL="https://turbocamp.dev"
-
-# Better Auth (same secret as API)
-BETTER_AUTH_SECRET="your-production-secret"
-
-# Analytics
-NEXT_PUBLIC_POSTHOG_KEY="your-production-posthog-key"
-NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
-
-# Error tracking
-NEXT_PUBLIC_SENTRY_DSN="https://production-dashboard@sentry.io/project"
-```
-</Tab>
-</Tabs>
-
-### Web App Configuration
-
-**File:** `apps/web/.env.local`
-
-<Tabs>
-<Tab title="Development" value="development">
-```bash
-# Authentication API
-AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
-
-# Application URLs
-NEXT_PUBLIC_WEB_URL="http://localhost:3000"
-NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
-
-# Optional: Analytics
-NEXT_PUBLIC_POSTHOG_KEY="your-posthog-key"
-NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
-
-# Optional: Error tracking
-NEXT_PUBLIC_SENTRY_DSN="https://web@sentry.io/project"
-```
-</Tab>
-<Tab title="Production" value="production">
-```bash
-# Authentication API
-AUTH_API_URL="https://api.turbocamp.dev"
-NEXT_PUBLIC_AUTH_API_URL="https://api.turbocamp.dev"
-
-# Application URLs
-NEXT_PUBLIC_WEB_URL="https://turbocamp.dev"
-NEXT_PUBLIC_DASHBOARD_URL="https://dashboard.turbocamp.dev"
-
-# Analytics
-NEXT_PUBLIC_POSTHOG_KEY="your-production-posthog-key"
-NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
-
-# Error tracking
-NEXT_PUBLIC_SENTRY_DSN="https://production-web@sentry.io/project"
-```
-</Tab>
-</Tabs>
-
-### Documentation Site Configuration
-
-**File:** `apps/docs/.env.local`
-
-```bash
-# Application URLs (for navigation links)
-NEXT_PUBLIC_WEB_URL="http://localhost:3000"
-NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
-
-# Optional: Search service
-ALGOLIA_APP_ID="your-algolia-app-id"
-ALGOLIA_API_KEY="your-algolia-search-key"
-ALGOLIA_INDEX_NAME="turbocamp-docs"
+RESEND_TOKEN="re_xxxxxxxxxxxxxxxx"
 ```
 
-## Optional Service Integrations
-
-### Email Service (Resend)
-
-For transactional emails like password resets and welcome emails:
+### Payments (packages/payments)
 
 ```bash
-# Get these from https://resend.com/
-RESEND_API_KEY="re_xxxxxxxxxxxxxxxx"
-RESEND_FROM="noreply@yourdomain.com"
+# Required: Stripe configuration
+STRIPE_SECRET_KEY="sk_test_xxxxxxxxxxxxxxxx"
+
+# Optional: Webhook secret for Stripe events
+STRIPE_WEBHOOK_SECRET="whsec_xxxxxxxxxxxxxxxx"
 ```
 
-### Rate Limiting (Upstash Redis)
-
-For API rate limiting and caching:
+### Analytics (packages/analytics)
 
 ```bash
-# Get these from https://upstash.com/
-UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
-UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
-```
-
-### Analytics (PostHog)
-
-For user behavior tracking and product analytics:
-
-```bash
-# Get these from https://posthog.com/
+# Required: PostHog configuration
 NEXT_PUBLIC_POSTHOG_KEY="phc_xxxxxxxxxxxxxxxx"
 NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
+
+# Optional: Google Analytics
+NEXT_PUBLIC_GA_MEASUREMENT_ID="G-XXXXXXXXXX"
 ```
 
-### Error Tracking (Sentry)
-
-For error monitoring and performance tracking:
+### Error Tracking (packages/logging)
 
 ```bash
-# Get these from https://sentry.io/
-NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxxxxxxxxxx@sentry.io/xxxxxxxx"
+# Optional: Sentry configuration
+SENTRY_ORG="your-org"
+SENTRY_PROJECT="your-project"
+NEXT_PUBLIC_SENTRY_DSN="https://xxxxxxxx@sentry.io/xxxxxxxx"
 ```
 
-### Search Service (Algolia)
-
-For documentation search functionality:
+### Rate Limiting (packages/security)
 
 ```bash
-# Get these from https://algolia.com/
-ALGOLIA_APP_ID="your-app-id"
-ALGOLIA_API_KEY="your-search-only-api-key"
-ALGOLIA_INDEX_NAME="turbocamp-docs"
+# Optional: Upstash Redis for rate limiting
+UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
 ```
 
-## Environment Setup Scripts
-
-### Quick Setup Script
-
-Create a setup script to quickly configure all environment files:
+### Feature Flags (packages/feature-flags)
 
 ```bash
-#!/bin/bash
-# setup-env.sh
+# Optional: Feature flags secret
+FLAGS_SECRET="your-feature-flags-secret"
+```
 
-echo "🚀 Setting up Turbocamp environment variables..."
+### AI Integration (packages/ai)
 
-# Generate Better Auth secret
-BETTER_AUTH_SECRET=$(openssl rand -base64 32)
+```bash
+# Optional: OpenAI API key
+OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxx"
+```
 
-# Create database environment
-cat > packages/db/.env << EOF
-DATABASE_URL="postgresql://\$USER@localhost:5432/turbocamp"
-EOF
+### File Storage (packages/storage)
 
-# Create API environment
-cat > apps/api/.env.local << EOF
-DATABASE_URL="postgresql://\$USER@localhost:5432/turbocamp"
-BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
+```bash
+# Optional: Vercel Blob storage
+BLOB_READ_WRITE_TOKEN="vercel_blob_xxxxxxxx"
+```
+
+### Internationalization (packages/i18n)
+
+```bash
+# Optional: Languine project ID for translations
+LANGUINE_PROJECT_ID="your-project-id"
+```
+
+## Application Examples
+
+### API App (.env.local)
+
+```bash
+# Database
+DATABASE_URL="postgresql://postgres@localhost:5432/turbocamp"
+
+# Authentication
+BETTER_AUTH_SECRET="your-32-character-secret"
 BETTER_AUTH_URL="http://localhost:3002"
-EOF
 
-# Create Dashboard environment
-cat > apps/dashboard/.env.local << EOF
-AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
-NEXT_PUBLIC_WEB_URL="http://localhost:3000"
-BETTER_AUTH_SECRET="$BETTER_AUTH_SECRET"
-EOF
-
-# Create Web environment
-cat > apps/web/.env.local << EOF
-AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
-NEXT_PUBLIC_WEB_URL="http://localhost:3000"
-NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
-EOF
-
-echo "✅ Environment files created successfully!"
-echo "📝 Generated Better Auth Secret: $BETTER_AUTH_SECRET"
-echo "🔧 Edit the files to add optional services (email, analytics, etc.)"
+# Optional services
+RESEND_FROM="noreply@localhost"
+RESEND_TOKEN="re_test_xxxxxxxx"
+STRIPE_SECRET_KEY="sk_test_xxxxxxxx"
+UPSTASH_REDIS_REST_URL="https://xxxxxxxx.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="xxxxxxxxxxxxxxxx"
 ```
 
-Make it executable and run:
+### Dashboard App (.env.local)
+
 ```bash
-chmod +x setup-env.sh
-./setup-env.sh
+# Authentication
+BETTER_AUTH_SECRET="your-32-character-secret"
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
+
+# Application URLs
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY="phc_xxxxxxxx"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
 ```
 
-## Environment Validation
+### Web App (.env.local)
 
-### Runtime Validation
+```bash
+# Authentication
+AUTH_API_URL="http://localhost:3002"
+NEXT_PUBLIC_AUTH_API_URL="http://localhost:3002"
 
-Validate required environment variables at startup:
+# Application URLs
+NEXT_PUBLIC_WEB_URL="http://localhost:3000"
+NEXT_PUBLIC_DASHBOARD_URL="http://localhost:3001"
 
-```typescript
-// utils/env.ts
-const requiredEnvVars = {
-  api: ['DATABASE_URL', 'BETTER_AUTH_SECRET', 'BETTER_AUTH_URL'],
-  dashboard: ['AUTH_API_URL', 'NEXT_PUBLIC_AUTH_API_URL', 'BETTER_AUTH_SECRET'],
-  web: ['AUTH_API_URL', 'NEXT_PUBLIC_AUTH_API_URL'],
-} as const;
-
-export function validateEnv(app: keyof typeof requiredEnvVars) {
-  const missing = requiredEnvVars[app].filter(
-    (envVar) => !process.env[envVar]
-  );
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables for ${app}: ${missing.join(', ')}`
-    );
-  }
-}
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY="phc_xxxxxxxx"
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
 ```
 
-Use in your app startup:
-```typescript
-// In your app initialization
-import { validateEnv } from './utils/env';
+## Adding New Environment Variables
 
-validateEnv('api'); // or 'dashboard', 'web'
+To add a new environment variable:
+
+1. **Define the schema** in the appropriate `keys.ts` file:
+
+```typescript
+// packages/your-package/keys.ts
+export const keys = () =>
+  createEnv({
+    server: {
+      MY_NEW_VAR: z.string().min(1),
+    },
+    runtimeEnv: {
+      MY_NEW_VAR: process.env.MY_NEW_VAR,
+    },
+  });
+```
+
+2. **Import the keys** in the app's `env.ts`:
+
+```typescript
+// apps/your-app/env.ts
+import { keys as yourPackageKeys } from '@packages/your-package/keys';
+
+export const env = createEnv({
+  extends: [
+    yourPackageKeys(),
+    // ... other keys
+  ],
+});
+```
+
+3. **Use the typed env** in your code:
+
+```typescript
+import { env } from '@/env';
+
+console.log(env.MY_NEW_VAR); // Type-safe!
+```
+
+## Quick Setup Script
+
+We've created a convenient setup script that automatically creates all required environment files with proper configuration:
+
+```bash
+# Run the setup script (Recommended)
+./scripts/setup-env.sh
+```
+
+This script will:
+- Generate a secure Better Auth secret
+- Create all necessary `.env` files for each app and package
+- Set up database connections and authentication URLs
+- Include commented examples for optional services
+
+<details>
+<summary>Manual Setup (Alternative)</summary>
+
+If you prefer to set up environment files manually, you can copy the example files and configure them:
+
+```bash
+# Copy example files (if they exist)
+cp apps/api/.env.example apps/api/.env.local
+cp apps/dashboard/.env.example apps/dashboard/.env.local
+cp apps/web/.env.example apps/web/.env.local
+cp packages/db/.env.example packages/db/.env
+
+# Or create them manually following the examples in the automated script
+```
+
+</details>
+
+## Validation & Type Safety
+
+### Build-Time Validation
+
+The @t3-oss/env package validates all environment variables at build time:
+
+```bash
+# Missing required variables will fail the build
+Error: Missing required environment variable: BETTER_AUTH_SECRET
+```
+
+### Runtime Type Safety
+
+All environment variables are fully typed:
+
+```typescript
+env.BETTER_AUTH_SECRET // string
+env.NEXT_PUBLIC_POSTHOG_KEY // string
+env.ANALYZE // string | undefined
+env.NEXT_RUNTIME // "nodejs" | "edge" | undefined
+```
+
+### Custom Validation
+
+Add custom validation rules:
+
+```typescript
+// Validate email format
+RESEND_FROM: z.string().email(),
+
+// Validate URL format
+BETTER_AUTH_URL: z.string().url(),
+
+// Validate specific prefixes
+STRIPE_SECRET_KEY: z.string().startsWith('sk_'),
+
+// Validate minimum length
+BETTER_AUTH_SECRET: z.string().min(32),
 ```
 
 ## Security Best Practices
 
-### Environment Variable Security
-
-<Callout type="error" title="Never commit secrets">
-- ✅ Add `.env*` files to `.gitignore`
-- ✅ Use different secrets for each environment
-- ✅ Rotate secrets regularly
-- ✅ Use a secret management service in production
+<Callout type="error" title="Security Rules">
+1. **Never commit `.env` files** - They're in `.gitignore` for a reason
+2. **Use different secrets per environment** - Dev, staging, and production should have unique values
+3. **Rotate secrets regularly** - Especially after team member changes
+4. **Use secret managers in production** - AWS Secrets Manager, Vercel, etc.
+5. **Limit access** - Only necessary team members should have production secrets
 </Callout>
 
-### Production Considerations
+### Client vs Server Variables
 
-1. **Use Secret Management**: Consider AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault
-2. **Environment Separation**: Different values for dev/staging/production
-3. **Access Control**: Limit who can access production environment variables
-4. **Audit Logging**: Track changes to environment variables
-5. **Backup**: Secure backup of environment configurations
+- **Server variables**: Can contain secrets, only available server-side
+- **Client variables**: Must start with `NEXT_PUBLIC_`, visible in browser
 
-### Example Production Setup
+```typescript
+// Server-only (secret)
+BETTER_AUTH_SECRET="secret-key"
 
-```bash
-# Use a secret management service
-DATABASE_URL="${SECRET_MANAGER_DATABASE_URL}"
-BETTER_AUTH_SECRET="${SECRET_MANAGER_AUTH_SECRET}"
-RESEND_API_KEY="${SECRET_MANAGER_RESEND_KEY}"
+// Client-side (public)
+NEXT_PUBLIC_API_URL="https://api.example.com"
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-<Callout type="error" title="Authentication not working">
-- ✅ Check `BETTER_AUTH_SECRET` is the same across all apps
-- ✅ Verify `AUTH_API_URL` points to your API server
-- ✅ Ensure database connection is working
+<Callout type="error" title="Build fails with missing env var">
+Ensure the variable is:
+1. Defined in the appropriate `keys.ts` file
+2. Added to the `runtimeEnv` object
+3. Present in your `.env` file
+4. Properly imported in the app's `env.ts`
 </Callout>
 
-<Callout type="error" title="Cross-domain issues">
-- ✅ Check application URLs are correctly configured
-- ✅ Verify `ADDITIONAL_TRUSTED_ORIGINS` includes all your domains
-- ✅ Ensure CORS configuration is correct
+<Callout type="error" title="TypeScript doesn't recognize env variable">
+1. Check that you're importing from `@/env`, not using `process.env`
+2. Ensure the variable is defined in the schema
+3. Restart your TypeScript server (VS Code: Cmd+Shift+P → "Restart TS Server")
 </Callout>
 
-<Callout type="error" title="Build errors">
-- ✅ Check all `NEXT_PUBLIC_` variables are set for client-side code
-- ✅ Verify environment file paths are correct
-- ✅ Ensure no syntax errors in environment files
+<Callout type="error" title="Variable works locally but not in production">
+1. Verify the variable is set in your deployment platform
+2. Check for typos in variable names
+3. Ensure build-time variables are available during build
+4. Remember: Client variables need `NEXT_PUBLIC_` prefix
 </Callout>
 
-### Debug Mode
-
-Enable debug logging for environment issues:
-
-```bash
-# Enable debug mode
-NODE_ENV="development"
-DEBUG="*"
-
-# Better Auth specific debugging
-DEBUG="better-auth:*"
-```
-
-### Environment Health Check
-
-Create a health check endpoint to verify environment configuration:
+### Debug Environment Variables
 
 ```typescript
-// pages/api/health.ts
-export default function handler(req: Request, res: Response) {
-  const health = {
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    config: {
-      hasDatabase: !!process.env.DATABASE_URL,
-      hasAuthSecret: !!process.env.BETTER_AUTH_SECRET,
-      hasAuthUrl: !!process.env.BETTER_AUTH_URL,
-      // Add other checks as needed
-    }
-  };
-
-  res.status(200).json(health);
+// Debug all loaded environment variables (dev only!)
+if (process.env.NODE_ENV === 'development') {
+  console.log('Loaded env:', env);
 }
 ```
 
-Access via: `http://localhost:3002/api/health`
-
 <Callout type="info">
-  **✅ Environment Ready!** With proper environment configuration, your Turbocamp applications will run smoothly across all environments.
+  **Need help?** Check the specific package's `keys.ts` file to see all available environment variables and their validation rules.
 </Callout>

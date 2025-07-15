@@ -24,6 +24,14 @@
 - Write self-documenting code with JSDoc comments for complex functions
 - Implement proper barrel exports from packages for clean imports
 
+## ENVIRONMENT VARIABLES
+- NEVER use `process.env` directly - always use the typed `env` object from `@/env`
+- All environment variables MUST be defined in the appropriate `keys.ts` file with Zod validation
+- Add new env vars to both the schema and `runtimeEnv` object in keys.ts
+- Use proper validation (e.g., `z.string().url()` for URLs, `z.string().email()` for emails)
+- Example: `import { env } from '@/env'; if (env.VERCEL) { ... }`
+- This ensures type safety and runtime validation of all environment variables
+
 ## MONOREPO GUIDELINES
 - Keep apps focused on their specific domain (api, app, docs, web)
 - Place shared logic in appropriate packages, not in apps

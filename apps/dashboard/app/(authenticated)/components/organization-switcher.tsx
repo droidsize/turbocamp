@@ -24,7 +24,6 @@ import {
 import { Building2, Check, ChevronsUpDown, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import * as React from 'react';
 
 interface OrganizationSwitcherProps {
   hidePersonal?: boolean;
@@ -38,7 +37,7 @@ export function OrganizationSwitcher({
   const { data: session } = useSession();
   const { isMobile } = useSidebar();
   const router = useRouter();
-  const { data: organizations, isLoading } = useListOrganizations();
+  const { data: organizations, isPending } = useListOrganizations();
   const { data: activeOrg } = useActiveOrganization();
 
   const handleOrganizationSwitch = async (orgId: string) => {
@@ -57,7 +56,7 @@ export function OrganizationSwitcher({
     router.push('/organization/new');
   };
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -93,7 +92,7 @@ export function OrganizationSwitcher({
   }
 
   // Use active org or first org if no active org is set
-  const displayOrg = activeOrg || (organizations && organizations[0]);
+  const displayOrg = activeOrg || organizations?.[0];
 
   return (
     <SidebarMenu>

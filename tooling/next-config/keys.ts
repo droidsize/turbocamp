@@ -5,6 +5,8 @@ export const keys = () =>
   createEnv({
     server: {
       ANALYZE: z.string().optional(),
+      VERCEL: z.string().optional(),
+      VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
 
       // Added by Vercel
       NEXT_RUNTIME: z.enum(['nodejs', 'edge']).optional(),
@@ -17,6 +19,8 @@ export const keys = () =>
     },
     runtimeEnv: {
       ANALYZE: process.env.ANALYZE,
+      VERCEL: process.env.VERCEL,
+      VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
       NEXT_RUNTIME: process.env.NEXT_RUNTIME,
       NEXT_PUBLIC_DASHBOARD_URL: process.env.NEXT_PUBLIC_DASHBOARD_URL,
       NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
