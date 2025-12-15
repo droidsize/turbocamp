@@ -9,7 +9,7 @@ const config = defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      // '@' alias should be set by each app's vitest.config.ts
       '@packages': path.resolve(__dirname, '../../packages'),
     },
   },
