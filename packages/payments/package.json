@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "@tooling/typescript-config": "workspace:*",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   }
 }
