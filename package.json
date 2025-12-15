@@ -17,7 +17,7 @@
     "translate": "turbo translate",
     "boundaries": "turbo boundaries",
     "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
-    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
+    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/base",
     "migrate": "cd apps/api && pnpm prisma format && pnpm prisma generate && pnpm prisma db push",
     "clean": "git clean -xdf node_modules"
   },
