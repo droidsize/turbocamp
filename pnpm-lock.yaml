@@ -116,8 +116,8 @@ importers:
   apps/dashboard:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^5.0.1
-        version: 5.1.1(react-hook-form@7.60.0(react@19.1.0))
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.68.0(react@19.1.0))
       '@packages/analytics':
         specifier: workspace:*
         version: link:../../packages/analytics
@@ -158,8 +158,8 @@ importers:
         specifier: ^1.13.2
         version: 1.14.2
       lucide-react:
-        specifier: ^0.511.0
-        version: 0.511.0(react@19.1.0)
+        specifier: ^0.556.0
+        version: 0.556.0(react@19.1.0)
       next:
         specifier: 15.3.2
         version: 15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -173,14 +173,14 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
-        specifier: ^7.56.4
-        version: 7.60.0(react@19.1.0)
+        specifier: ^7.68.0
+        version: 7.68.0(react@19.1.0)
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2
       sonner:
-        specifier: ^2.0.3
-        version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^3.25.28
         version: 3.25.76
@@ -229,13 +229,13 @@ importers:
         version: 15.6.2(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       fumadocs-mdx:
         specifier: 11.6.10
-        version: 11.6.10(acorn@8.15.0)(fumadocs-core@15.6.2(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(vite@7.0.4(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))
+        version: 11.6.10(acorn@8.15.0)(fumadocs-core@15.6.2(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       fumadocs-ui:
         specifier: 15.6.2
         version: 15.6.2(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(tailwindcss@4.1.11)
       lucide-react:
-        specifier: ^0.511.0
-        version: 0.511.0(react@19.1.0)
+        specifier: ^0.556.0
+        version: 0.556.0(react@19.1.0)
       next:
         specifier: 15.3.2
         version: 15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -277,8 +277,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2(@content-collections/core@0.9.1(typescript@5.9.3))(acorn@8.15.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@hookform/resolvers':
-        specifier: ^5.0.1
-        version: 5.1.1(react-hook-form@7.60.0(react@19.1.0))
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.68.0(react@19.1.0))
       '@packages/base':
         specifier: workspace:*
         version: link:../../packages/base
@@ -331,8 +331,8 @@ importers:
         specifier: ^1.13.2
         version: 1.14.2
       lucide-react:
-        specifier: ^0.511.0
-        version: 0.511.0(react@19.1.0)
+        specifier: ^0.556.0
+        version: 0.556.0(react@19.1.0)
       mdx-bundler:
         specifier: ^10.1.1
         version: 10.1.1(acorn@8.15.0)(esbuild@0.25.6)
@@ -346,8 +346,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
-        specifier: ^7.56.4
-        version: 7.60.0(react@19.1.0)
+        specifier: ^7.68.0
+        version: 7.68.0(react@19.1.0)
       require-in-the-middle:
         specifier: ^7.5.2
         version: 7.5.2
@@ -358,8 +358,8 @@ importers:
         specifier: ^3.4.2
         version: 3.8.0
       sonner:
-        specifier: ^2.0.3
-        version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^3.25.28
         version: 3.25.76
@@ -521,8 +521,8 @@ importers:
   packages/base:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^5.0.1
-        version: 5.1.1(react-hook-form@7.60.0(react@19.1.0))
+        specifier: ^5.2.2
+        version: 5.2.2(react-hook-form@7.68.0(react@19.1.0))
       '@packages/analytics':
         specifier: workspace:*
         version: link:../analytics
@@ -626,14 +626,14 @@ importers:
         specifier: ^8.6.0
         version: 8.6.0(react@19.1.0)
       geist:
-        specifier: ^1.4.2
-        version: 1.4.2(next@15.3.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+        specifier: ^1.5.1
+        version: 1.5.1(next@15.3.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       lucide-react:
-        specifier: ^0.511.0
-        version: 0.511.0(react@19.1.0)
+        specifier: ^0.556.0
+        version: 0.556.0(react@19.1.0)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -644,8 +644,8 @@ importers:
         specifier: ^9.11.3
         version: 9.12.0(react@19.1.0)
       react-hook-form:
-        specifier: ^7.56.4
-        version: 7.60.0(react@19.1.0)
+        specifier: ^7.68.0
+        version: 7.68.0(react@19.1.0)
       react-moveable:
         specifier: ^0.56.0
         version: 0.56.0
@@ -659,11 +659,11 @@ importers:
         specifier: ^0.0.1
         version: 0.0.1
       sonner:
-        specifier: ^2.0.3
-        version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
-        specifier: ^3.3.0
-        version: 3.3.1
+        specifier: ^3.4.0
+        version: 3.4.0
       tw-animate-css:
         specifier: ^1.3.0
         version: 1.3.5
@@ -1647,8 +1647,8 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@hookform/resolvers@5.1.1':
-    resolution: {integrity: sha512-J/NVING3LMAEvexJkyTLjruSm7aOFx7QX21pzkiJfMoNG0wl5aFEjLTl7ay7IQb9EWY6AkrBy7tHL2Alijpdcg==}
+  '@hookform/resolvers@5.2.2':
+    resolution: {integrity: sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==}
     peerDependencies:
       react-hook-form: ^7.55.0
 
@@ -5408,8 +5408,8 @@ packages:
     resolution: {integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==}
     engines: {node: '>=10'}
 
-  geist@1.4.2:
-    resolution: {integrity: sha512-OQUga/KUc8ueijck6EbtT07L4tZ5+TZgjw8PyWfxo16sL5FWk7gNViPNU8hgCFjy6bJi9yuTP+CRpywzaGN8zw==}
+  geist@1.5.1:
+    resolution: {integrity: sha512-mAHZxIsL2o3ZITFaBVFBnwyDOw+zNLYum6A6nIjpzCGIO8QtC3V76XF2RnZTyLx1wlDTmMDy8jg3Ib52MIjGvQ==}
     peerDependencies:
       next: '>=13.2.0'
 
@@ -6212,8 +6212,8 @@ packages:
     resolution: {integrity: sha512-Lkk/vx6ak3rYkRR0Nhu4lFUT2VDnQSxBe8Hbl7f36358p6ow8Bnvr8lrLt98H8J1aGxfhbX4Fs5tYg2+FTwr5Q==}
     engines: {bun: '>=1.0.0', deno: '>=1.30.0', node: '>=8.0.0'}
 
-  lucide-react@0.511.0:
-    resolution: {integrity: sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==}
+  lucide-react@0.556.0:
+    resolution: {integrity: sha512-iOb8dRk7kLaYBZhR2VlV1CeJGxChBgUthpSP8wom9jfj79qovgG6qcSdiy6vkoREKPnbUYzJsCn4o4PtG3Iy+A==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -7143,8 +7143,8 @@ packages:
     peerDependencies:
       react: ^19.1.0
 
-  react-hook-form@7.60.0:
-    resolution: {integrity: sha512-SBrYOvMbDB7cV8ZfNpaiLcgjH/a1c7aK0lK+aNigpf4xWLO8q+o4tcvVurv3c4EOyzn/3dCsYt4GKD42VvJ/+A==}
+  react-hook-form@7.68.0:
+    resolution: {integrity: sha512-oNN3fjrZ/Xo40SWlHf1yCjlMK417JxoSJVUXQjGdvdRCU07NTFei1i1f8ApUAts+IVh14e4EdakeLEA+BEAs/Q==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -7612,8 +7612,8 @@ packages:
     resolution: {integrity: sha512-pe4Y2yzru68lXCb38aAqRf5gvN8YdjP1lok5o0J7BOHljkyCGKVz7H3vpVIXKD27rj2giOJ7DwVyk/GWrPHDWA==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
 
-  sonner@2.0.6:
-    resolution: {integrity: sha512-yHFhk8T/DK3YxjFQXIrcHT1rGEeTLliVzWbO0xN8GberVun2RiBnxAjXAYpZrqwEVHBG9asI/Li8TAAhN9m59Q==}
+  sonner@2.0.7:
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
@@ -7803,6 +7803,9 @@ packages:
 
   tailwind-merge@3.3.1:
     resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
+
+  tailwind-merge@3.4.0:
+    resolution: {integrity: sha512-uSaO4gnW+b3Y2aWoWfFpX62vn2sR3skfhbjsEnaBI81WD1wBLlHZe5sWf0AqjksNdYTbGBEd0UasQMT3SNV15g==}
 
   tailwindcss@4.1.11:
     resolution: {integrity: sha512-2E9TBm6MDD/xKYe+dvJZAmg3yxIEDNRc0jwlNyDg/4Fil2QcSLjFKGVff0lAf1jjeaArlG/M75Ey/EYr/OJtBA==}
@@ -9111,10 +9114,10 @@ snapshots:
     dependencies:
       hono: 4.10.6
 
-  '@hookform/resolvers@5.1.1(react-hook-form@7.60.0(react@19.1.0))':
+  '@hookform/resolvers@5.2.2(react-hook-form@7.68.0(react@19.1.0))':
     dependencies:
       '@standard-schema/utils': 0.3.0
-      react-hook-form: 7.60.0(react@19.1.0)
+      react-hook-form: 7.68.0(react@19.1.0)
 
   '@img/sharp-darwin-arm64@0.34.3':
     optionalDependencies:
@@ -13200,7 +13203,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-mdx@11.6.10(acorn@8.15.0)(fumadocs-core@15.6.2(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(vite@7.0.4(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0)):
+  fumadocs-mdx@11.6.10(acorn@8.15.0)(fumadocs-core@15.6.2(@types/react@19.1.8)(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(next@15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)):
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.15.0)
       '@standard-schema/spec': 1.0.0
@@ -13217,7 +13220,6 @@ snapshots:
       zod: 3.25.76
     optionalDependencies:
       next: 15.3.2(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      vite: 7.0.4(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0)
     transitivePeerDependencies:
       - acorn
       - supports-color
@@ -13269,7 +13271,7 @@ snapshots:
 
   fuse.js@7.1.0: {}
 
-  geist@1.4.2(next@15.3.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)):
+  geist@1.5.1(next@15.3.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)):
     dependencies:
       next: 15.3.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
@@ -14126,7 +14128,7 @@ snapshots:
 
   lru.min@1.1.3: {}
 
-  lucide-react@0.511.0(react@19.1.0):
+  lucide-react@0.556.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -15324,7 +15326,7 @@ snapshots:
       react: 19.1.0
       scheduler: 0.26.0
 
-  react-hook-form@7.60.0(react@19.1.0):
+  react-hook-form@7.68.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -16045,7 +16047,7 @@ snapshots:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
 
-  sonner@2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  sonner@2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
@@ -16229,6 +16231,8 @@ snapshots:
   symbol-tree@3.2.4: {}
 
   tailwind-merge@3.3.1: {}
+
+  tailwind-merge@3.4.0: {}
 
   tailwindcss@4.1.11: {}
 
