@@ -22,17 +22,28 @@ turbocamp/
 │
 ├── 📁 packages/                # Shared packages
 │   ├── 📁 auth/                # Authentication logic & configuration
+│   ├── 📁 base/                # Shared UI components (shadcn/ui)
 │   ├── 📁 cms/                 # Content management system
 │   ├── 📁 db/                  # Database schema & migrations
 │   ├── 📁 email/               # Email templates & utilities
-│   ├── 📁 ui/                  # Shared UI components
-│   ├── 📁 config/              # Shared configuration
-│   └── 📁 utils/               # Shared utilities
+│   ├── 📁 analytics/           # User tracking & insights
+│   ├── 📁 payments/            # Stripe integration
+│   ├── 📁 security/            # Rate limiting & protection
+│   ├── 📁 logging/             # Error tracking & monitoring
+│   ├── 📁 i18n/                # Internationalization
+│   ├── 📁 seo/                 # SEO utilities
+│   ├── 📁 feature-flags/       # Feature flag management
+│   ├── 📁 ai/                  # AI/LLM integrations
+│   ├── 📁 storage/             # File storage utilities
+│   └── 📁 testing/             # Testing utilities
+│
+├── 📁 tooling/                 # Development tools & configs
+│   ├── 📁 typescript-config/   # Shared TypeScript settings
+│   └── 📁 next-config/         # Shared Next.js configurations
 │
 ├── 📄 package.json             # Root package configuration
 ├── 📄 turbo.json               # Turborepo configuration
-├── 📄 pnpm-workspace.yaml      # Workspace configuration
-└── 📄 CLAUDE_PLAN.md           # Development roadmap
+└── 📄 pnpm-workspace.yaml      # Workspace configuration
 ```
 
 ## Applications (`apps/`)
@@ -203,7 +214,7 @@ apps/docs/
 - Responsive design
 - Code highlighting
 
-**Port:** `3003` (development)
+**Port:** `3004` (development)
 
 ## Shared Packages (`packages/`)
 
@@ -263,34 +274,36 @@ packages/cms/
 - Legal document handling
 - Metadata generation
 
-### UI Components (`packages/ui/`)
+### UI Components (`packages/base/`)
 
-**Purpose:** Shared React components and design system
+**Purpose:** Shared React components and design system based on shadcn/ui
 
 ```
-packages/ui/
-├── 📁 src/
-│   ├── 📁 components/          # React components
-│   │   ├── 📄 button.tsx
-│   │   ├── 📄 input.tsx
-│   │   ├── 📄 modal.tsx
-│   │   └── 📄 index.ts
-│   │
-│   ├── 📁 styles/              # Shared styles
-│   │   ├── 📄 globals.css
-│   │   └── 📄 components.css
-│   │
-│   └── 📄 index.ts             # Main exports
+packages/base/
+├── 📁 components/
+│   └── 📁 ui/                  # shadcn/ui components
+│       ├── 📄 button.tsx
+│       ├── 📄 input.tsx
+│       ├── 📄 dialog.tsx
+│       ├── 📄 dropdown-menu.tsx
+│       └── 📄 ...more
 │
-├── 📄 tailwind.config.js       # Tailwind configuration
-└── 📄 package.json             # UI dependencies
+├── 📁 providers/               # Context providers
+│   └── 📄 index.tsx
+│
+├── 📁 lib/                     # Utilities
+│   └── 📄 utils.ts
+│
+├── 📄 tailwind.css             # Tailwind styles
+└── 📄 package.json             # Dependencies
 ```
 
 **Features:**
 - shadcn/ui component library
-- Tailwind CSS integration
+- Tailwind CSS v4 integration
 - Consistent design system
 - TypeScript support
+- Geist font family
 
 ### Email Templates (`packages/email/`)
 
@@ -313,28 +326,19 @@ packages/email/
 - Template management
 - Type-safe email sending
 
-### Configuration (`packages/config/`)
+### Tooling (`tooling/`)
 
-**Purpose:** Shared configuration files
-
-```
-packages/config/
-├── 📄 eslint.config.js         # ESLint configuration
-├── 📄 prettier.config.js       # Prettier configuration
-├── 📄 tailwind.config.js       # Tailwind base config
-└── 📄 tsconfig.json            # TypeScript base config
-```
-
-### Utilities (`packages/utils/`)
-
-**Purpose:** Shared utility functions
+**Purpose:** Shared development tools and configurations
 
 ```
-packages/utils/
-├── 📄 index.ts                 # Main exports
-├── 📄 cn.ts                    # Class name utilities
-├── 📄 dates.ts                 # Date utilities
-└── 📄 validation.ts            # Validation schemas
+tooling/
+├── 📁 typescript-config/       # Shared TypeScript settings
+│   ├── 📄 base.json
+│   └── 📄 nextjs.json
+│
+└── 📁 next-config/             # Shared Next.js configurations
+    ├── 📄 index.ts
+    └── 📄 package.json
 ```
 
 ## Workspace Configuration
@@ -449,8 +453,8 @@ pnpm add react --filter dashboard
 # Add dependency to workspace root
 pnpm add -w typescript
 
-# Add shared package dependency
-pnpm add @turbocamp/ui --filter web
+# Add shared package dependency (workspace packages are linked automatically)
+# Just import from @packages/* in your code
 
 # Remove dependency
 pnpm remove lodash --filter api
@@ -492,9 +496,9 @@ PascalCase/              # For component directories only
 
 ```typescript
 // Shared packages (from packages/)
-import { Button } from '@turbocamp/ui'
-import { db } from '@turbocamp/db'
-import { authClient } from '@turbocamp/auth'
+import { Button } from '@packages/base/components/ui/button'
+import { database } from '@packages/db'
+import { authClient } from '@packages/auth/client'
 
 // Internal imports
 import { UserButton } from './components/user-button'
@@ -502,7 +506,7 @@ import { config } from '../lib/config'
 
 // External packages
 import { useState } from 'react'
-import { cn } from 'clsx'
+import { cn } from '@packages/base/lib/utils'
 ```
 
 ### Path Mapping
@@ -554,37 +558,33 @@ import { cn } from 'clsx'
 
 **Sharing Components:**
 ```typescript
-// In packages/ui/src/components/button.tsx
+// In packages/base/components/ui/button.tsx
 export const Button = ({ children, ...props }) => (
   <button {...props}>{children}</button>
 )
 
 // In apps/web/components/hero.tsx
-import { Button } from '@turbocamp/ui'
+import { Button } from '@packages/base/components/ui/button'
 ```
 
 **Sharing Utilities:**
 ```typescript
-// In packages/utils/src/dates.ts
-export const formatDate = (date: Date) => {
-  // utility implementation
+// In packages/base/lib/utils.ts
+export const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs))
 }
 
 // In apps/dashboard/lib/helpers.ts
-import { formatDate } from '@turbocamp/utils'
+import { cn } from '@packages/base/lib/utils'
 ```
 
 **Sharing Types:**
 ```typescript
-// In packages/auth/src/types.ts
-export interface User {
-  id: string
-  email: string
-  name: string
-}
+// In packages/db/index.ts
+export type { User, Session } from './generated/client'
 
 // In apps/dashboard/components/user-button.tsx
-import type { User } from '@turbocamp/auth'
+import type { User } from '@packages/db'
 ```
 
 ## Troubleshooting
@@ -612,7 +612,7 @@ import type { User } from '@turbocamp/auth'
 pnpm list --depth=0
 
 # Verify package linking
-pnpm why @turbocamp/ui
+pnpm why @packages/base
 
 # Check Turborepo configuration
 turbo run build --dry-run
