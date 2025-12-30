@@ -19,7 +19,6 @@
     "@packages/base": "workspace:*",
     "@packages/logging": "workspace:*",
     "@packages/payments": "workspace:*",
-    "@packages/testing": "workspace:*",
     "@sentry/nextjs": "^9.22.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tooling/next-config": "workspace:*",
@@ -30,6 +29,7 @@
     "zod": "^3.25.28"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.0",
     "@tooling/typescript-config": "workspace:*",
     "@types/node": "24.10.1",
     "@types/react": "19.2.7",
