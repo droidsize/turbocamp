@@ -267,19 +267,22 @@ Your docs will be available at: http://localhost:3004
 **Every tool chosen for maximum developer productivity and minimal vendor lock-in.** Here's what powers your SaaS and why:
 
 ### 🏗️ Core Framework
-- **[Next.js 15](https://nextjs.org/)** – The React framework that scales with you. Server Components, App Router, and edge-ready.
+- **[Next.js 15.3](https://nextjs.org/)** – The React framework that scales with you. Server Components, App Router, and edge-ready.
+- **[React 19.2](https://react.dev/)** – The latest React with Server Components and improved performance.
 - **[Turborepo](https://turbo.build/)** – Monorepo done right. Caching, parallel builds, and shared packages that just work.
-- **[TypeScript](https://www.typescriptlang.org/)** – Your safety net. Catch bugs at compile time, not in production.
+- **[TypeScript 5.9](https://www.typescriptlang.org/)** – Your safety net. Catch bugs at compile time, not in production.
 - **[@t3-oss/env-nextjs](https://env.t3.gg/)** – Type-safe environment variables. Validated at build time with Zod schemas.
 
 ### 🔐 Authentication & Data
 - **[Better Auth](https://www.better-auth.com/)** – Open-source auth that doesn't break the bank. Type-safe, secure, and yours to control.
-- **[Prisma](https://prisma.io/)** – Database queries that feel like magic. Type-safe, auto-completing, and migration-ready.
+- **[Prisma 7](https://prisma.io/)** – Database queries that feel like magic. Type-safe, auto-completing, and migration-ready.
+- **[Neon](https://neon.tech/)** – Serverless PostgreSQL with branching, autoscaling, and instant provisioning.
 
-### 🎨 UI & Design  
-- **[Tailwind CSS](https://tailwindcss.com/)** – Style without the mess. Utility-first CSS that speeds up development.
+### 🎨 UI & Design
+- **[Tailwind CSS v4](https://tailwindcss.com/)** – Style without the mess. Utility-first CSS that speeds up development.
 - **[shadcn/ui](https://ui.shadcn.com/)** – Copy, paste, customize. Beautiful components built on Radix UI primitives.
 - **[Lucide Icons](https://lucide.dev/)** – Crisp icons that look great at any size.
+- **[Geist Font](https://vercel.com/font)** – The beautiful Vercel font family for modern interfaces.
 
 ### 💰 Business Tools
 - **[Stripe](https://stripe.com/)** – Global payments, subscriptions, and billing. Handle money like a pro.
