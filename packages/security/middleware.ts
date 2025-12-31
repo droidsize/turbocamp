@@ -10,8 +10,8 @@ export { createMiddleware as noseconeMiddleware } from '@nosecone/next';
 export const noseconeOptions: NoseconeOptions = {
   ...defaults,
   // Content Security Policy (CSP) is disabled by default because the values
-  // depend on which Next Forge features are enabled. See
-  // https://www.next-forge.com/packages/security/headers for guidance on how
+  // depend on which Turbocamp features are enabled. See
+  // https://docs.turbocamp.dev/packages/security/headers for guidance on how
   // to configure it.
   contentSecurityPolicy: false,
 };

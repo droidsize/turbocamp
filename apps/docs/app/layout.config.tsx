@@ -37,7 +37,7 @@ export const baseOptions: BaseLayoutProps = {
     },
     {
       text: 'GitHub',
-      url: 'https://github.com/turbocamp/turbocamp',
+      url: 'https://github.com/droidsize/turbocamp',
       icon: <Github className="h-4 w-4" />,
       external: true,
     },
