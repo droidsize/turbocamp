@@ -1,0 +1,234 @@
+---
+title: Next-Forge Comparison
+description: Key differences between Turbocamp and next-forge
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Turbocamp is built on top of [next-forge](https://github.com/haydenbleasel/next-forge), maintaining compatibility while making opinionated changes for specific use cases. This document outlines the key differences.
+
+## Quick Comparison
+
+| Feature | Turbocamp | next-forge |
+|---------|-----------|------------|
+| **Authentication** | Better Auth | Clerk |
+| **Package Structure** | Combined security package | Separate rate-limit package |
+| **Package Naming** | `@packages/*` | `@repo/*` |
+| **Design System** | `@packages/base` | `@repo/design-system` |
+| **Tooling Location** | `tooling/*` | `packages/*` |
+
+## Authentication: Better Auth vs Clerk
+
+The most significant difference is the authentication system.
+
+### Why Better Auth?
+
+- **Self-hosted** - Full control over user data and authentication flow
+- **No vendor lock-in** - Open source with no per-user pricing
+- **Database-driven** - Sessions stored in your PostgreSQL database
+- **Cross-domain support** - Built-in support for multi-app authentication
+- **Customizable** - Full control over auth UI and flow
+
+### Architecture Difference
+
+```
+next-forge (Clerk):
+├── Clerk handles all auth
+├── External session management
+└── Webhook-based sync to database
+
+Turbocamp (Better Auth):
+├── API app is primary auth server (localhost:3002)
+├── Sessions stored in PostgreSQL
+├── Cross-domain cookies for multi-app auth
+└── Direct database integration
+```
+
+### Auth Package Structure
+
+```typescript
+// Turbocamp auth package exports
+@packages/auth/client     // Client-side auth utilities
+@packages/auth/server     // Server-side session handling
+@packages/auth/middleware // Auth middleware
+@packages/auth/handlers   // API route handlers
+@packages/auth/provider   // React context provider
+```
+
+<Callout type="info">
+  See the [Authentication Setup](/docs/setup/authentication) guide for detailed configuration.
+</Callout>
+
+## Package Organization
+
+### Naming Convention
+
+| Turbocamp | next-forge | Purpose |
+|-----------|------------|---------|
+| `@packages/base` | `@repo/design-system` | shadcn/ui components |
+| `@packages/db` | `@repo/database` | Prisma client |
+| `@packages/auth` | Uses Clerk SDK | Authentication |
+| `@packages/security` | `@repo/security` + `@repo/rate-limit` | Security + rate limiting |
+| `@tooling/*` | `@repo/*` | Build tooling |
+
+### Combined Security Package
+
+Turbocamp combines security features into a single package:
+
+```typescript
+// @packages/security includes:
+import { securityHeaders } from '@packages/security/middleware';
+import { createRateLimiter, slidingWindow } from '@packages/security/rate-limit';
+```
+
+next-forge separates these:
+
+```typescript
+// next-forge has separate packages:
+import { secure } from '@repo/security';
+import { ratelimit } from '@repo/rate-limit';
+```
+
+### Tooling Directory
+
+Build configuration lives in `tooling/` instead of `packages/`:
+
+```
+turbocamp/
+├── packages/          # Runtime packages
+│   ├── auth/
+│   ├── db/
+│   └── ...
+└── tooling/           # Build-time tooling
+    ├── next-config/
+    └── typescript-config/
+
+next-forge/
+└── packages/          # Everything together
+    ├── next-config/
+    ├── typescript-config/
+    └── ...
+```
+
+## Database: Prisma 7
+
+Turbocamp uses Prisma 7 with the new driver adapter pattern:
+
+```typescript
+// packages/db/index.ts
+import { PrismaNeon } from '@prisma/adapter-neon';
+
+const adapter = new PrismaNeon({ connectionString: keys().DATABASE_URL });
+export const database = new PrismaClient({ adapter });
+```
+
+### Schema Differences
+
+```prisma
+// Turbocamp schema
+generator client {
+  provider = "prisma-client"
+  output   = "../generated"
+}
+
+datasource db {
+  provider     = "postgresql"
+  relationMode = "prisma"
+}
+```
+
+## Packages We Don't Have
+
+next-forge includes some packages that Turbocamp doesn't have (yet):
+
+| Package | Purpose | Status in Turbocamp |
+|---------|---------|---------------------|
+| `collaboration` | Real-time collaboration | Not included |
+| `notifications` | Push notifications | Not included |
+| `observability` | OpenTelemetry tracing | Uses Sentry instead |
+| `webhooks` | Webhook handling | Not included |
+
+<Callout type="info">
+  These packages can be added as needed. The core architecture supports them.
+</Callout>
+
+## Version Differences
+
+Current versions in Turbocamp:
+
+| Package | Version |
+|---------|---------|
+| Next.js | 15.3.x |
+| React | 19.2.x |
+| TypeScript | 5.9.x |
+| Prisma | 7.x |
+| Tailwind CSS | 4.x |
+
+## Subpath Imports
+
+Both use subpath imports for better tree-shaking:
+
+```typescript
+// Import specific modules, not barrel exports
+import { auth } from '@packages/auth/server';
+import { createMetadata } from '@packages/seo/metadata';
+import { parseError } from '@packages/logging/error';
+```
+
+This pattern avoids importing unused code and improves bundle size.
+
+## Environment Variables
+
+### Auth-Related Variables
+
+```bash
+# Turbocamp (Better Auth)
+BETTER_AUTH_SECRET=""
+BETTER_AUTH_URL=""
+AUTH_API_URL=""
+NEXT_PUBLIC_AUTH_API_URL=""
+
+# next-forge (Clerk)
+CLERK_SECRET_KEY=""
+CLERK_WEBHOOK_SECRET=""
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=""
+```
+
+### Rate Limiting (Same)
+
+```bash
+# Both use Upstash
+UPSTASH_REDIS_REST_URL=""
+UPSTASH_REDIS_REST_TOKEN=""
+```
+
+## Migration from next-forge
+
+If migrating from next-forge to Turbocamp:
+
+1. **Update imports** - Change `@repo/*` to `@packages/*`
+2. **Replace Clerk** - Migrate to Better Auth (see auth setup guide)
+3. **Update Prisma** - Use new v7 adapter pattern
+4. **Combine packages** - Rate limiting is now in `@packages/security`
+5. **Move tooling** - Build configs go in `tooling/` directory
+
+## When to Choose Turbocamp
+
+Choose Turbocamp if you need:
+
+- Self-hosted authentication
+- No per-user pricing for auth
+- Full control over user data
+- Multi-app authentication with shared sessions
+- PostgreSQL-based session storage
+
+Choose next-forge if you prefer:
+
+- Managed authentication (Clerk)
+- Faster initial setup
+- Less infrastructure to manage
+- Clerk's built-in UI components
+
+## Contributing
+
+Found a difference not documented here? Please open an issue or PR to help keep this comparison up to date.

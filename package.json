@@ -17,7 +17,7 @@
     "translate": "turbo translate",
     "boundaries": "turbo boundaries",
     "bump-deps": "npx npm-check-updates --deep -u -x react-day-picker",
-    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
+    "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/base",
     "migrate": "cd apps/api && pnpm prisma format && pnpm prisma generate && pnpm prisma db push",
     "clean": "git clean -xdf node_modules"
   },
@@ -25,13 +25,13 @@
     "@auto-it/first-time-contributor": "^11.3.0",
     "@biomejs/biome": "1.9.4",
     "@tooling/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.5.3",
-    "@types/node": "^22.15.21",
+    "@turbo/gen": "^2.6.3",
+    "@types/node": "^24.10.1",
     "tsup": "^8.5.0",
-    "turbo": "^2.5.3",
-    "typescript": "^5.8.3",
+    "turbo": "^2.6.3",
+    "typescript": "^5.9.3",
     "ultracite": "^4.2.5",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18"

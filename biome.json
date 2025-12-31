@@ -6,11 +6,10 @@
   },
   "files": {
     "ignore": [
-      "packages/design-system/components/ui/**",
-      "packages/design-system/lib/**",
-      "packages/design-system/hooks/**",
-      "apps/docs/**/*.json",
-      "apps/email/.react-email/**"
+      "packages/base/components/ui/**",
+      "packages/base/lib/**",
+      "packages/base/hooks/**",
+      "apps/docs/**/*.json"
     ]
   }
 }

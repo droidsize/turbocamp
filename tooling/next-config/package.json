@@ -8,13 +8,13 @@
   },
   "devDependencies": {
     "@tooling/typescript-config": "workspace:*",
-    "next": "15.3.2"
+    "next": "15.5.9"
   },
   "dependencies": {
-    "@next/bundle-analyzer": "15.3.2",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^6.8.2",
-    "@t3-oss/env-core": "^0.13.4",
-    "@t3-oss/env-nextjs": "^0.13.4",
+    "@next/bundle-analyzer": "15.5.9",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^7.1.0",
+    "@t3-oss/env-core": "^0.13.8",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "zod": "^3.25.28"
   }
 }
