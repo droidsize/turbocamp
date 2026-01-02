@@ -11,13 +11,33 @@ const I18nMiddleware = createI18nMiddleware({
   defaultLocale: 'en',
   urlMappingStrategy: 'rewriteDefault',
   resolveLocaleFromRequest: (request: NextRequest) => {
-    const headers = Object.fromEntries(request.headers.entries());
-    const negotiator = new Negotiator({ headers });
-    const acceptedLanguages = negotiator.languages();
+    try {
+      const headers = Object.fromEntries(request.headers.entries());
+      const negotiator = new Negotiator({ headers });
+      const acceptedLanguages = negotiator.languages();
 
-    const matchedLocale = matchLocale(acceptedLanguages, locales, 'en');
+      // Filter out invalid locales that might cause Intl errors in Edge Runtime
+      const validLanguages = acceptedLanguages.filter((lang) => {
+        try {
+          // Test if the locale is valid
+          new Intl.Locale(lang);
+          return true;
+        } catch {
+          return false;
+        }
+      });
 
-    return matchedLocale;
+      if (validLanguages.length === 0) {
+        return 'en';
+      }
+
+      const matchedLocale = matchLocale(validLanguages, locales, 'en');
+      return matchedLocale;
+    } catch (error) {
+      // Fallback to default locale if any error occurs
+      console.error('Locale matching error:', error);
+      return 'en';
+    }
   },
 });
 
