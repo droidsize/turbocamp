@@ -17,6 +17,20 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        // Camping role badges
+        owner:
+          "border-amber-500/30 bg-amber-500/20 text-amber-600 dark:text-amber-400 [a&]:hover:bg-amber-500/30",
+        admin:
+          "border-slate-400/30 bg-slate-400/20 text-slate-600 dark:text-slate-300 [a&]:hover:bg-slate-400/30",
+        camper:
+          "border-green-500/30 bg-green-500/20 text-green-600 dark:text-green-400 [a&]:hover:bg-green-500/30",
+        // Camping status badges
+        success:
+          "border-green-500/30 bg-green-500/20 text-green-600 dark:text-green-400",
+        warning:
+          "border-amber-500/30 bg-amber-500/20 text-amber-600 dark:text-amber-400",
+        info:
+          "border-blue-500/30 bg-blue-500/20 text-blue-600 dark:text-blue-400",
       },
     },
     defaultVariants: {

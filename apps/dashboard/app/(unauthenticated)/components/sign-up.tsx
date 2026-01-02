@@ -168,14 +168,14 @@ export const SignUp = ({ onSuccess, redirectTo }: SignUpProps) => {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" variant="camping" className="w-full glow-neon" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating account...
+              Setting up camp...
             </>
           ) : (
-            'Create account'
+            'Start Your Adventure'
           )}
         </Button>
       </form>

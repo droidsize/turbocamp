@@ -20,6 +20,9 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        // Camping theme variant - neon lime with glow effect
+        camping:
+          "bg-[oklch(0.87_0.18_110)] text-[oklch(0.15_0.01_60)] shadow-md hover:bg-[oklch(0.82_0.17_110)] dark:shadow-[0_0_20px_rgba(215,223,35,0.2)] dark:hover:shadow-[0_0_25px_rgba(215,223,35,0.3)] transition-shadow",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

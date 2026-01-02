@@ -148,14 +148,14 @@ export const SignIn = ({ onSuccess, redirectTo }: SignInProps) => {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" variant="camping" className="w-full glow-neon" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Signing in...
+              Entering camp...
             </>
           ) : (
-            'Sign in'
+            'Enter Camp'
           )}
         </Button>
       </form>

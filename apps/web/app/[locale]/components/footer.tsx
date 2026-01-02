@@ -1,6 +1,10 @@
 import { env } from '@/env';
+import { TentIcon } from '@packages/base/components/icons/camping-icons';
 import { legal, type Legal } from '@packages/cms';
+import { Github, Twitter } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import Logo from '../logo.png';
 
 type NavigationItem = {
   title: string;
@@ -17,86 +21,143 @@ export const Footer = () => {
 
   const navigationItems: NavigationItem[] = [
     {
-      title: 'Home',
+      title: 'Base Camp',
       href: '/',
       description: '',
     },
     {
-      title: 'Pages',
-      description: 'Managing a small business today is already tough.',
+      title: 'Explore',
+      description: 'Discover the trails.',
       items: [
         {
-          title: 'Blog',
+          title: 'Trail Journal',
           href: '/blog',
         },
       ],
     },
     {
-      title: 'Legal',
-      description: 'We stay on top of the latest legal requirements.',
-      items: legalPages && legalPages.length > 0 ? legalPages.map((post: Legal) => ({
-        title: post._title,
-        href: `/legal/${post._slug}`,
-      })) : [],
+      title: 'Trail Rules',
+      description: 'Important guidelines for the journey.',
+      items:
+        legalPages && legalPages.length > 0
+          ? legalPages.map((post: Legal) => ({
+              title: post._title,
+              href: `/legal/${post._slug}`,
+            }))
+          : [],
     },
   ];
 
   if (env.NEXT_PUBLIC_DOCS_URL) {
     navigationItems.at(1)?.items?.push({
-      title: 'Docs',
+      title: 'Trail Maps',
       href: env.NEXT_PUBLIC_DOCS_URL,
     });
   }
 
   return (
-    <section className="dark border-foreground/10 border-t">
-      <div className="w-full bg-background py-20 text-foreground lg:py-40">
+    <footer className="relative border-t border-border/50 bg-[oklch(0.12_0.005_60)] dark:bg-[oklch(0.12_0.005_60)]">
+      {/* Topographic pattern overlay */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <svg width="100%" height="100%">
+          <pattern
+            id="topo-pattern"
+            x="0"
+            y="0"
+            width="100"
+            height="100"
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx="50" cy="50" r="40" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle cx="50" cy="50" r="30" fill="none" stroke="white" strokeWidth="0.5" />
+            <circle cx="50" cy="50" r="20" fill="none" stroke="white" strokeWidth="0.5" />
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#topo-pattern)" />
+        </svg>
+      </div>
+
+      <div className="relative z-10 w-full py-16 lg:py-24">
         <div className="container mx-auto">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div className="flex flex-col items-start gap-8">
-              <div className="flex flex-col gap-2">
-                <h2 className="max-w-xl text-left font-regular text-3xl tracking-tighter md:text-5xl">
+          <div className="grid items-start gap-12 lg:grid-cols-2">
+            {/* Left side - Brand */}
+            <div className="flex flex-col items-start gap-6">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="relative">
+                  <Image
+                    src={Logo}
+                    alt="Turbocamp Logo"
+                    width={32}
+                    height={32}
+                    className="rounded-lg"
+                  />
+                  <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity bg-primary/20 blur-md -z-10" />
+                </div>
+                <span className="font-bold text-xl text-white tracking-tight group-hover:text-primary transition-colors">
                   Turbocamp
-                </h2>
-                <p className="max-w-lg text-left text-foreground/75 text-lg leading-relaxed tracking-tight">
-                  This is the start of something new.
-                </p>
+                </span>
+              </Link>
+              <p className="max-w-sm text-sm text-white/60 leading-relaxed">
+                Your digital basecamp for building extraordinary applications.
+                Set up camp and start your adventure today.
+              </p>
+
+              {/* Social links */}
+              <div className="flex items-center gap-3">
+                <Link
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 hover:text-primary transition-colors"
+                >
+                  <Github className="h-5 w-5" />
+                </Link>
+                <Link
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-white/5 text-white/60 hover:bg-white/10 hover:text-primary transition-colors"
+                >
+                  <Twitter className="h-5 w-5" />
+                </Link>
               </div>
             </div>
-            <div className="grid items-start gap-10 lg:grid-cols-3">
+
+            {/* Right side - Navigation */}
+            <div className="grid items-start gap-8 sm:grid-cols-3">
               {navigationItems.map((item) => (
                 <div
                   key={item.title}
-                  className="flex flex-col items-start gap-1 text-base"
+                  className="flex flex-col items-start gap-3"
                 >
-                  <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <TentIcon className="h-4 w-4 text-primary/60" />
                     {item.href ? (
                       <Link
                         href={item.href}
-                        className="flex items-center justify-between"
-                        target={
-                          item.href.includes('http') ? '_blank' : undefined
-                        }
+                        className="font-semibold text-white hover:text-primary transition-colors"
+                        target={item.href.includes('http') ? '_blank' : undefined}
                         rel={
                           item.href.includes('http')
                             ? 'noopener noreferrer'
                             : undefined
                         }
                       >
-                        <span className="text-xl">{item.title}</span>
+                        {item.title}
                       </Link>
                     ) : (
-                      <p className="text-xl">{item.title}</p>
+                      <span className="font-semibold text-white">
+                        {item.title}
+                      </span>
                     )}
+                  </div>
+                  <div className="flex flex-col gap-2 pl-6">
                     {item.items?.map((subItem) => (
                       <Link
                         key={subItem.title}
                         href={subItem.href}
-                        className="flex items-center justify-between"
+                        className="text-sm text-white/60 hover:text-primary transition-colors"
                         target={
-                          subItem.href.includes('http')
-                            ? '_blank'
-                            : undefined
+                          subItem.href.includes('http') ? '_blank' : undefined
                         }
                         rel={
                           subItem.href.includes('http')
@@ -104,9 +165,7 @@ export const Footer = () => {
                             : undefined
                         }
                       >
-                        <span className="text-foreground/75">
-                          {subItem.title}
-                        </span>
+                        {subItem.title}
                       </Link>
                     ))}
                   </div>
@@ -114,8 +173,18 @@ export const Footer = () => {
               ))}
             </div>
           </div>
+
+          {/* Bottom bar */}
+          <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-white/40">
+              &copy; {new Date().getFullYear()} Turbocamp. All trails reserved.
+            </p>
+            <p className="text-xs text-white/40">
+              Built with determination and hot cocoa.
+            </p>
+          </div>
         </div>
       </div>
-    </section>
+    </footer>
   );
 };

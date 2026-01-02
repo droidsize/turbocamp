@@ -1,18 +1,15 @@
 'use client';
 import { useActiveOrganization } from '@packages/auth/client';
+import {
+  BackpackIcon,
+  CampGroupIcon,
+  CompassIcon,
+  LanternIcon,
+  MapIcon,
+  PineTreeIcon,
+  TentIcon,
+} from '@packages/base/components/icons/camping-icons';
 import { ModeToggle } from '@packages/base/components/mode-toggle';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@packages/base/components/ui/collapsible';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@packages/base/components/ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -23,25 +20,12 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   useSidebar,
 } from '@packages/base/components/ui/sidebar';
 import { cn } from '@packages/base/lib/utils';
-import {
-  Building2Icon,
-  CreditCardIcon,
-  LifeBuoyIcon,
-  SendIcon,
-  Settings2Icon,
-  SquareTerminalIcon,
-  UserIcon,
-  UsersIcon,
-} from 'lucide-react';
+import { Building2Icon } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { OrganizationSwitcher } from './organization-switcher';
@@ -55,56 +39,58 @@ type GlobalSidebarProperties = {
 // Function to generate navigation data with active organization
 const useNavData = () => {
   const { data: activeOrg } = useActiveOrganization();
-  
+
   return {
     navMain: [
       {
-        title: 'Dashboard',
+        title: 'Basecamp',
         url: '/',
-        icon: SquareTerminalIcon,
+        icon: TentIcon,
         isActive: true,
       },
     ],
-    navOrganization: activeOrg ? [
-      {
-        title: 'Settings',
-        url: `/organization/${activeOrg.id}/settings`,
-        icon: Settings2Icon,
-      },
-      {
-        title: 'Members',
-        url: `/organization/${activeOrg.id}/members`,
-        icon: UsersIcon,
-      },
-    ] : [
-      {
-        title: 'Create Organization',
-        url: '/organization/new',
-        icon: Building2Icon,
-      },
-    ],
+    navOrganization: activeOrg
+      ? [
+          {
+            title: 'Camp Settings',
+            url: `/organization/${activeOrg.id}/settings`,
+            icon: CompassIcon,
+          },
+          {
+            title: 'Campers',
+            url: `/organization/${activeOrg.id}/members`,
+            icon: CampGroupIcon,
+          },
+        ]
+      : [
+          {
+            title: 'Set Up New Camp',
+            url: '/organization/new',
+            icon: Building2Icon,
+          },
+        ],
     navUser: [
       {
-        title: 'Profile',
+        title: 'Your Gear',
         url: '/settings/profile',
-        icon: UserIcon,
+        icon: BackpackIcon,
       },
       {
-        title: 'Billing',
+        title: 'Trail Pass',
         url: '/settings/billing',
-        icon: CreditCardIcon,
+        icon: MapIcon,
       },
     ],
     navSecondary: [
       {
-        title: 'Support',
+        title: 'Signal Fire',
         url: '#',
-        icon: LifeBuoyIcon,
+        icon: LanternIcon,
       },
       {
-        title: 'Feedback',
+        title: 'Leave a Mark',
         url: '#',
-        icon: SendIcon,
+        icon: PineTreeIcon,
       },
     ],
   };
@@ -133,14 +119,21 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
         </SidebarHeader>
         <Search />
         <SidebarContent>
+          {/* Your Trail - Main navigation */}
           <SidebarGroup>
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+              Your Trail
+            </SidebarGroupLabel>
             <SidebarMenu>
               {data.navMain.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.title}
+                    className="group hover:bg-primary/5 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:border-l-2 data-[active=true]:border-primary"
+                  >
                     <Link href={item.url}>
-                      <item.icon />
+                      <item.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -148,16 +141,23 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
               ))}
             </SidebarMenu>
           </SidebarGroup>
-          
+
+          {/* Camp Management */}
           {data.navOrganization && data.navOrganization.length > 0 && (
             <SidebarGroup>
-              <SidebarGroupLabel>Organization</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+                Camp Management
+              </SidebarGroupLabel>
               <SidebarMenu>
                 {data.navOrganization.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.title}
+                      className="group hover:bg-primary/5"
+                    >
                       <Link href={item.url}>
-                        <item.icon />
+                        <item.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
@@ -166,15 +166,22 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
               </SidebarMenu>
             </SidebarGroup>
           )}
-          
+
+          {/* Your Pack */}
           <SidebarGroup>
-            <SidebarGroupLabel>Account</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+              Your Pack
+            </SidebarGroupLabel>
             <SidebarMenu>
               {data.navUser.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.title}
+                    className="group hover:bg-primary/5"
+                  >
                     <Link href={item.url}>
-                      <item.icon />
+                      <item.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -182,14 +189,22 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
               ))}
             </SidebarMenu>
           </SidebarGroup>
+
+          {/* Trail Support */}
           <SidebarGroup className="mt-auto">
+            <SidebarGroupLabel className="text-xs uppercase tracking-wider text-muted-foreground/70">
+              Trail Support
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {data.navSecondary.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      asChild
+                      className="group hover:bg-primary/5"
+                    >
                       <Link href={item.url}>
-                        <item.icon />
+                        <item.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>

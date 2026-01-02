@@ -6,79 +6,102 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ═══════════════════════════════════════════════════════════════════
+   TURBOCAMP DESIGN SYSTEM - Camping/Outdoor Aesthetic
+   Brand: Neon Lime #D7DF23 (campfire glow) + Night Forest #282828
+   ═══════════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --success: oklch(50.8% 0.118 165.612);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Light Mode - Warm Canvas & Trail Tones */
+  --background: oklch(0.975 0.005 90);          /* Warm parchment canvas */
+  --foreground: oklch(0.20 0.02 60);            /* Rich tree bark */
+  --card: oklch(0.995 0.002 90);                /* Clean canvas */
+  --card-foreground: oklch(0.20 0.02 60);
+  --popover: oklch(0.995 0.002 90);
+  --popover-foreground: oklch(0.20 0.02 60);
+  --primary: oklch(0.58 0.16 115);              /* Darker lime for contrast */
+  --primary-foreground: oklch(0.15 0.01 90);
+  --secondary: oklch(0.94 0.02 90);             /* Warm parchment */
+  --secondary-foreground: oklch(0.25 0.02 60);
+  --muted: oklch(0.94 0.02 90);                 /* Soft earth */
+  --muted-foreground: oklch(0.45 0.03 60);
+  --accent: oklch(0.92 0.04 135);               /* Soft fern tint */
+  --accent-foreground: oklch(0.25 0.05 135);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --success: oklch(0.55 0.15 145);              /* Forest green */
+  --border: oklch(0.88 0.02 90);                /* Warm border */
+  --input: oklch(0.88 0.02 90);
+  --ring: oklch(0.58 0.16 115);                 /* Lime ring */
+  --chart-1: oklch(0.58 0.16 115);              /* Lime */
+  --chart-2: oklch(0.50 0.10 145);              /* Forest */
+  --chart-3: oklch(0.55 0.15 35);               /* Ember */
+  --chart-4: oklch(0.45 0.08 250);              /* Night sky */
+  --chart-5: oklch(0.60 0.12 80);               /* Golden hour */
+  --radius: 0.75rem;                            /* Softer, organic feel */
+  --sidebar: oklch(0.97 0.01 90);
+  --sidebar-foreground: oklch(0.20 0.02 60);
+  --sidebar-primary: oklch(0.58 0.16 115);
+  --sidebar-primary-foreground: oklch(0.15 0.01 90);
+  --sidebar-accent: oklch(0.94 0.03 135);
+  --sidebar-accent-foreground: oklch(0.25 0.05 135);
+  --sidebar-border: oklch(0.88 0.02 90);
+  --sidebar-ring: oklch(0.58 0.16 115);
+
+  /* Camping Theme Variables - Light Mode */
+  --camp-neon: oklch(0.58 0.16 115);            /* Darker for light mode */
+  --camp-dark: oklch(0.20 0.01 60);
+  --camp-forest: oklch(0.45 0.10 145);
+  --camp-ember: oklch(0.55 0.18 35);
+  --camp-sky: oklch(0.55 0.08 250);
+  --camp-glow: rgba(134, 143, 20, 0.15);        /* Subtle glow for light */
 
   --font-weight-bold: 700;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --success: oklch(50.8% 0.118 165.612);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Dark Mode - Night Forest Base */
+  --background: oklch(0.18 0.005 60);           /* #282828 Night forest */
+  --foreground: oklch(0.93 0.01 90);            /* Warm moonlight */
+  --card: oklch(0.21 0.008 60);                 /* Slightly lighter card */
+  --card-foreground: oklch(0.93 0.01 90);
+  --popover: oklch(0.21 0.008 60);
+  --popover-foreground: oklch(0.93 0.01 90);
+  --primary: oklch(0.87 0.18 110);              /* #D7DF23 Neon lime */
+  --primary-foreground: oklch(0.15 0.01 60);
+  --secondary: oklch(0.25 0.01 60);             /* Dark earth */
+  --secondary-foreground: oklch(0.90 0.01 90);
+  --muted: oklch(0.25 0.015 60);                /* Muted earth */
+  --muted-foreground: oklch(0.65 0.02 90);
+  --accent: oklch(0.35 0.06 145);               /* Forest accent */
+  --accent-foreground: oklch(0.90 0.01 90);
+  --destructive: oklch(0.45 0.18 25);
+  --destructive-foreground: oklch(0.95 0 0);
+  --success: oklch(0.55 0.15 145);
+  --border: oklch(0.28 0.01 60);                /* Subtle border */
+  --input: oklch(0.25 0.01 60);
+  --ring: oklch(0.87 0.18 110);                 /* Neon ring */
+  --chart-1: oklch(0.87 0.18 110);              /* Neon lime */
+  --chart-2: oklch(0.55 0.12 145);              /* Forest */
+  --chart-3: oklch(0.60 0.18 35);               /* Ember */
+  --chart-4: oklch(0.50 0.10 250);              /* Night sky */
+  --chart-5: oklch(0.70 0.15 80);               /* Golden */
+  --sidebar: oklch(0.15 0.005 60);              /* Deeper sidebar */
+  --sidebar-foreground: oklch(0.90 0.01 90);
+  --sidebar-primary: oklch(0.87 0.18 110);
+  --sidebar-primary-foreground: oklch(0.15 0.01 60);
+  --sidebar-accent: oklch(0.25 0.02 145);
+  --sidebar-accent-foreground: oklch(0.90 0.01 90);
+  --sidebar-border: oklch(0.25 0.01 60);
+  --sidebar-ring: oklch(0.87 0.18 110);
+
+  /* Camping Theme Variables - Dark Mode */
+  --camp-neon: oklch(0.87 0.18 110);            /* #D7DF23 Full neon */
+  --camp-dark: oklch(0.18 0.005 60);            /* #282828 */
+  --camp-forest: oklch(0.40 0.08 145);
+  --camp-ember: oklch(0.60 0.20 35);
+  --camp-sky: oklch(0.30 0.06 250);
+  --camp-glow: rgba(215, 223, 35, 0.25);        /* Bright glow for dark */
 }
 
 @theme inline {
@@ -116,12 +139,28 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --color-success: var(--success);
+
+  /* Camping theme colors */
+  --color-camp-neon: var(--camp-neon);
+  --color-camp-dark: var(--camp-dark);
+  --color-camp-forest: var(--camp-forest);
+  --color-camp-ember: var(--camp-ember);
+  --color-camp-sky: var(--camp-sky);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Accordion animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  /* Camping animations */
+  --animate-campfire-glow: campfire-glow 3s ease-in-out infinite;
+  --animate-firefly: firefly 4s ease-in-out infinite;
+  --animate-firefly-drift: firefly-drift 8s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
 
   @keyframes accordion-down {
     from {
@@ -140,6 +179,76 @@
       height: 0;
     }
   }
+
+  /* Campfire glow - pulsing warm light effect */
+  @keyframes campfire-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 20px var(--camp-glow),
+        0 0 40px var(--camp-glow),
+        0 0 60px rgba(215, 223, 35, 0.1);
+      filter: brightness(1);
+    }
+    25% {
+      box-shadow:
+        0 0 25px var(--camp-glow),
+        0 0 50px var(--camp-glow),
+        0 0 70px rgba(215, 223, 35, 0.15);
+      filter: brightness(1.05);
+    }
+    50% {
+      box-shadow:
+        0 0 30px var(--camp-glow),
+        0 0 55px var(--camp-glow),
+        0 0 80px rgba(215, 223, 35, 0.12);
+      filter: brightness(1.1);
+    }
+    75% {
+      box-shadow:
+        0 0 22px var(--camp-glow),
+        0 0 45px var(--camp-glow),
+        0 0 65px rgba(215, 223, 35, 0.08);
+      filter: brightness(1.02);
+    }
+  }
+
+  /* Firefly - gentle blinking */
+  @keyframes firefly {
+    0%, 100% {
+      opacity: 0.2;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Firefly drift - floating movement */
+  @keyframes firefly-drift {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(10px, -15px) scale(1.1);
+    }
+    50% {
+      transform: translate(-5px, -25px) scale(0.9);
+    }
+    75% {
+      transform: translate(-15px, -10px) scale(1.05);
+    }
+  }
+
+  /* Pulse glow - subtle breathing effect */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 15px var(--camp-glow);
+    }
+    50% {
+      box-shadow: 0 0 25px var(--camp-glow), 0 0 35px var(--camp-glow);
+    }
+  }
 }
 
 /* This layer is added by shadcn/ui */
@@ -152,7 +261,7 @@
   }
 }
 
-/* This layer is by next-forge */
+/* This layer is by Turbocamp */
 @layer base {
   ::after,
   ::before,
@@ -176,6 +285,89 @@
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     @apply cursor-pointer;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CAMPING GLOW UTILITIES
+   ═══════════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  /* Neon glow effect for buttons/cards */
+  .glow-neon {
+    box-shadow:
+      0 0 10px var(--camp-glow),
+      0 0 20px var(--camp-glow),
+      0 0 30px rgba(215, 223, 35, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .glow-neon:hover {
+    box-shadow:
+      0 0 15px var(--camp-glow),
+      0 0 30px var(--camp-glow),
+      0 0 45px rgba(215, 223, 35, 0.15);
+  }
+
+  /* Text glow for headings */
+  .text-glow {
+    text-shadow:
+      0 0 10px var(--camp-glow),
+      0 0 20px var(--camp-glow);
+  }
+
+  .text-glow-subtle {
+    text-shadow: 0 0 8px var(--camp-glow);
+  }
+
+  /* Border glow */
+  .border-glow {
+    border-color: var(--camp-neon);
+    box-shadow:
+      0 0 0 1px var(--camp-neon),
+      0 0 15px var(--camp-glow);
+  }
+
+  /* Animated glow */
+  .animate-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Campfire animation class */
+  .animate-campfire {
+    animation: campfire-glow 3s ease-in-out infinite;
+  }
+
+  /* Firefly classes */
+  .animate-firefly {
+    animation: firefly 4s ease-in-out infinite;
+  }
+
+  .animate-firefly-drift {
+    animation: firefly-drift 8s ease-in-out infinite, firefly 4s ease-in-out infinite;
+  }
+
+  /* Neon accent border - left accent bar */
+  .neon-accent-left {
+    border-left: 3px solid var(--camp-neon);
+    box-shadow: -3px 0 15px var(--camp-glow);
+  }
+
+  /* Gradient backgrounds */
+  .bg-camp-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(0.18 0.005 60) 0%,
+      oklch(0.12 0.008 60) 100%
+    );
+  }
+
+  .bg-camp-gradient-radial {
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      oklch(0.25 0.02 110 / 0.3) 0%,
+      transparent 70%
+    );
   }
 }
 
