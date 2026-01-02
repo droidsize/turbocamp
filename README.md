@@ -4,7 +4,7 @@
 </a>
 
 <p align="center">
-  🏕️ Open-source SaaS starter that gets you to production fast without breaking the bank!
+  ⛺ Open-source SaaS starter that gets you to production fast without breaking the bank!
 </p>
 
 <p align="center">
