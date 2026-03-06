@@ -1,0 +1,239 @@
+---
+title: Dodo Payments Migration
+description: Complete Stripe-to-Dodo migration guide for Turbocamp (Better Auth plugin + package structure + rollout checks)
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+## Overview
+
+This guide documents the migration from Stripe to Dodo Payments in Turbocamp using Better Auth plugins.
+
+Scope:
+- Replace Stripe runtime and Stripe Better Auth plugin
+- Add Dodo Payments SDK and Dodo Better Auth plugin
+- Update auth server/client plugin wiring
+- Update env vars, payment config, and billing flow
+- Keep package naming aligned with Turbocamp (`packages/base`, `packages/payments`, `tooling/*`)
+
+## Version Baseline (validated March 6, 2026)
+
+| Package | Version |
+|---|---|
+| `better-auth` | `1.5.3` |
+| `@dodopayments/better-auth` | `1.4.3` |
+| `dodopayments` | `2.23.0` |
+| `next` | `16.1.6` |
+| `prisma` | `7.4.2` |
+| `ultracite` | `7.2.5` |
+
+<Callout type="info">
+Use latest stable patch versions at implementation time, but keep these as minimum migration anchors.
+</Callout>
+
+## What Changes
+
+| Area | Before | After |
+|---|---|---|
+| Payments package | Stripe SDK client | Dodo SDK client |
+| Auth server plugin | `@better-auth/stripe` | `@dodopayments/better-auth` |
+| Auth client plugin | `stripeClient(...)` | `dodopaymentsClient()` |
+| Webhook path | Stripe-specific webhook route | Better Auth Dodo webhook endpoint |
+| Env vars | `STRIPE_*` | `DODO_PAYMENTS_*` |
+| Billing actions | Stripe session/portal | Dodo checkout/portal APIs |
+
+## Files to Update
+
+### Required
+
+- `packages/payments/package.json`
+- `packages/payments/keys.ts`
+- `packages/payments/index.ts`
+- `packages/auth/package.json`
+- `packages/auth/server.ts`
+- `packages/auth/client.ts`
+- `apps/api/.env.local` (or your env source)
+- `apps/dashboard/.env.local`
+- `apps/web/.env.local`
+- billing UI/actions in `apps/dashboard` and `apps/web` that currently call Stripe flows
+
+### Remove / Replace
+
+- Stripe-only helper files in `packages/payments` or app actions
+- Stripe webhook handlers
+- Stripe env keys in typed env schema
+- Stripe product/price ID wiring in config
+
+## Migration Steps
+
+<Steps>
+
+  <Step title="Replace dependencies">
+    In `packages/payments/package.json` remove Stripe deps and add Dodo deps:
+```json
+{
+  "dependencies": {
+    "@t3-oss/env-nextjs": "...",
+    "server-only": "...",
+    "dodopayments": "^2.23.0",
+    "zod": "..."
+  }
+}
+```
+
+In `packages/auth/package.json`, replace:
+- remove `@better-auth/stripe`
+- add `@dodopayments/better-auth`
+  </Step>
+
+  <Step title="Add Dodo environment keys">
+    Add typed keys:
+```ts
+// packages/payments/keys.ts
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const keys = () =>
+  createEnv({
+    server: {
+      DODO_PAYMENTS_API_KEY: z.string().min(1),
+      DODO_PAYMENTS_WEBHOOK_SECRET: z.string().min(1)
+    },
+    runtimeEnv: {
+      DODO_PAYMENTS_API_KEY: process.env.DODO_PAYMENTS_API_KEY,
+      DODO_PAYMENTS_WEBHOOK_SECRET: process.env.DODO_PAYMENTS_WEBHOOK_SECRET
+    }
+  });
+```
+  </Step>
+
+  <Step title="Create Dodo payments client">
+```ts
+// packages/payments/index.ts
+import 'server-only';
+import DodoPayments from 'dodopayments';
+import { keys } from './keys';
+
+export const dodoPayments = new DodoPayments({
+  bearerToken: keys().DODO_PAYMENTS_API_KEY,
+  environment: process.env.NODE_ENV === 'production' ? 'live_mode' : 'test_mode'
+});
+```
+  </Step>
+
+  <Step title="Wire Better Auth server plugin">
+```ts
+// packages/auth/server.ts
+import { dodopayments, checkout, portal, webhooks } from '@dodopayments/better-auth';
+import { dodoPayments } from '@packages/payments';
+import { keys as paymentKeys } from '@packages/payments/keys';
+
+// inside betterAuth({ plugins: [...] })
+dodopayments({
+  client: dodoPayments,
+  createCustomerOnSignUp: true,
+  use: [
+    checkout({
+      products: [
+        { productId: 'pdt_xxx', slug: 'pro-plan' },
+        { productId: 'pdt_yyy', slug: 'team-plan' }
+      ],
+      successUrl: '/dashboard/billing/success',
+      authenticatedUsersOnly: true
+    }),
+    portal(),
+    webhooks({
+      webhookKey: paymentKeys().DODO_PAYMENTS_WEBHOOK_SECRET,
+      onPayload: async (payload) => {
+        // TODO: route to domain handlers (credits, receipts, ledger updates)
+      }
+    })
+  ]
+})
+```
+  </Step>
+
+  <Step title="Wire Better Auth client plugin">
+```ts
+// packages/auth/client.ts
+import { dodopaymentsClient } from '@dodopayments/better-auth';
+
+export const authClient = createAuthClient({
+  baseURL: `${process.env.BETTER_AUTH_URL || 'http://localhost:3002'}/api/auth`,
+  plugins: [
+    organizationClient(),
+    dodopaymentsClient()
+  ]
+});
+```
+  </Step>
+
+  <Step title="Update billing flows">
+    Replace Stripe checkout/portal calls with Dodo client calls:
+- Checkout: `authClient.dodopayments.checkout({ slug, customer, billing })`
+- Portal: `authClient.dodopayments.customer.portal()`
+- Subscriptions/payments listing via `authClient.dodopayments.customer.*`
+  </Step>
+
+  <Step title="Remove Stripe surface area">
+    Remove:
+- Stripe SDK clients
+- Stripe webhook routes
+- Stripe env keys and schema entries
+- Stripe product ID config
+- Stripe-specific docs and UI copy
+  </Step>
+</Steps>
+
+## Environment Variables
+
+```bash
+DODO_PAYMENTS_API_KEY=
+DODO_PAYMENTS_WEBHOOK_SECRET=
+```
+
+<Callout type="warn">
+Set Dodo client `environment` to `live_mode` only in production.
+</Callout>
+
+## Data Model Guidance
+
+Use provider-agnostic payment fields/tables where possible:
+- `payment_customer` (`provider`, `external_customer_id`)
+- `payment_checkout`
+- `payment_event` (unique provider event ID + processing status)
+- `credit_wallet`
+- `credit_ledger`
+
+Avoid Stripe-named columns in new schema.
+
+## Validation Checklist
+
+- `pnpm lint` passes (`ultracite lint`)
+- `pnpm format` passes (`ultracite format`)
+- checkout flow creates redirect URL
+- customer portal opens successfully
+- webhook signature is validated
+- webhook handler is idempotent
+- credits/ledger updates are consistent on payment success/failure
+
+## Rollback Plan
+
+1. Keep migration branch isolated until webhook + billing checks pass.
+2. Preserve pre-migration payment package and auth plugin wiring in a tagged commit.
+3. If production issue occurs:
+   - disable Dodo checkout CTA
+   - retain read-only billing visibility
+   - replay missed webhook events after fix
+
+## Session Handoff Notes
+
+For each migration session, append:
+- commit SHA
+- files changed
+- env keys added/removed
+- DB migration ID
+- verified checklist items
+- unresolved issues
