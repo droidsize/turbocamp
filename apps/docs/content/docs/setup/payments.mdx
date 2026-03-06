@@ -1,0 +1,220 @@
+---
+title: Payments Setup
+description: Configure payment providers with Better Auth integration
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+## Overview
+
+Turbocamp supports **three payment providers** through Better Auth's plugin system:
+
+| Provider | Type | Fee Model | Best For |
+|----------|------|-----------|----------|
+| **Stripe** | Payment Processor | 2.9% + $0.30 | Full control, custom billing flows |
+| **Polar** | Merchant of Record | 4% + $0.40 | Indie devs, open source, no tax hassle |
+| **Dodo Payments** | Merchant of Record | Varies by region | Global sales in 150+ countries |
+
+<Callout type="info">
+  **Merchant of Record (MoR)** means the provider handles tax collection, fraud prevention, and compliance for you. With Stripe, you handle these yourself.
+</Callout>
+
+## Stripe Setup
+
+Stripe is the default payment provider and is always available.
+
+<Steps>
+
+### Get API Keys
+
+1. Create a [Stripe account](https://dashboard.stripe.com/register)
+2. Get your API keys from the [Stripe Dashboard](https://dashboard.stripe.com/apikeys)
+
+### Configure Environment Variables
+
+```bash
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+```
+
+### Create Products and Prices
+
+Create your subscription plans in the Stripe Dashboard or via the API.
+
+### Configure Webhook
+
+Set up a webhook endpoint pointing to your API:
+```
+https://api.yourdomain.com/api/auth/stripe/webhook
+```
+
+</Steps>
+
+The Stripe plugin automatically:
+- Creates Stripe customers when users sign up
+- Manages subscription lifecycle via webhooks
+- Supports organization-level billing
+- Provides subscription upgrade/downgrade/cancel APIs
+
+### Client Usage
+
+```typescript
+import { subscription } from '@packages/auth/client';
+
+// Upgrade to a plan
+await subscription.upgrade({
+  plan: "pro",
+  successUrl: "/dashboard",
+  cancelUrl: "/pricing",
+});
+
+// List subscriptions
+const { data } = await subscription.list();
+
+// Cancel subscription
+await subscription.cancel({
+  subscriptionId: "sub_...",
+  returnUrl: "/billing",
+});
+```
+
+## Polar Setup
+
+Polar is an open-source billing platform ideal for indie hackers and startups.
+
+<Steps>
+
+### Create Polar Account
+
+1. Sign up at [polar.sh](https://polar.sh)
+2. Create an organization and products
+
+### Get Access Token
+
+Generate a Personal Access Token from Polar settings.
+
+### Configure Environment Variables
+
+```bash
+POLAR_ACCESS_TOKEN="pat_..."
+POLAR_WEBHOOK_SECRET="..."
+POLAR_ENVIRONMENT="sandbox"  # or "production"
+```
+
+### Add Plugin to Auth Config
+
+The Polar plugin is available but needs to be explicitly enabled in `packages/auth/server.ts`:
+
+```typescript
+import { polar, checkout, portal, webhooks } from '@polar-sh/better-auth';
+import { polar as polarClient } from '@packages/payments/polar';
+
+// Add to plugins array:
+polar({
+  client: polarClient,
+  createCustomerOnSignUp: true,
+  use: [
+    checkout({ products: ['your-product-id'] }),
+    portal(),
+    webhooks({ secret: env.POLAR_WEBHOOK_SECRET }),
+  ],
+}),
+```
+
+</Steps>
+
+## Dodo Payments Setup
+
+Dodo Payments is a global MoR platform for selling in 150+ countries.
+
+<Steps>
+
+### Create Dodo Account
+
+1. Sign up at [dodopayments.com](https://dodopayments.com)
+2. Create your products
+
+### Get API Key
+
+Get your API key from the Dodo Payments dashboard.
+
+### Configure Environment Variables
+
+```bash
+DODO_PAYMENTS_API_KEY="..."
+DODO_PAYMENTS_WEBHOOK_SECRET="..."
+DODO_PAYMENTS_ENVIRONMENT="test_mode"  # or "live_mode"
+```
+
+### Add Plugin to Auth Config
+
+Enable the Dodo plugin in `packages/auth/server.ts`:
+
+```typescript
+import { dodopayments, checkout, portal, webhooks } from '@dodopayments/better-auth';
+import { dodoPayments } from '@packages/payments/dodo';
+
+// Add to plugins array:
+dodopayments({
+  client: dodoPayments,
+  createCustomerOnSignUp: true,
+  use: [
+    checkout({ products: ['your-product-id'] }),
+    portal(),
+    webhooks({ webhookKey: env.DODO_PAYMENTS_WEBHOOK_SECRET }),
+  ],
+}),
+```
+
+</Steps>
+
+## Using Multiple Providers
+
+<Callout type="warn">
+  There is a known upstream issue with Better Auth where multiple payment plugins can have route conflicts. Currently, it's recommended to use **one payment provider at a time**. The packages are set up so you can easily switch between providers.
+</Callout>
+
+To switch providers:
+
+1. Update your environment variables for the desired provider
+2. Enable/disable the corresponding plugin in `packages/auth/server.ts`
+3. Update client-side code to use the appropriate checkout flow
+
+## Organization Billing
+
+All payment providers support organization-level billing through Better Auth's organization plugin:
+
+```typescript
+// Create organization subscription
+await subscription.upgrade({
+  plan: "team",
+  referenceId: organizationId,
+  customerType: "organization",
+  seats: 10,
+});
+```
+
+## Architecture
+
+The payment system is structured as:
+
+```
+packages/payments/       # Payment provider clients
+├── index.ts            # Stripe client (always available)
+├── polar.ts            # Polar client (optional)
+├── dodo.ts             # Dodo Payments client (optional)
+├── keys.ts             # Environment variable validation
+└── ai.ts               # Stripe AI agent toolkit
+
+packages/auth/          # Better Auth with payment plugins
+├── server.ts           # Auth config with payment plugins
+└── client.ts           # Client-side subscription API
+```
+
+Payment plugins integrate at the auth layer, meaning:
+- Customer records are tied to auth users
+- Subscription state is accessible via session
+- Webhooks are handled through the auth API
+- Organization billing is built-in

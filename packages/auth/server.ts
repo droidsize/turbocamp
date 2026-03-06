@@ -1,11 +1,15 @@
 import { stripe } from '@better-auth/stripe';
 import { database } from '@packages/db';
+import { resend } from '@packages/email';
 import { stripe as stripeClient } from '@packages/payments';
-import { keys } from '@packages/payments/keys';
+import { keys as paymentKeys } from '@packages/payments/keys';
 import { type BetterAuthOptions, betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { nextCookies } from 'better-auth/next-js';
 import { organization } from 'better-auth/plugins';
+import { keys } from './keys';
+
+const env = keys();
 
 const authOptions = {
   database: prismaAdapter(database, {
@@ -47,18 +51,22 @@ const authOptions = {
     nextCookies(),
     organization({
       allowUserToCreateOrganization: true,
-      organizationLimit: 5, // Limit users to 5 organizations
-      membershipLimit: 100, // Max 100 members per organization
-      creatorRole: 'owner', // Creator gets 'owner' role
+      organizationLimit: 5,
+      membershipLimit: 100,
+      creatorRole: 'owner',
       sendInvitationEmail: async (data) => {
-        // TODO: Implement email sending for invitations
-        console.log('Organization invitation:', data);
-        // This will be implemented with the email package
+        await resend.emails.send({
+          from: env.EMAIL_FROM ?? 'noreply@turbocamp.dev',
+          to: data.email,
+          subject: `You've been invited to join ${data.organization.name}`,
+          text: `You've been invited to join ${data.organization.name}. Visit your dashboard to accept the invitation.`,
+        });
       },
     }),
     stripe({
       stripeClient,
-      stripeWebhookSecret: keys().STRIPE_WEBHOOK_SECRET || '',
+      stripeWebhookSecret: paymentKeys().STRIPE_WEBHOOK_SECRET || '',
+      createCustomerOnSignUp: true,
     }),
   ],
 } satisfies BetterAuthOptions;

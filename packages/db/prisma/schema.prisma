@@ -11,14 +11,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-// This is a stub model.
-// Delete it and add your own Prisma models.
-
-model Page {
-  id   Int    @id @default(autoincrement())
-  name String
-}
-
 model User {
   id               String       @id
   name             String

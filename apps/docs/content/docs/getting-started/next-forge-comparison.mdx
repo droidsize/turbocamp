@@ -11,7 +11,8 @@ Turbocamp is built on top of [next-forge](https://github.com/haydenbleasel/next-
 
 | Feature | Turbocamp | next-forge |
 |---------|-----------|------------|
-| **Authentication** | Better Auth | Clerk |
+| **Authentication** | Better Auth (self-hosted, plugin ecosystem) | Clerk (managed, per-user pricing) |
+| **Payments** | Multi-provider via Better Auth plugins (Stripe, Polar, Dodo) | Stripe only |
 | **Package Structure** | Combined security package | Separate rate-limit package |
 | **Package Naming** | `@packages/*` | `@repo/*` |
 | **Design System** | `@packages/base` | `@repo/design-system` |
@@ -152,17 +153,53 @@ next-forge includes some packages that Turbocamp doesn't have (yet):
   These packages can be added as needed. The core architecture supports them.
 </Callout>
 
+## Payments: Multi-Provider vs Stripe Only
+
+Turbocamp's biggest differentiator is its **Better Auth plugin-based payment integration**, supporting multiple payment providers out of the box:
+
+| Provider | Type | Best For |
+|----------|------|----------|
+| **Stripe** | Payment processor | Full control over billing, global reach |
+| **Polar** | Merchant of Record | Indie devs, open source, tax handled |
+| **Dodo Payments** | Merchant of Record | Global sales in 150+ countries, tax/fraud handled |
+
+Each provider integrates directly with Better Auth's plugin system, giving you:
+
+- Automatic customer creation on signup
+- Subscription management tied to user sessions
+- Webhook handling through the auth layer
+- Organization-level billing support
+
+```bash
+# Configure your preferred payment provider(s)
+STRIPE_SECRET_KEY="sk_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+
+# Optional: Add Polar for MoR billing
+POLAR_ACCESS_TOKEN="pat_..."
+POLAR_WEBHOOK_SECRET="..."
+
+# Optional: Add Dodo Payments for global MoR
+DODO_PAYMENTS_API_KEY="..."
+DODO_PAYMENTS_WEBHOOK_SECRET="..."
+```
+
+next-forge only supports Stripe, requiring you to handle tax, fraud, and compliance yourself. Turbocamp gives you the choice of using a Merchant of Record (Polar, Dodo) that handles all of that for you.
+
 ## Version Differences
 
 Current versions in Turbocamp:
 
 | Package | Version |
 |---------|---------|
-| Next.js | 15.3.x |
+| Next.js | 16.1.x |
 | React | 19.2.x |
 | TypeScript | 5.9.x |
 | Prisma | 7.x |
 | Tailwind CSS | 4.x |
+| Zod | 4.x |
+| Sentry | 10.x |
+| Vercel AI SDK | 6.x |
 
 ## Subpath Imports
 
@@ -216,16 +253,18 @@ If migrating from next-forge to Turbocamp:
 
 Choose Turbocamp if you need:
 
-- Self-hosted authentication
-- No per-user pricing for auth
-- Full control over user data
+- Self-hosted authentication with no per-user pricing
+- **Multiple payment provider support** (Stripe, Polar, Dodo Payments)
+- **Merchant of Record options** for global tax/fraud compliance
+- Full control over user data and auth flow
 - Multi-app authentication with shared sessions
+- Plugin-based extensibility through Better Auth
 - PostgreSQL-based session storage
 
 Choose next-forge if you prefer:
 
 - Managed authentication (Clerk)
-- Faster initial setup
+- Faster initial setup with fewer decisions
 - Less infrastructure to manage
 - Clerk's built-in UI components
 

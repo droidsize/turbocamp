@@ -267,7 +267,7 @@ Your docs will be available at: http://localhost:3004
 **Every tool chosen for maximum developer productivity and minimal vendor lock-in.** Here's what powers your SaaS and why:
 
 ### 🏗️ Core Framework
-- **[Next.js 15.3](https://nextjs.org/)** – The React framework that scales with you. Server Components, App Router, and edge-ready.
+- **[Next.js 16](https://nextjs.org/)** – The React framework that scales with you. Turbopack default, Cache Components, and async APIs.
 - **[React 19.2](https://react.dev/)** – The latest React with Server Components and improved performance.
 - **[Turborepo](https://turbo.build/)** – Monorepo done right. Caching, parallel builds, and shared packages that just work.
 - **[TypeScript 5.9](https://www.typescriptlang.org/)** – Your safety net. Catch bugs at compile time, not in production.
@@ -286,6 +286,8 @@ Your docs will be available at: http://localhost:3004
 
 ### 💰 Business Tools
 - **[Stripe](https://stripe.com/)** – Global payments, subscriptions, and billing. Handle money like a pro.
+- **[Polar](https://polar.sh/)** – Open-source billing platform with Merchant of Record. No tax/compliance hassle.
+- **[Dodo Payments](https://dodopayments.com/)** – Global MoR platform for selling in 150+ countries.
 - **[Resend](https://resend.com/)** – Email delivery built for developers. Transactional emails that actually arrive.
 - **[PostHog](https://posthog.com/)** – Product analytics you can self-host. Understand your users without the privacy concerns.
 

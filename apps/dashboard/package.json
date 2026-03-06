@@ -20,20 +20,20 @@
     "@packages/logging": "workspace:*",
     "@packages/security": "workspace:*",
     "@packages/seo": "workspace:*",
-    "@sentry/nextjs": "^9.22.0",
+    "@sentry/nextjs": "^10.42.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tooling/next-config": "workspace:*",
     "fuse.js": "^7.1.0",
     "import-in-the-middle": "^1.13.2",
     "lucide-react": "^0.556.0",
-    "next": "15.5.9",
+    "next": "16.1.6",
     "next-themes": "^0.4.6",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "react-hook-form": "^7.68.0",
     "require-in-the-middle": "^7.5.2",
     "sonner": "^2.0.7",
-    "zod": "^3.25.28"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.5.0",
@@ -44,8 +44,8 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "jsdom": "^26.1.0",
-    "tailwindcss": "^4.1.17",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
-    "vitest": "^3.1.4"
+    "vitest": "^4.0.18"
   }
 }
