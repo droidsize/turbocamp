@@ -9,6 +9,7 @@ const otelRegex = /@opentelemetry\/instrumentation/;
 export const config: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
+    qualities: [25, 50, 75, 100],
     remotePatterns: [
       // Add any required image hostnames here
     ],
