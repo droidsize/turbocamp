@@ -218,3 +218,14 @@ Payment plugins integrate at the auth layer, meaning:
 - Subscription state is accessible via session
 - Webhooks are handled through the auth API
 - Organization billing is built-in
+
+## Other Payment Providers
+
+Better Auth's plugin ecosystem also supports these additional providers. They aren't pre-configured in Turbocamp but can be added:
+
+| Provider | Package | Description |
+|----------|---------|-------------|
+| **Creem** | `@creem_io/better-auth` | Financial OS for global software sales with revenue splitting |
+| **Autumn** | `autumn-js` | Open-source billing layer over Stripe (no webhooks needed) |
+
+See the [Better Auth payment plugins documentation](https://better-auth.com/docs/plugins) for setup guides.

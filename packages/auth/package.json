@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@better-auth/stripe": "^1.5.3",
-    "@dodopayments/better-auth": "^0.2.0",
+    "@dodopayments/better-auth": "^1.4.2",
     "@packages/db": "workspace:*",
     "@packages/email": "workspace:*",
     "@packages/payments": "workspace:*",
